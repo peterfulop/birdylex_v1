@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Login</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <script src="/framework/bootstrap/js/bootstrap.min.js"></script>
+    <link href="/framework/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    {{!-- <nav>
+        <h4>Node MySQL</h4>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        </ul>
+    </nav> --}}
+    <main id="main-app">
+
+        <div class="login-app d-flex justify-content-center" id="login-app-box">
+
+            <form class="w-100 mx-2" action="/API/login" method="POST">
+
+                <div class="d-flex flex-column align-items-center login-logo-box justify-content-center mb-4"
+                    id="login-logo-box">
+                    <img src="/images/avatar.png" alt="logo" id="login-form-logo">
+                    <h3>LOGIN</h3>
+                </div>
+
+                <div class="my-3">
+                    <label for="login-useremail" class="form-label">Emailcím</label>
+                    <input type="email" class="form-control" id="login-useremail" name="email">
+                    <div class="form-text"></div>
+                </div>
+
+                <div class="d-block w-100 mb-2">
+                    <label class="mb-2" for="login-password">Jelszó</label>
+                    <div class="d-flex">
+                        <div class="d-flex profile-input-container w-100">
+                            <input type="password" class="form-control px-2 mb-2 password-input" id="login-password"
+                                data-input-id="111" name="password">
+                            <div class="show-hide-password-block ms-1">
+                                <input type="checkbox" class="btn-check show-password-btn" autocomplete="off"
+                                    data-input-id="111" id="show-new-pw" checked="">
+                                <label class="btn btn-outline-listen btn-small password-label" data-input-id="111"
+                                    for="show-new-pw" id="show-hide-btn">
+                                    <i class="fas fa-eye"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="login-form-alert"></div>
+
+                <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3"
+                    id="login-button">Bejelentkezés</button>
+                <a class="btn btn-light rounded-pill mb-3 w-100" id="register-button" href="/register">Regisztráció</a>
+
+            </form>
+        </div>
+    </main>
+
+    <section id="circles">
+        <div class="circle1 circle"></div>
+        <div class="circle2 circle"></div>
+        <div class="circle3 circle"></div>
+        <div class="circle4 circle"></div>
+        <div class="circle5 circle"></div>
+        <div class="circle6 circle"></div>
+    </section>
+
+    <script type="module" src="/JS/controllers/loginControl.js"></script>
+</body>
+
+</html>
