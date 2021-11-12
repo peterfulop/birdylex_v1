@@ -39,17 +39,17 @@ exports.register = (req, res) => {
 exports.isLoggedIn = async (req, res, next) => {
 
     if (req.cookies.birdylexlogin) {
-
         const result = db.userIdValidation(req.cookies.birdylexlogin);
         result.then(data => {
+
             if (!data) return next();
             else {
                 req.user = {
-                    id : data.user.id,
-                    username : data.user.username,
+                    unique_id: data.user.unique_id,
+                    name: data.user.name,
                     email: data.user.email,
-                    registered : data.user.registered,
-                    last_login : data.user.last_login
+                    registered: new Date(data.user.registered).toLocaleString(),
+                    last_login: new Date(data.user.last_login).toLocaleString()
                 };
                 return next();
             }
@@ -58,4 +58,9 @@ exports.isLoggedIn = async (req, res, next) => {
     } else {
         next();
     }
+}
+
+exports.logout = async (reg, res) => {
+    res.clearCookie('birdylexlogin')
+    res.status(200).redirect("/");
 }
