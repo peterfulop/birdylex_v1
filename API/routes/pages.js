@@ -6,6 +6,7 @@ const authController = require("../controllers/auth");
 
 router.get("/", (req, res) => {
     res.render("index");
+
     // if (req.user) {
     //     res.render("index", {
     //         user: req.user,
