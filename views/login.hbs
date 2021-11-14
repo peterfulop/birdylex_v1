@@ -15,14 +15,7 @@
 </head>
 
 <body>
-    {{!-- <nav>
-        <h4>Node MySQL</h4>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Register</a></li>
-        </ul>
-    </nav> --}}
+
     <main id="main-app">
 
         <div class="login-app d-flex justify-content-center" id="login-app-box">
@@ -62,7 +55,7 @@
                     {{#if message}}
                     <div class="d-flex justify-content-center mt-3">
                         <div class="alert w-100 alert-warning m-0 alert-dismissible fade show" role="alert">
-                            <strong>Hiba!</strong>{{message}}
+                            {{message}}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
