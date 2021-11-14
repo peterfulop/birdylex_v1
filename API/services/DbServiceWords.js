@@ -172,7 +172,7 @@ class DbServiceWords extends DbService {
   async insertWord(userId, dictionaryId, word_1, word_2, lang_1, lang_2) {
     try {
       const dateAdded = new Date();
-      let post = [
+      let body = [
         this.sanitizeHtml(dictionaryId),
         this.sanitizeHtml(word_1),
         this.sanitizeHtml(word_2),
@@ -181,15 +181,14 @@ class DbServiceWords extends DbService {
         dateAdded,
         dateAdded,
       ];
-      const isPostValid = this.arrayValidator(post);
-      console.log(post);
+      const isPostValid = this.arrayValidator(body);
       if (!isPostValid) return false;
       else {
         const data = await new Promise((resolve, reject) => {
           const query = `INSERT INTO words
           (fk_user_id, fk_dictionary_id, word_1, word_2, fk_language_code_1, fk_language_code_2, relase_date,last_modified)
             VALUES ((select users.id from users where users.unique_id ='${userId}'),?,?,?,?,?,?,?);`;
-          connection.query(query, post, (err, result) => {
+          connection.query(query, body, (err, result) => {
             if (err) reject(new Error(err.message));
             if (result) resolve(result);
             console.log(result);
@@ -214,19 +213,19 @@ class DbServiceWords extends DbService {
   }
 
   // OK!
-  async updateWord(userId, id, word_1, word_2, lang_1, lang_2) {
+  async updateWord(userId, wordId, word_1, word_2, lang_1, lang_2) {
     try {
-      id = parseInt(id, 10);
+      wordId = parseInt(wordId, 10);
       const updateDate = new Date();
-      let post = [
+      let body = [
         this.sanitizeHtml(word_1),
         this.sanitizeHtml(word_2),
         this.sanitizeHtml(lang_1),
         this.sanitizeHtml(lang_2),
         updateDate,
-        id,
+        wordId,
       ];
-      const isPostValid = this.arrayValidator(post);
+      const isPostValid = this.arrayValidator(body);
       if (!isPostValid) return false;
       else {
         const response = await new Promise((resolve, reject) => {
@@ -234,7 +233,7 @@ class DbServiceWords extends DbService {
             WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}')
             AND
             id=?;`;
-          connection.query(query, post, (err, result) => {
+          connection.query(query, body, (err, result) => {
             if (err) reject(new Error(err.message));
             if (result) resolve(result.changedRows);
           });
@@ -242,7 +241,7 @@ class DbServiceWords extends DbService {
         response === 1 ? true : false;
         return [
           {
-            id: id,
+            id: wordId,
             word_1: word_1,
             word_2: word_2,
             lang_1: lang_1,
@@ -257,6 +256,7 @@ class DbServiceWords extends DbService {
     }
   }
 
+  // OK!
   async deleteWordById(userId, wordId) {
     try {
       wordId = parseInt(wordId, 10);
@@ -279,6 +279,7 @@ class DbServiceWords extends DbService {
     }
   }
 
+  // OK!
   async deleteWordsByDictionaryId(userId, dictionaryId) {
     try {
       dictionaryId = parseInt(dictionaryId, 10);

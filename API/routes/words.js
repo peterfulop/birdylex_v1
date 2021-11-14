@@ -1,37 +1,167 @@
 const express = require("express");
+const { isLoggedIn } = require("../controllers/auth");
 const router = express.Router();
 
 const WordsController = require("../controllers/words");
 
-router.get("/:userId", WordsController.words_get_all);
-
-router.get("/bywordid/:userId/:wordId", WordsController.words_get_word);
-
+// OK!! + AUTH
 router.get(
-  "bydictionaryid/:userId/:dictionaryId",
+  "/",
+  isLoggedIn,
+  (req, res, next) => {
+    console.log(req.user);
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_get_all
+);
+
+// OK! + AUTH
+router.get(
+  "/bywordid/:wordId",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_get_word
+);
+
+// OK! + AUTH
+router.get(
+  "/byword/:word",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_get_wordsBySearch
+);
+
+// OK! + AUTH
+router.get(
+  "/bydictionaryid/:dictionaryId",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
   WordsController.words_get_wordsByDictionaryId
 );
 
-router.get("/byword/:userId/:word", WordsController.words_get_wordsBySearch);
-
+// OK! + AUTH
 router.get(
-  "/limit/:userId/:limit",
+  "/limit/:limit",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
   WordsController.words_get_words_orderByLimit
 );
 
+// OK! + AUTH
 router.get(
-  "equal/:userId/:dictionaryId/:word_1/:word_2",
+  "/equal/:dictionaryId/:word_1/:word_2",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
   WordsController.words_get_equalsWord
 );
 
-router.post("/post", WordsController.words_post_word);
+// OK! + AUTH
+router.post(
+  "/post",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_post_word
+);
 
-router.patch("/patch", WordsController.words_update_word);
+// OK! + AUTH
+router.patch(
+  "/patch",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_update_word
+);
 
-router.delete("/bywordid/:userId/:wordId", WordsController.words_delete_word);
-
+// OK! + AUTH
 router.delete(
-  "/bydictionaryid/:userId/:dictionaryId",
+  "/bywordid/:wordId",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
+  WordsController.words_delete_word
+);
+
+// OK! + AUTH
+router.delete(
+  "/bydictionaryid/:dictionaryId",
+  isLoggedIn,
+  (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.render("login", { message: res.message });
+    } else {
+      req.body.userId = req.user.unique_id;
+      next();
+    }
+  },
   WordsController.words_delete_wordByDictionaryId
 );
 
