@@ -2,7 +2,8 @@ const DbService = require("./dbService.js");
 const connection = require("../database/db")
 
 class DbServicePractice extends DbService {
-    async getPractices() {
+
+    async getPractices(userId) {
         try {
             const response = await new Promise((resolve, reject) => {
                 const query = `
@@ -15,7 +16,8 @@ class DbServicePractice extends DbService {
                 question_count,
                 prompter_count,
                 skipped_count
-                FROM practice;`;
+                FROM practice
+                WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}');`;
                 connection.query(query, (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
@@ -27,7 +29,7 @@ class DbServicePractice extends DbService {
         }
     }
 
-    async getPracticeOrderByLimit(limit) {
+    async getPracticeOrderByLimit(userId, limit) {
         limit = parseInt(limit, 10);
         try {
             const response = await new Promise((resolve, reject) => {
@@ -42,6 +44,7 @@ class DbServicePractice extends DbService {
                 prompter_count,
                 skipped_count
                 FROM practice
+                WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}')
                 ORDER BY relase_date DESC
                 limit ?;`;
                 connection.query(query, [limit], (err, results) => {

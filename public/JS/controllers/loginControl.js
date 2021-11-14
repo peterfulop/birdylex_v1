@@ -64,6 +64,7 @@ const addHandlerLogin = async () => {
                     password: elements["password"].value,
                 }
                 let res = await tryToLogin(body);
+                console.log(res);
                 if (!res.status) {
                     showAlertPanel(
                         "#login-form-alert",

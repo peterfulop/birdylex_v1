@@ -27,7 +27,7 @@ export class Dictionary extends DataModel {
 
   async loadDictionaries() {
     try {
-      let data = await getJSON(`${API_URL}/dictionaries`);
+      let data = await getJSON(`${API_URL}/dictionaries/${state.user.unique_id}`);
       state.dictionaries = Array.from(data["data"]).map((data) => {
         return new Dictionary(
           data.id,

@@ -2,7 +2,9 @@ const DbServicePractice = require("../services/DbServicePractice");
 const db = new DbServicePractice();
 
 exports.practice_get_all = (req, res) => {
-    const result = db.getPractices();
+    const { userId } = req.params;
+
+    const result = db.getPractices(userId);
     result
         .then(data => {
             if (data[0]) {
@@ -25,8 +27,8 @@ exports.practice_get_all = (req, res) => {
 
 exports.practice_get_practice_orderByLimit = (req, res) => {
 
-    const { limit } = req.params;
-    const result = db.getPracticeOrderByLimit(limit);
+    const { limit, userId } = req.params;
+    const result = db.getPracticeOrderByLimit(userId, limit);
     result
         .then(data => {
             if (data) {

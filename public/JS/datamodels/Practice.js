@@ -28,7 +28,7 @@ export class Practice extends DataModel {
 
   async loadPractices() {
     try {
-      const data = await getJSON(`${API_URL}/practice/limit/3`);
+      const data = await getJSON(`${API_URL}/practice/${state.user.unique_id}/limit/3`);
       state.practiceHistory = Array.from(data["data"]).map((data) => {
         return new Practice(
           data.id,

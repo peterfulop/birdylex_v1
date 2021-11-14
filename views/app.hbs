@@ -15,15 +15,55 @@
 </head>
 
 <body>
-    <main id="main-app" dataset-user={{user.id}}>
-        <div class="container mt-4 text-white">
-            <div class="jumbotron">
-                <h1 class="display-4 text-white">BirdyLex</h1>
-                <h2 class="lead text-dark">Welcome in the App!</h2>
-            </div>
+    <main id="main-app">
+        <div id="app-spinner" class="text-center m-5">
+            <div class="spinner-border text-white" role="status"></div>
         </div>
-    </main>
+        <section class="app d-none" id="app-box">
+            <div class="dashboard wide" id="dashboard">
+                <div class="dashboard-header">
+                    <i id="full-screen-button" class="fas fa-expand-arrows-alt"></i>
+                    <i id="show-hide-button" class="fas fa-angle-double-left"></i>
+                </div>
 
+                <div class="user" id="user-avatar">
+                    <img src="/images/avatar.png" alt="" class="avatar" id="avatar">
+                    <h6 class="user-username hideable">{{user.name}}</h6>
+                </div>
+
+                <div class="links" style="max-height: 60vh; overflow:auto">
+                </div>
+            </div>
+            <div class="pages" id="page-content-box">
+                <div class="status d-block p-0" id="status-bar">
+                    <div class="status d-flex w-100 px-3 py-2 align-items-center justify-content-between">
+                        <div class="page-back-btn btn btn-group btn-sm">
+                            <button class="btn btn-trans btn-sm" id="back-to-history-btn"
+                                onclick=window.history.back();><i class="fas fa-chevron-left"></i></button>
+                            <button class="btn btn-trans btn-sm" id="back-to-history-btn"
+                                onclick=window.history.forward();><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-name">
+                            <h3 id="active-page-name"></h3>
+                        </div>
+                        <div class="page-icon">
+                            <i id="active-page-icon"></i>
+                            <div class="mobile-menu-icon">
+                                <i class="fas fa-bars" id="mobile-menu-button"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-menu-container d-none">
+                    </div>
+
+                </div>
+
+                <div class="main-content p-3 p-sm-4" id="main-content-box">
+                </div>
+            </div>
+        </section>
+    </main>
 
 
     <section id="circles">
@@ -36,12 +76,12 @@
     </section>
 
 
-<section>
-{{#each user}}
-    <meta dataset-{{@key}}={{this}}/>
-{{/each}}
-</section>
-<script type="module" src="../JS/index.js"></script>
+    <section id="user-metas">
+        {{#each user}}
+        <meta class="user-meta" data-{{@key}}="{{this}}" />
+        {{/each}}
+    </section>
+    <script type="module" src="../JS/index.js"></script>
 
 </body>
 

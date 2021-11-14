@@ -4,10 +4,11 @@ import { inputComboField } from "./components.js";
 
 import { state } from "./state.js";
 
+
 export const loadVisualisation = async () => {
 
-  console.log("state",state);
-  await renderAppHTML();
+  console.log("state", state);
+  //await renderAppHTML();
   await renderMainMenu();
   renderMobileMenu();
   displayMobileMenu();
@@ -35,8 +36,8 @@ const timeout = function (s) {
 export const getJSON = async function (url) {
   try {
     const res = await Promise.race([fetch(url), timeout(TIMEOUT_SEC)]);
-    const data = await res.json();
     if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);
+    const data = await res.json();
     return data;
   } catch (error) {
     throw error;
@@ -108,10 +109,13 @@ export async function renderMainMenu() {
 
   // add last menuitem 
   dashboardLinkContainer.innerHTML += `
-  <a href="/login" class="link wide nav" title="Kijelentkezés">
+  <a href="api/auth/logout" class="link wide nav" title="Kijelentkezés">
     <i class="link-icon-box fas fa-sign-out-alt"></i>
     <h3 class="hideable">Kijelentkezés</h3>
   </a>`
+
+  document.getElementById("app-spinner").classList.add("d-none");
+  document.getElementById("app-box").classList.remove("d-none");
 }
 
 export function renderMobileMenu() {

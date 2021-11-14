@@ -26,8 +26,9 @@ export class Word extends DataModel {
   }
 
   async loadWords() {
+
     try {
-      const data = await getJSON(`${API_URL}/words`);
+      const data = await getJSON(`${API_URL}/words/${state.user.unique_id}`);
       state.words = Array.from(data["data"]).map((data) => {
         return new Word(
           data.id,
@@ -44,4 +45,5 @@ export class Word extends DataModel {
       console.log(error.message);
     }
   }
+
 }

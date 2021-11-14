@@ -4,7 +4,7 @@ const connection = require("../database/db");
 class DbServiceDictionaries extends DbService {
 
 
-    async getDictionaries() {
+    async getDictionaries(userId) {
         try {
             const response = await new Promise((resolve, reject) => {
                 const query = `
@@ -17,7 +17,8 @@ class DbServiceDictionaries extends DbService {
                 (select languages.icon from languages where dictionaries.FK_language_code_1 = languages.id) as 'flag_1',
                 (select languages.icon from languages where dictionaries.FK_language_code_2 = languages.id) as 'flag_2',
                 relase_date
-                FROM dictionaries`;
+                FROM dictionaries
+                WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}');`;
                 connection.query(query, (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);

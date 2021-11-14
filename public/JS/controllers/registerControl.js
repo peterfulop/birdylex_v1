@@ -17,7 +17,6 @@ DOM.inputs = [DOM.registerName, DOM.registerEmail, DOM.registerPassword, DOM.reg
 
 
 const tryToRegister = async (reqBody) => {
-    console.log(reqBody);
     try {
         let res = await fetch(`${API_URL}/auth/register`, {
             headers: {
@@ -61,6 +60,15 @@ const addHandlerRegister = async () => {
                     "danger",
                     "HIBA!",
                     " Minden mező kitöltése kötelező!",
+                    0
+                );
+            }
+            else if (DOM.registerName.value.length < 5 || DOM.registerName.value.length < 50) {
+                showAlertPanel(
+                    "#register-form-alert",
+                    "danger",
+                    "HIBA!",
+                    " A felhasználónév hossza 5 és 50 karakter között legyen!",
                     0
                 );
             }

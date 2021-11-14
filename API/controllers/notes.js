@@ -2,7 +2,9 @@ const DbServiceNotes = require("../services/DbServiceNotes");
 var db = new DbServiceNotes();
 
 exports.notes_get_all = (req, res) => {
-    const result = db.getNotes();
+    const { userId } = req.params;
+
+    const result = db.getNotes(userId);
     result
         .then(data => {
             if (data[0]) {

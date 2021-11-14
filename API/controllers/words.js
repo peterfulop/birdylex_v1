@@ -3,7 +3,10 @@ const db = new DbServiceWords();
 
 
 exports.words_get_all = (req, res) => {
-    const result = db.getWords();
+    const { userId } = req.params;
+    console.log("words_get_all for:", userId);
+    const result = db.getWords(userId);
+    console.log(result);
     result
         .then(data => {
             if (data[0]) {

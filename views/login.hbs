@@ -58,8 +58,16 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-3" id="login-form-alert"></div>
+                <div class="mb-3" id="login-form-alert">
+                    {{#if message}}
+                    <div class="d-flex justify-content-center mt-3">
+                        <div class="alert w-100 alert-warning m-0 alert-dismissible fade show" role="alert">
+                            <strong>Hiba!</strong>{{message}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
 
                 <button type="submit" class="btn btn-primary rounded-pill w-100 mb-3"
                     id="login-button">Bejelentkezés</button>

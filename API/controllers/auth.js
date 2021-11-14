@@ -11,6 +11,7 @@ exports.login = async (req, res) => {
     const result = db.loginUser(email, password);
 
     result.then(data => {
+        console.log(data);
         res.cookie("birdylexlogin", data.token, data.cookieOptions);
         res.status(200).json({
             message: data.message,
@@ -41,8 +42,10 @@ exports.isLoggedIn = async (req, res, next) => {
     if (req.cookies.birdylexlogin) {
         const result = db.userIdValidation(req.cookies.birdylexlogin);
         result.then(data => {
-
-            if (!data) return next();
+            if (!data.valid) {
+                res.message = data.message;
+                return next();
+            }
             else {
                 req.user = {
                     unique_id: data.user.unique_id,
@@ -56,6 +59,7 @@ exports.isLoggedIn = async (req, res, next) => {
         })
 
     } else {
+        res.message = " Jelentkezz be újra!";
         next();
     }
 }

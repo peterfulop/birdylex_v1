@@ -77,6 +77,13 @@ class DbServiceUsers extends DbService {
                     message: "Minden mező kitöltése kötelező!",
                 };
             }
+            if (this.sanitizeHtml(name).length < 5 || this.sanitizeHtml(name).length > 50) {
+                console.log("A felhasználónév hossza 5 és 50 karakter között legyen!");
+                return {
+                    status: false,
+                    message: "A felhasználónév hossza 5 és 50 karakter között legyen!",
+                };
+            }
             if (!password || passwordconfirm.length < 6) {
                 console.log("A jelszó legalább 6 karakter hosszúságú legyen!");
                 return {
@@ -112,8 +119,8 @@ class DbServiceUsers extends DbService {
                         let hashedPassword = await bcrypt.hash(password, 8);
                         let datetime = new Date().toLocaleString();
                         let newUser = {
-                            id: uuid.v4(),
-                            username: this.sanitizeHtml(name),
+                            unique_id: uuid.v4(),
+                            name: this.sanitizeHtml(name),
                             email: this.sanitizeHtml(email),
                             password: hashedPassword,
                             registered: datetime,
@@ -148,231 +155,62 @@ class DbServiceUsers extends DbService {
 
         } catch (error) {
             console.error(error);
+            return {
+                status: false,
+                message: "Szerver hiba!",
+            };
         }
     }
 
     async userIdValidation(token) {
 
-        const decoded = await new Promise(async (resolve) => {
-            resolve(jwt.verify(token, process.env.JWT_SECRET));
-        })
-        console.log(decoded);
+        try {
 
-        const response = await new Promise((resolve, reject) => {
-            const query = `SELECT * FROM users WHERE id = '${decoded.id}';`
-            connection.query(query, (err, result) => {
-                if (err) reject(new Error(err.message));
-                if (!result) {
-                    return {
-                        valid: false
+            const decoded = await new Promise(async (resolve, reject) => {
+                resolve(jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                    if (err) {
+                        if (err.name === "TokenExpiredError") {
+                            console.log("Hiba!", err.name);
+                            return false;
+                        }
+                    } else {
+                        return decoded;
                     }
-                } else {
-                    resolve(result);
-                }
+                }));
+
             })
-        })
-        console.log(response);
-
-        if (response) {
-            return {
-                user: response[0]
-            }
-        }
-
-
-
-
-        // if (req.cookies.jwt) {
-        //     try {
-        //         // 1) Verify the token
-        //         // const decoded = await new Promise(async (resolve) => {
-        //         //     resolve(jwt.verify(req.cookies.jwt, process.env.JWT_SECRET));
-        //         // })
-        //         // console.log(decoded);
-
-        //         // 2) Check if user id exists
-        //         db.query(`SELECT * FROM users WHERE id = '${decoded.id}';`, (error, result) => {
-        //             if (!result) {
-        //                 return next();
-        //             } else {
-        //                 req.user = result[0];
-        //                 return next();
-        //             }
-        //         })
-        //     } catch (error) {
-        //         console.log(error);
-        //         return next();
-        //     }
-        // } else {
-        //     next();
-        // }
-    }
-
-
-
-
-
-
-
-
-    async getUsers() {
-        try {
-            const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM users;`;
-                connection.query(query, (err, results) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(results);
-                });
-            });
-            return response;
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-
-
-    async getUserById(id) {
-        try {
-            const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM users WHERE id=?`;
-                connection.query(query, [id], (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result);
-                });
-            });
-            return response;
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    async getUserByEmail(email) {
-        try {
-            const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM users WHERE email=?`;
-                connection.query(query, [email], (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result);
-                });
-            });
-            console.log("response:", response);
-            return response;
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    async getUserByName(username) {
-        username = this.sanitizeHtml(username);
-        try {
-            const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM users WHERE username=?`;
-                connection.query(query, [username], (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result);
-                });
-            });
-            return response;
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    async getUserByNameAndEmail(username, email) {
-        username = this.sanitizeHtml(username);
-        email = this.sanitizeHtml(email);
-        try {
-            const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM users WHERE username=? AND email=?`;
-                connection.query(query, [username, email], (err, result) => {
-                    if (err) reject(new Error(err.message));
-                    resolve(result);
-                });
-            })
-            return response;
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    async getUserByEmailAndPassword(email, password) {
-        // const sha256Hasher = crypto.createHmac("sha256", process.env.KEY);
-        // password = sha256Hasher.update(password).digest("hex");
-        // try {
-        //     return await new Promise((resolve, reject) => {
-        //         const query = `SELECT * FROM users WHERE email=? AND password=?`;
-        //         connection.query(query, [email, password], async (err, result) => {
-        //             if (err) {
-        //                 reject(new Error(err.message));
-        //                 return;
-        //             }
-
-        //             if (result.length) {
-        //                 let token = jwt.sign(
-        //                     {
-        //                         username: result[0].username,
-        //                         userId: result[0].id,
-        //                     },
-        //                     process.env.KEY,
-        //                     { expiresIn: "1d" }
-        //                 );
-        //                 resolve([
-        //                     {
-        //                         status: true,
-        //                         msg: "Logged In!",
-        //                         token,
-        //                         user: {
-        //                             username: result[0].username,
-        //                             userId: result[0].id,
-        //                             email: result[0].email,
-        //                             relase_date: result[0].relase_date,
-        //                             last_modified: result[0].last_modified,
-        //                         },
-        //                     },
-        //                 ]);
-        //             } else {
-        //                 return resolve();
-        //             }
-        //         });
-        //     });
-        // } catch (err) {
-        //     console.log(err);
-        // }
-    }
-
-    async insertUser(username, email, password) {
-        const sha256Hasher = crypto.createHmac("sha256", process.env.KEY);
-        password = sha256Hasher.update(password).digest("hex");
-
-        try {
-            username = this.sanitizeHtml(username);
-            const dateAdded = new Date();
-            const userId = uuidv4();
-            const user = [userId, username, email, password, dateAdded, dateAdded];
-            const isPostValid = this.arrayValidator(user);
-            if (!isPostValid) return false;
-            else {
-                const newUser = await new Promise((resolve, reject) => {
-                    const query =
-                        "INSERT INTO users (id,username, email, password, relase_date, last_modified) VALUES (?,?,?,?,?,?);";
-                    connection.query(query, user, (err, result) => {
+            if (!decoded) {
+                return {
+                    valid: false,
+                    message: "A munkamenet lejárt, jelentkezz be újra!"
+                };
+            } else {
+                const response = await new Promise((resolve, reject) => {
+                    const query = `SELECT * FROM users WHERE id = '${decoded.id}';`
+                    connection.query(query, (err, result) => {
                         if (err) reject(new Error(err.message));
-                        if (result) resolve(result);
-                    });
-                });
-                return [
-                    {
-                        id: userId,
-                        username: username,
-                        email: email,
-                        password: password,
-                        date_added: dateAdded,
-                    },
-                ];
+                        if (!result) {
+                            return {
+                                valid: false
+                            }
+                        } else {
+                            resolve(result);
+                        }
+                    })
+                })
+                if (response) {
+                    return {
+                        valid: true,
+                        user: response[0]
+                    }
+                }
             }
-        } catch (err) {
-            console.log(err);
+
+        } catch (error) {
+            return {
+                valid: false,
+                error
+            }
         }
     }
 }

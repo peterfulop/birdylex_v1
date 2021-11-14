@@ -3,7 +3,8 @@ const db = new DbServiceDictionaries();
 
 exports.dictionaries_get_all = async (req, res) => {
 
-    const result = db.getDictionaries();
+    const { userId } = req.params;
+    const result = db.getDictionaries(userId);
     result
         .then(data => {
             res.status(200).json({

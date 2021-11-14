@@ -2,20 +2,25 @@ const DbService = require("./dbService.js");
 const connection = require("../database/db")
 
 class DbServiceWords extends DbService {
-    async getWords() {
+
+    async getWords(userId) {
+
+        //let userId = "39112b13-9a19-4a08-b360-28e4e71ad21a";
+
         try {
             const response = await new Promise((resolve, reject) => {
                 const query = `
                 SELECT
                 id,
-                FK_dictionary_id as 'dictionary_id',
+                fk_dictionary_id as 'dictionary_id',
                 word_1,
                 word_2,
-                (select languages.lang_code from languages where words.FK_language_code_1 = languages.id) as 'lang_1',
-                (select languages.lang_code from languages where words.FK_language_code_2 = languages.id) as 'lang_2',
+                (select languages.lang_code from languages where words.fk_language_code_1 = languages.id) as 'lang_1',
+                (select languages.lang_code from languages where words.fk_language_code_2 = languages.id) as 'lang_2',
                 relase_date,
                 last_modified
-                FROM words;`;
+                FROM words
+                WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}');`;
                 connection.query(query, (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
@@ -34,11 +39,11 @@ class DbServiceWords extends DbService {
                 const query = `
                 SELECT
                 id,
-                FK_dictionary_id as 'dictionary_id',
+                fk_dictionary_id as 'dictionary_id',
                 word_1,
                 word_2,
-                (select languages.lang_code from languages where words.FK_language_code_1 = languages.id) as 'lang_1',
-                (select languages.lang_code from languages where words.FK_language_code_2 = languages.id) as 'lang_2',
+                (select languages.lang_code from languages where words.fk_language_code_1 = languages.id) as 'lang_1',
+                (select languages.lang_code from languages where words.fk_language_code_2 = languages.id) as 'lang_2',
                 relase_date,
                 last_modified
                 FROM words
@@ -60,11 +65,11 @@ class DbServiceWords extends DbService {
                 const query = `
                 SELECT
                 id,
-                (SELECT dictionaries.dictionary_name from dictionaries where dictionaries.id = words.FK_dictionary_id) as dictionary,
+                (SELECT dictionaries.dictionary_name from dictionaries where dictionaries.id = words.fk_dictionary_id) as dictionary,
                 word_1,
                 word_2,
-                (select languages.lang_code from languages where words.FK_language_code_1 = languages.id) as 'lang_1',
-                (select languages.lang_code from languages where words.FK_language_code_2 = languages.id) as 'lang_2',
+                (select languages.lang_code from languages where words.fk_language_code_1 = languages.id) as 'lang_1',
+                (select languages.lang_code from languages where words.fk_language_code_2 = languages.id) as 'lang_2',
                 relase_date,
                 last_modified
                 FROM words
@@ -89,7 +94,7 @@ class DbServiceWords extends DbService {
                 *
                 FROM words
                 WHERE
-                FK_dictionary_id = ? AND word_1 = ? AND word_2 = ?;`;
+                fk_dictionary_id = ? AND word_1 = ? AND word_2 = ?;`;
                 connection.query(
                     query,
                     [dictionaryId, word_1, word_2],
@@ -112,15 +117,15 @@ class DbServiceWords extends DbService {
                 const query = `
                 SELECT
                 id,
-                FK_dictionary_id as 'dictionary_id',
+                fk_dictionary_id as 'dictionary_id',
                 word_1,
                 word_2,
-                (select languages.lang_code from languages where words.FK_language_code_1 = languages.id) as 'lang_1',
-                (select languages.lang_code from languages where words.FK_language_code_2 = languages.id) as 'lang_2',
+                (select languages.lang_code from languages where words.fk_language_code_1 = languages.id) as 'lang_1',
+                (select languages.lang_code from languages where words.fk_language_code_2 = languages.id) as 'lang_2',
                 relase_date,
                 last_modified
                 FROM words
-                WHERE FK_dictionary_id=?;`;
+                WHERE fk_dictionary_id=?;`;
                 connection.query(query, [id], (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
@@ -167,7 +172,7 @@ class DbServiceWords extends DbService {
             else {
                 const insertId = await new Promise((resolve, reject) => {
                     const query =
-                        "INSERT INTO words (FK_dictionary_id, word_1, word_2, FK_language_code_1, FK_language_code_2, relase_date,last_modified) VALUES (?,?,?,?,?,?,?);";
+                        "INSERT INTO words (fk_dictionary_id, word_1, word_2, fk_language_code_1, fk_language_code_2, relase_date,last_modified) VALUES (?,?,?,?,?,?,?);";
                     connection.query(query, post, (err, result) => {
                         if (err) reject(new Error(err.message));
                         if (result) resolve(result.insertId);
@@ -208,7 +213,7 @@ class DbServiceWords extends DbService {
             else {
                 const response = await new Promise((resolve, reject) => {
                     const query =
-                        "UPDATE words SET word_1=?, word_2=?, FK_language_code_1=?, FK_language_code_2=?, last_modified=? WHERE id=?;";
+                        "UPDATE words SET word_1=?, word_2=?, fk_language_code_1=?, fk_language_code_2=?, last_modified=? WHERE id=?;";
                     connection.query(query, post, (err, result) => {
                         if (err) reject(new Error(err.message));
                         if (result) resolve(result.changedRows);
@@ -253,7 +258,7 @@ class DbServiceWords extends DbService {
         try {
             id = parseInt(id, 10);
             const response = await new Promise((resolve, reject) => {
-                const query = "DELETE FROM words WHERE FK_dictionary_id=?;";
+                const query = "DELETE FROM words WHERE fk_dictionary_id=?;";
                 connection.query(query, [id], (err, result) => {
                     if (err) reject(new Error(err.message));
                     resolve(result.affectedRows);

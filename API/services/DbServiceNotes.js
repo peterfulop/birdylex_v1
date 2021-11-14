@@ -2,10 +2,10 @@ const DbService = require("./dbService.js");
 const connection = require("../database/db")
 
 class DbServiceNotes extends DbService {
-    async getNotes() {
+    async getNotes(userId) {
         try {
             const response = await new Promise((resolve, reject) => {
-                const query = `SELECT * FROM notes;`;
+                const query = `SELECT * FROM notes WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}');`;
                 connection.query(query, (err, results) => {
                     if (err) reject(new Error(err.message));
                     resolve(results);
