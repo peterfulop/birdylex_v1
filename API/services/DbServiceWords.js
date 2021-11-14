@@ -2,7 +2,7 @@ const DbService = require("./dbService.js");
 const connection = require("../database/db");
 
 class DbServiceWords extends DbService {
-  //OK!
+  // OK! + AUTH
   async getWords(userId) {
     try {
       const response = await new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  //OK!
+  // OK! + AUTH
   async getWordById(userId, wordId) {
     try {
       wordId = parseInt(wordId, 10);
@@ -60,7 +60,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  //OK!
+  // OK! + AUTH
   async getWordsBySearch(userId, word) {
     try {
       const response = await new Promise((resolve, reject) => {
@@ -90,7 +90,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  //OK!
+  // OK! + AUTH
   async getEqualsWord(userId, dictionaryId, word_1, word_2) {
     try {
       const response = await new Promise((resolve, reject) => {
@@ -117,7 +117,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async getWordsByDictionaryId(userId, dictionaryId) {
     try {
       dictionaryId = parseInt(dictionaryId, 10);
@@ -148,7 +148,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async getWordsOrderByLimit(userId, limit) {
     limit = parseInt(limit, 10);
     try {
@@ -168,7 +168,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async insertWord(userId, dictionaryId, word_1, word_2, lang_1, lang_2) {
     try {
       const dateAdded = new Date();
@@ -186,7 +186,7 @@ class DbServiceWords extends DbService {
       else {
         const data = await new Promise((resolve, reject) => {
           const query = `INSERT INTO words
-          (fk_user_id, fk_dictionary_id, word_1, word_2, fk_language_code_1, fk_language_code_2, relase_date,last_modified)
+          (fk_user_id, fk_dictionary_id, word_1, word_2, fk_language_code_1, fk_language_code_2, relase_date, last_modified)
             VALUES ((select users.id from users where users.unique_id ='${userId}'),?,?,?,?,?,?,?);`;
           connection.query(query, body, (err, result) => {
             if (err) reject(new Error(err.message));
@@ -212,7 +212,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async updateWord(userId, wordId, word_1, word_2, lang_1, lang_2) {
     try {
       wordId = parseInt(wordId, 10);
@@ -256,7 +256,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async deleteWordById(userId, wordId) {
     try {
       wordId = parseInt(wordId, 10);
@@ -279,7 +279,7 @@ class DbServiceWords extends DbService {
     }
   }
 
-  // OK!
+  // OK! + AUTH
   async deleteWordsByDictionaryId(userId, dictionaryId) {
     try {
       dictionaryId = parseInt(dictionaryId, 10);

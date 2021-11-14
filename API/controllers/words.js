@@ -50,8 +50,8 @@ exports.words_get_word = (req, res) => {
 
 // OK! + AUTH
 exports.words_get_wordsBySearch = (req, res) => {
-  const { word } = req.params;
   const { userId } = req.body;
+  const { word } = req.params;
   const result = db.getWordsBySearch(userId, word);
   result
     .then((data) => {
@@ -172,7 +172,8 @@ exports.words_post_word = (req, res) => {
 
 // OK! + AUTH
 exports.words_update_word = (req, res) => {
-  const { userId, wordId, word_1, word_2, lang_1, lang_2 } = req.body;
+  const { wordId } = req.params;
+  const { userId, word_1, word_2, lang_1, lang_2 } = req.body;
   const result = db.updateWord(userId, wordId, word_1, word_2, lang_1, lang_2);
   result
     .then((data) => {

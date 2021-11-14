@@ -119,7 +119,7 @@ router.post(
 
 // OK! + AUTH
 router.patch(
-  "/patch",
+  "/patch/:wordId",
   isLoggedIn,
   (req, res, next) => {
     if (!req.user) {
@@ -151,7 +151,7 @@ router.delete(
 
 // OK! + AUTH
 router.delete(
-  "/bydictionaryid/:dictionaryId",
+  "/delete/:dictionaryId",
   isLoggedIn,
   (req, res, next) => {
     if (!req.user) {

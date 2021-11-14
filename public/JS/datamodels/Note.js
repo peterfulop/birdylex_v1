@@ -14,7 +14,7 @@ export class Note extends DataModel {
 
   async loadNotes() {
     try {
-      const data = await getJSON(`${API_URL}/notes/${state.user.unique_id}`);
+      const data = await getJSON(`${API_URL}/notes`);
       state.notes = Array.from(data["data"]).map((data) => {
         return new Note(data.id, data.note, data.relase_date);
       });
