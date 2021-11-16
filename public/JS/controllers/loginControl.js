@@ -42,12 +42,12 @@ const addHandlerLogin = async () => {
             evt.preventDefault();
 
             resetInputValidation(DOM.inputs);
-            //showHidePasswords([DOM.showNewPw], true);
+            [DOM.showNewPw].forEach(btn => {
+                if (!btn.checked) btn.click();
+            });
             hideAlertPanel("#login-form-alert");
 
             const elements = DOM.loginForm.elements;
-            console.log(elements["email"].value);
-            console.log(elements["password"].value);
 
             let req = validateInputs(DOM.inputs);
             if (!req) {
@@ -64,7 +64,6 @@ const addHandlerLogin = async () => {
                     password: elements["password"].value,
                 }
                 let res = await tryToLogin(body);
-                console.log(res);
                 if (!res.status) {
                     showAlertPanel(
                         "#login-form-alert",

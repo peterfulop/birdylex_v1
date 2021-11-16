@@ -9,7 +9,7 @@ export const getPractices = async (number) => {
     state.practiceHistory = Array.from(data.data).map((data) => {
       return new Practice(
         data.id,
-        data.name,
+        data.dictionary_name,
         data.start_time,
         data.end_time,
         data.relase_date,
@@ -25,8 +25,7 @@ export const getPractices = async (number) => {
 
 export const addPractice = async (data) => {
   try {
-    console.log(data);
-    const res = await fetch(`${API_URL}/practice`, {
+    const res = await fetch(`${API_URL}/practice/post`, {
       headers: {
         "Content-type": "application/json",
       },

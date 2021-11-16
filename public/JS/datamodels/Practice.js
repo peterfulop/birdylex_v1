@@ -6,7 +6,7 @@ import { state } from "../state.js";
 export class Practice extends DataModel {
   constructor(
     id,
-    name,
+    dictionary_name,
     start_time,
     end_time,
     relase_date,
@@ -16,7 +16,7 @@ export class Practice extends DataModel {
   ) {
     super();
     this.id = id;
-    this.name = name;
+    this.dictionary_name = dictionary_name;
     this.start_time = new Date(start_time);
     this.end_time = new Date(end_time);
     this.relase_date = new Date(relase_date);
@@ -32,7 +32,7 @@ export class Practice extends DataModel {
       state.practiceHistory = Array.from(data["data"]).map((data) => {
         return new Practice(
           data.id,
-          data.name,
+          data.dictionary_name,
           data.start_time,
           data.end_time,
           data.relase_date,

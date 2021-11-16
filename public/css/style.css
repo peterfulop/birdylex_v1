@@ -21,6 +21,12 @@
   text-decoration: none !important;
   }
 
+  .helper-icon{
+    font-size: 2rem;
+    color: var(--default-icon-color);
+  }
+
+
 .text-sort {
   overflow: hidden;
   white-space: nowrap;

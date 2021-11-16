@@ -43,8 +43,6 @@ export const pathToRegex = (path) =>
 
 export const router = async () => {
 
-    console.log("router");
-
     const routes = [
         { path: "/", view: HomeView, init: homeControl },
         { path: "/profile", view: ProfileView, init: profileControl },
@@ -95,14 +93,11 @@ export const router = async () => {
 };
 
 const navigateTo = (sendState, url) => {
-    //console.log('navigateTo');
     history.pushState(sendState, null, url);
     router();
 };
 
 export async function pageNavigation() {
-
-    console.log("pageNavigation");
 
     const dashboardLinks = document.querySelectorAll("[data-link]");
     const actualPageContainer = document.getElementById("active-page-name");

@@ -26,7 +26,7 @@ class DbServiceUsers extends DbService {
 
       const user = response[0];
 
-      if (!response || !(await bcrypt.compare(password, user.password))) {
+      if (!user || !(await bcrypt.compare(password, user.password))) {
         return {
           status: false,
           message: "Az email, vagy a jelszó nem megfelelő!",
@@ -84,7 +84,7 @@ class DbServiceUsers extends DbService {
           message: "A felhasználónév hossza 5 és 50 karakter között legyen!",
         };
       }
-      if (!password || passwordconfirm.length < 6) {
+      if (!password || password.length < 6 || password.length > 50) {
         console.log("A jelszó legalább 6 karakter hosszúságú legyen!");
         return {
           status: false,

@@ -70,16 +70,13 @@ const controlStartToSpeech = async (data) => {
 
 const controlResumeToSpeech = async (data) => {
   const speech = await startSpeech("", "", "", data.method);
-  console.log(speech.type);
 };
 
 const controlPauseToSpeech = async (data) => {
   const speech = await startSpeech("", "", "", data.method);
-  console.log(speech.type);
 };
 const controlStopToSpeech = async (data) => {
   const speech = await startSpeech("", "", "", data.method);
-  console.log(speech.type);
 };
 
 export default async function init() {

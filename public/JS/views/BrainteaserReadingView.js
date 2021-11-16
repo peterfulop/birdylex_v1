@@ -110,10 +110,8 @@ export default class extends View {
                 </div>
             </div>
             ${readerControlPanelHTML()}
-
-            <div class="question-answer-boxes words-list"  id="reading-words-list">
+            <div class="question-answer-boxes words-list" id="reading-words-list">
             </div>
-
         </div>`;
   }
 

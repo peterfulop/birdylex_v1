@@ -14,13 +14,6 @@ export default class {
   _actualPageIcon = document.getElementById("active-page-icon");
   DOM = {};
 
-  // constructor() {
-  //   if (!document.getElementById("main-content-box")) {
-  //     console.log("Nincs app, render!");
-  //     loadVisualisation();
-  //     pageNavigation();
-  //   }
-  // }
 
   async renderHtml() {
     return "";
@@ -90,11 +83,9 @@ export default class {
 
     // 1) Set page title
     document.title = await this.setTitle(title);
-    //console.log('page title', document.title);
 
     // 2) Get page name
     let page = await this.getPageTitle(title);
-    //console.log('page', page);
 
     // 3) Get menu index
     let index = await this.getPageIndex(page);

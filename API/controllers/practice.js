@@ -15,7 +15,11 @@ exports.practice_get_all = (req, res) => {
           data: data,
         });
       } else {
-        res.status(404).json({ message: "Not exists ID!" });
+        res.status(200).json({
+          count: data.length,
+          info: "no results",
+          data: data,
+        });
       }
     })
     .catch((err) => {
@@ -52,7 +56,7 @@ exports.practice_get_practice_orderByLimit = (req, res) => {
 exports.practice_post_practice_result = (req, res) => {
   const {
     userId,
-    fk_dictionary_id,
+    dictionary_name,
     start_time,
     end_time,
     question_count,
@@ -62,7 +66,7 @@ exports.practice_post_practice_result = (req, res) => {
 
   const result = db.insertPractice(
     userId,
-    fk_dictionary_id,
+    dictionary_name,
     start_time,
     end_time,
     question_count,

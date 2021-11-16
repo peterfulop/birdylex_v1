@@ -6,7 +6,7 @@ export const returnStateToRender = async () => {
 
 export const getDataFromState = async () => {
   return {
-    FK_dictionary_id: parseInt(state.excercise.data.dictionaryId),
+    dictionary_name: state.excercise.data.dictionary,
     start_time: new Date(state.excercise.data.startTermin),
     end_time: new Date(state.excercise.data.endTermin),
     question_count: parseInt(state.excercise.data.yourAnswers.length),

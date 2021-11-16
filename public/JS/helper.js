@@ -37,12 +37,44 @@ export const getJSON = async function (url) {
   try {
     const res = await Promise.race([fetch(url), timeout(TIMEOUT_SEC)]);
     if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);
+    console.log("getJSON", res);
+    if (res.redirected) {
+      window.location.href = "/login";
+    }
     const data = await res.json();
     return data;
   } catch (error) {
     throw error;
   }
 };
+
+export const multiFetch = async function (url, method = "GET", body = "") {
+
+  let object = {
+    headers: {
+      "Content-type": "application/json",
+    },
+    method: method,
+    body: body === "" ? null : JSON.stringify(body),
+  }
+
+  try {
+    const res = await Promise.race([fetch(url, object), timeout(TIMEOUT_SEC)]);
+    if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);
+    console.log("multiFetch", res);
+    if (res.redirected) {
+      window.location.href = res.url;
+    }
+    const data = await res.json();
+    return {
+      ok: res.ok,
+      data
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export function mediaQuery() {
   const mediaQuery = window.matchMedia("(max-width: 960px)");
@@ -90,6 +122,22 @@ function autoFullScreen(mediaQuery) {
       enableFullScreen();
     }
   }
+}
+
+export const renderNoDataHTML = (objectData, uniqueId = "helper-btn", click = true) => {
+  let event = click ? `document.querySelector("[data-href='/${objectData.buttonHref}']").click()` : "";
+  return `<div class="m-1">
+            <div class="row align-items-center mb-2">
+                    <i class="fas fa-info-circle helper-icon"></i>
+                </div>
+                <div class="">
+                    <h5 class="text-secondary"><strong>Hoppá! </strong>${objectData.headerText}</h5>
+                    <small class="helper-box-small mb-2 d-block">${objectData.smallText}</small>
+                    <button id="${uniqueId}" class="btn btn-${objectData.buttonColor} mt-1"
+                    onClick=${event}>${objectData.buttonText}</button>
+                </div>
+            </div>
+        </div>`
 }
 
 export async function renderMainMenu() {
@@ -514,13 +562,10 @@ export function startSpeech(
   speech.pitch = pitch;
 
   if (cancel) {
-    console.log("cancel");
     window.speechSynthesis.cancel();
   } else if (pause) {
-    console.log("pause");
     window.speechSynthesis.pause();
   } else if (resume) {
-    console.log("resume");
     window.speechSynthesis.resume();
   } else {
     window.speechSynthesis.speak(speech);
@@ -627,7 +672,7 @@ export const showPassword = (button, label, input) => {
 };
 
 
-export const showHidePasswords = async (nodeList, hide = false) => {
+export const showHidePasswords = async (nodeList) => {
   nodeList.forEach(
     (btn) =>
       btn.addEventListener("change", async () => {
@@ -637,10 +682,10 @@ export const showHidePasswords = async (nodeList, hide = false) => {
         let input = [...document.querySelectorAll(".password-input")].find(
           (a) => a.dataset.inputId === btn.dataset.inputId
         );
-        if (hide) nodeList.forEach(btn, () => btn.checked = false);
         showPassword(btn, label, input);
       })
   );
+
 }
 
 

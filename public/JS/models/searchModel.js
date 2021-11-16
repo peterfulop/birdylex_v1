@@ -4,7 +4,7 @@ import { state } from "../state.js";
 
 export const loadSearchResults = async (query) => {
   try {
-    let url = `${API_URL}/words/s/${query}`;
+    let url = `${API_URL}/words/byword/${query}`;
     const data = await getJSON(url);
     state.search = {
       query: query,

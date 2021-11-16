@@ -360,6 +360,8 @@ const renderDictionaryContentProcess = async (
 };
 
 export default async function init() {
+
+
   await dcv.addHandlerDefDOMelements();
   await controlLoadPage();
 
@@ -388,6 +390,8 @@ export default async function init() {
 
   // Accept Modal multi events
   await dcv.handlerAcceptMultiSelectedItems(controlAccpetEditMultiSelect);
+
+
 }
 
 export const loadDictionaryContentHandlers = async () => {

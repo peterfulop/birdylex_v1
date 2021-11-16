@@ -46,6 +46,34 @@ export const menuItems = Object.freeze({
   }
 })
 
+export const noDataInputs = Object.freeze({
+  dictionaryView: {
+    headerText: "Úgy tűnik, nincsenek még szótáraid!",
+    smallText: "Ahhoz, hogy szavakat tudj rögzíteni, csinálnod kell legalább egy szótárt.",
+    buttonHref: "",
+    buttonText: "Szótár létrehozása",
+    buttonColor: "success",
+    click: false
+  },
+  addnewView: {
+    headerText: "Úgy tűnik, nincsenek még szótáraid!",
+    smallText: "Ahhoz, hogy szavakat tudj rögzíteni, csinálnod kell legalább egy szótárt.",
+    buttonHref: "dictionaries",
+    buttonText: "Szótár létrehozása",
+    buttonColor: "secondary",
+    click: true
+
+  },
+  brainteaserView: {
+    headerText: "Úgy tűnik, nincsenek még mentett kifejezéseid!",
+    smallText: "Ahhoz, hogy gyakorolni tudj, legalább 1 kifejezést rögzítened kell.",
+    buttonHref: "addnew",
+    buttonText: "Kifejezés rögzítése",
+    buttonColor: "primary",
+    click: true
+  }
+})
+
 export const dialogObjects = Object.freeze({
   deleteRow: {
     name: "deleteRowObject",

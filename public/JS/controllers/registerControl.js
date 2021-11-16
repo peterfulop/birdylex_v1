@@ -44,7 +44,9 @@ const addHandlerRegister = async () => {
             evt.preventDefault();
 
             resetInputValidation(DOM.inputs);
-            showHidePasswords([DOM.showNewPw, DOM.showNewPwConf], true);
+            [DOM.showNewPw, DOM.showNewPwConf].forEach(btn => {
+                if (!btn.checked) btn.click();
+            });
             hideAlertPanel("#register-form-alert");
 
             const elements = DOM.registerForm.elements;
@@ -63,7 +65,7 @@ const addHandlerRegister = async () => {
                     0
                 );
             }
-            else if (DOM.registerName.value.length < 5 || DOM.registerName.value.length < 50) {
+            else if (DOM.registerName.value.length < 5 || DOM.registerName.value.length > 50) {
                 showAlertPanel(
                     "#register-form-alert",
                     "danger",

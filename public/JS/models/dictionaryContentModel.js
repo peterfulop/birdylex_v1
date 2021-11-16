@@ -205,7 +205,7 @@ export const isFiltered = () => {
 /// Single Edit Methods
 
 export const updateWordById = async (data) => {
-  const resp = await fetch(`${API_URL}/words/${data.wordId}`, {
+  const resp = await fetch(`${API_URL}/words/patch/${data.wordId}`, {
     method: "PATCH",
     headers: {
       "Content-type": "application/json",
@@ -223,7 +223,7 @@ export const updateWordById = async (data) => {
 };
 
 export const deleteWordById = async (wordId) => {
-  const resp = await fetch(`${API_URL}/words/${wordId}`, {
+  const resp = await fetch(`${API_URL}/words/bywordid/${wordId}`, {
     method: "DELETE",
   });
   if (!resp.ok) throw error;
@@ -239,7 +239,7 @@ export const copySingleWord = async (data) => {
 export const moveSingleWord = async (data) => {
   const resp = await addWord(data);
   if (!resp.ok) throw error;
-  const resp_2 = await fetch(`${API_URL}/words/${data.wordId}`, {
+  const resp_2 = await fetch(`${API_URL}/words/bywordid/${data.wordId}`, {
     method: "DELETE",
   });
   if (!resp_2.ok) throw error;
@@ -294,7 +294,7 @@ export const multiWordsAlert = async (rawArray) => {
 export const deleteMultiWords = async (data) => {
   let resp;
   for (const word of data) {
-    resp = await fetch(`${API_URL}/words/${word.wordId}`, {
+    resp = await fetch(`${API_URL}/words/bywordid/${word.wordId}`, {
       method: "DELETE",
     });
     if (!resp.ok) throw error;

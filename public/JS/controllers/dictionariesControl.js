@@ -22,6 +22,7 @@ import {
 
 import * as pagination from "../models/paginationModel.js";
 import dictionaryContentControl from "../controllers/dictionaryContentControl.js";
+import { isAnyDictionary } from "../models/_controllModel.js";
 
 const dv = new dictionaryView();
 
@@ -35,7 +36,9 @@ const renderDictionaryProcess = async (
     const pageIndex = dv.renderDictionaries(data.array, data.index);
     await setPaginationRendering(pageIndex, dictionaries);
   } else {
+    //dv.renderDictionariesPageHTML()
     dv.DOM.dictionaryList.innerHTML = "Nincsenek még szótáraid!";
+    //document.querySelector("[data-href='/dictionaries']").click();
   }
 };
 
@@ -63,12 +66,10 @@ const controlAddDictionary = async () => {
 
   // 3. Reload page
   showSuccessMessage(dv.DOM, process.data.dictionaryName);
-  setTimeout(async () => {
-    dv.hideAddNewBlock();
-    const dictionaries = await getDictionariesObject();
-    await renderDictionaryProcess(true, dictionaries);
-    await loadDictionariesHandlers();
-  }, 2000);
+
+  //dv.hideAddNewBlock();
+  await controlLoad();
+
 };
 
 const controlSearch = async () => {
@@ -149,6 +150,8 @@ const controlExitEditDictionary = async () => {
 };
 
 export default async function init() {
+
+
   await dv.addHandlerDefDOMelements();
   await controlLoad();
   await dv.handlerShowNewDictionaryPanel(controlNewDictionaryPanel);
@@ -159,6 +162,8 @@ export default async function init() {
   await dv.handlerClearFiltration(controlClearFilter);
   await dv.handlerSortDictionaries(controlSortDictionaries);
   await loadDictionariesHandlers();
+
+
 }
 
 export const loadDictionariesHandlers = async () => {

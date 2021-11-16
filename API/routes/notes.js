@@ -12,7 +12,7 @@ router.get(
     console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();

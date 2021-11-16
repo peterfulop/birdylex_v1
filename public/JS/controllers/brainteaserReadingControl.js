@@ -16,10 +16,8 @@ const controlStartReading = async () => {
   setExcerciseStatus(1);
 
   let reading = await startReading(brv.DOM);
-  console.log(reading);
 
   if (reading.reset && reading.end) {
-    console.log("Újra!");
     controlStartReading();
   }
 };
@@ -29,7 +27,6 @@ const controlResumeToSpeech = async () => {
   let reading = await startReading(brv.DOM);
 
   if (reading.reset && reading.end) {
-    console.log("Újra!");
     controlStartReading();
   }
 };

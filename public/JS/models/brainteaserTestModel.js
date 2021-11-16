@@ -30,7 +30,6 @@ export const showAnswer = (objectDOM, count = true) => {
     objectDOM.helpText.classList.add("fadeOut");
   }, 1000);
 
-  console.log(state.excercise);
 };
 
 export const sendAnswer = async (objectDOM) => {
@@ -73,7 +72,6 @@ export const askSomething = async (objectDOM) => {
     state.excercise.settings.timeIndex == 2 &&
     state.excercise.data.indexPuffer.length == maxNumber
   ) {
-    console.log("restart progress!");
     clearExcercisePuffers();
     maxNumber =
       state.excercise.settings.timeIndex === 0
@@ -86,7 +84,6 @@ export const askSomething = async (objectDOM) => {
     state.excercise.data.endTermin = new Date().toLocaleString();
     state.excercise.data.dictionary = state.excercise.settings.dictionaryName;
     state.excercise.data.dictionaryId = state.excercise.settings.dictionaryId;
-    console.log("Gyakorlás vége!", state.excercise.data);
     return {
       run: false,
     };

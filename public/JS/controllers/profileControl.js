@@ -3,7 +3,6 @@ import ProfileView from "../views/ProfileView.js";
 let pf = new ProfileView();
 
 const submitForm = async (data) => {
-  console.log(data);
 };
 
 const controlNoteControlInit = async () => {

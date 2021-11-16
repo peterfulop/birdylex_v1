@@ -1,7 +1,7 @@
 import View from "./View.js";
-import { renderDictionaryListInput, clearDialogPanels } from '../helper.js';
+import { renderDictionaryListInput, clearDialogPanels, renderNoDataHTML } from '../helper.js';
 import { inputComboField, inputField } from "../components.js";
-import { excerciseTypes, brainteaserTypes, excerciseRunTime } from '../config.js';
+import { excerciseTypes, brainteaserTypes, excerciseRunTime, noDataInputs } from '../config.js';
 
 export default class extends View {
 
@@ -12,7 +12,7 @@ export default class extends View {
 
     async loadPage() {
         this._clear();
-        await this.RenderBrainteasetPageHTML();
+        //await this.RenderBrainteasetPageHTML();
     };
 
 
@@ -34,20 +34,16 @@ export default class extends View {
             brainteaserBackBtn: document.getElementById("brainteaser-back-btn"),
         }
 
-        console.log("Kész a DOM!");
-
     };
 
     async addHandlerRenderTest() {
         this.DOM.setBrainteaserTestBtn.addEventListener("click", async () => {
-            console.log("load test inputs");
             this.showHideBrainteaserInputs(true, brainteaserTypes.test);
         });
     }
 
     async addHandlerRenderReading() {
         this.DOM.setBrainteaserReadingBtn.addEventListener("click", async () => {
-            console.log("load reading inputs");
             this.showHideBrainteaserInputs(true, brainteaserTypes.reading);
         });
     }
@@ -70,14 +66,12 @@ export default class extends View {
 
     async addHandlerRuntimeChange(handler) {
         this.DOM.runtimeNameSelect.addEventListener("change", () => {
-            console.log("addHandlerRuntimeChange");
             handler();
         });
     };
 
     async addHandlerWordCountChange(handler) {
         this.DOM.setCountManual.addEventListener("change", () => {
-            console.log("addHandlerWordCountChange");
             handler();
         });
     };
@@ -88,35 +82,14 @@ export default class extends View {
         });
     };
 
-    // async addHandlerReadingStartSelectmethod(handler) {
-    //     this.DOM.readingStartButton.addEventListener("click", () => {
-    //         handler();
-    //     });
-    // };
-    // async addHandlerReadingStopSelectmethod(handler) {
-    //     this.DOM.readingStopButton.addEventListener("click", () => {
-    //         handler();
-    //     });
-    // };
-    // async addHandlerReadingPauseSelectmethod(handler) {
-    //     this.DOM.readingPauseButton.addEventListener("click", () => {
-    //         this.DOM.readingResumeButton.classList.remove("d-none");
-    //         this.DOM.readingPauseButton.classList.add("d-none");
-    //         handler();
-    //     });
-    // };
-    // async addHandlerReadingResumeSelectmethod(handler) {
-    //     this.DOM.readingResumeButton.addEventListener("click", () => {
-    //         this.DOM.readingResumeButton.classList.add("d-none");
-    //         this.DOM.readingPauseButton.classList.remove("d-none");
-    //         handler();
-    //     });
-    // };
-
-    async RenderBrainteasetPageHTML() {
+    async RenderBrainteasetPageHTML(isAnyWord) {
 
         clearDialogPanels();
-        this._mainContainer.innerHTML = `
+
+        this._mainContainer.innerHTML = renderNoDataHTML(noDataInputs.brainteaserView);
+
+        if (isAnyWord) {
+            this._mainContainer.innerHTML = `
         <div class="d-flex card-menu justify-content-around">
             <div class="card cursor-pointer col-5 card-menu-item">
                 <div class="card-body" id="card-menu-test-btn">
@@ -143,7 +116,10 @@ export default class extends View {
             </div>
         </div>
         `
-        this.loadInputs();
+            this.loadInputs();
+        }
+
+
 
     };
 
@@ -213,43 +189,6 @@ export default class extends View {
             </div>
             `
     };
-
-
-    // renderReadingPage() {
-
-    //     let main = document.getElementById("main-content-box");
-
-    //     main.innerHTML = `
-
-    //         <!--<div class="excercise-header-info m-0 d-flex">
-    //             <div class="m-2">
-    //                 <label id="minutes">00</label>:<label id="seconds">20</label>
-    //             </div>
-    //             <div class="m-2">
-    //                 <span id="number-of-excercise">1</span>/<span id="count-of-numbers">82</span>
-    //             </div>
-    //         </div>
-    //         <div class="dictionary-item-words my-3">
-
-    //             <div class="dictionary-second-word read-active">
-    //                 <p class="text-dark" data-lang="en-GB">This is the first word, what I want to read!</p>
-    //             </div>
-
-    //             <div class="dictionary-second-word">
-    //                 <p class="text-dark" data-lang="en-GB">This is the first word, what I want to read!</p>
-    //             </div>
-
-    //         </div>-->
-    //     `
-
-    //     this.DOM = renderListeningModeControlPanel("#main-content-box");
-
-    //     this.addHandlerDefDOMelements();
-    // };
-
-
-
-    // ///******************************************** */
 
     updateRunTimeCount(wordCount) {
         this.DOM.setCountManual.max = wordCount;

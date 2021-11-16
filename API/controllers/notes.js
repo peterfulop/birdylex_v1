@@ -7,14 +7,18 @@ exports.notes_get_all = (req, res) => {
   const result = db.getNotes(userId);
   result
     .then((data) => {
-      if (data[0]) {
+      if (data) {
         res.status(200).json({
           count: data.length,
           info: "notes",
-          data: data,
+          data,
         });
       } else {
-        res.status(404).json({ message: "No items found!" });
+        res.status(200).json({
+          count: data.length,
+          info: "no result",
+          data,
+        });
       }
     })
     .catch((err) => {

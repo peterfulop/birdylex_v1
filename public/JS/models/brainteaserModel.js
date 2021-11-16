@@ -79,6 +79,5 @@ export const getStateOfExcercise = () => {
 export const setReadingMethod = async (
   param = { cancel: false, pause: false, resume: false }
 ) => {
-  console.log(param);
   startSpeech("", "", param);
 };

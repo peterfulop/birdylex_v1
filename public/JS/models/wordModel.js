@@ -25,10 +25,11 @@ export const getlastAddedWords = async (number) => {
 
 export const controlEqualWord = async (data) => {
   try {
-    const querystring = `dictionaryId=${data.dictionaryId}&word_1=${data.word_1}&word_2=${data.word_2}`;
-    const res = await fetch(`${API_URL}/words/equal/search?${querystring}`, {
+    const querystring = `${data.dictionaryId}/${data.word_1}/${data.word_2}`;
+    const res = await fetch(`${API_URL}/words/equal/${querystring}`, {
       method: "GET",
     });
+
     if (!res.ok) throw error;
     return await res.json();
   } catch (err) {
@@ -38,7 +39,7 @@ export const controlEqualWord = async (data) => {
 
 export const addWord = async (data) => {
   try {
-    const res = await fetch(`${API_URL}/words`, {
+    const res = await fetch(`${API_URL}/words/post`, {
       headers: {
         "Content-type": "application/json",
       },

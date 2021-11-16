@@ -9,7 +9,6 @@ let sup = new SignUpView();
 
 
 export const controlSubmitRegistration = async (data) => {
-    console.log(data);
     const res = await controlEqualUser(data.email);
 
     if (res.data) {

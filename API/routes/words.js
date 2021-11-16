@@ -76,7 +76,8 @@ router.get(
   (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.render("app", { message: res.message });
+      return;
     } else {
       req.body.userId = req.user.unique_id;
       next();

@@ -35,10 +35,10 @@ import {
   await loadVisualisation();
   await pageNavigation();
 
-  //window.addEventListener("popstate", router());
+  window.addEventListener("popstate", router());
+
 
 })();
-
 
 
 

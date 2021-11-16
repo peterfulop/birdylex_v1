@@ -1,6 +1,7 @@
 import { state } from "../state.js";
 import { inputField, inputComboField } from "../components.js";
 import {
+  multiFetch,
   getJSON,
   compareValues,
   sliceArray,
@@ -68,7 +69,6 @@ export const controlInputs = async (objectDOM) => {
   const langSeondary = parseInt(objectDOM.languageSecondary.value);
 
   if (!dictionaryName) {
-    console.log("Minden mezőt tölts ki!!");
     showAlertPanel(
       "#new-dictionary-form-alert",
       "danger",
@@ -107,17 +107,24 @@ export const controlInputs = async (objectDOM) => {
 
 export const addDictionary = async (data) => {
   try {
-    const res = await fetch(`${API_URL}/dictionaries`, {
-      headers: {
-        "Content-type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({
-        name: data.dictionaryName,
-        lang_1: data.langPrimary,
-        lang_2: data.langSeondary,
-      }),
+
+    const res = await multiFetch(`${API_URL}/dictionaries/post`, "POST", {
+      dictionaryName: data.dictionaryName,
+      lang_1: data.langPrimary,
+      lang_2: data.langSeondary,
     });
+    // const res = await fetch(`${API_URL}/dictionaries/post`, {
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     dictionaryName: data.dictionaryName,
+    //     lang_1: data.langPrimary,
+    //     lang_2: data.langSeondary,
+    //   }),
+    // });
+    console.log("postmetod", res);
     if (!res.ok) throw error;
     return res;
   } catch (err) {
@@ -127,9 +134,11 @@ export const addDictionary = async (data) => {
 
 async function isDictionaryNameExists(newName) {
   let searchFor = newName.toLowerCase();
-  const result = await fetch(`${API_URL}/dictionaries/search/${searchFor}`);
-  const data = await result.json();
-  if (data["data"][0]) return true;
+  const result = await multiFetch(`${API_URL}/dictionaries/bydictionary/${searchFor}`);
+  //const result = await fetch(`${API_URL}/dictionaries/bydictionary/${searchFor}`);
+  //const data = await result.json();
+  console.log("Vizsgál:", result.data.data.length);
+  if (result.data.data.length > 0) return true;
   else return false;
 }
 
@@ -174,7 +183,6 @@ export const sortDictionaryList = (objectDOM) => {
 };
 
 export const dictionarySearchByName = (objectDOM) => {
-  console.log("state.filterArray", state.filterArray);
 
   const searchFor = objectDOM.searchDictionaryInput.value.trim();
   objectDOM.searchDictionaryInput.value = searchFor;
@@ -192,7 +200,6 @@ export const dictionarySearchByName = (objectDOM) => {
         data: state.filterArray,
       };
     } else {
-      console.log("nincs renderelés!");
       objectDOM.searchAlert.classList.remove("d-none");
       objectDOM.searchAlert.classList.add("d-flex");
       return {
@@ -200,7 +207,6 @@ export const dictionarySearchByName = (objectDOM) => {
       };
     }
   } else {
-    console.log("üres mező");
     objectDOM.clearfilterBtn.classList.add("d-none");
     objectDOM.searchAlert.classList.add("d-none");
     resetFilteredState();
@@ -235,18 +241,13 @@ export const LoadDeleteDictionary = async (button) => {
 export const deleteDictionary = async () => {
   let dictionaryId = state.activeDictionary[0].id;
 
-  const exists = await getJSON(`${API_URL}/words/search/${dictionaryId}`);
+  const exists = await multiFetch(`${API_URL}/words/bydictionaryid/${dictionaryId}`);
 
-  if (exists["data"].length > 0) {
-    const response = await fetch(`${API_URL}/words/by/${dictionaryId}`, {
-      method: "DELETE",
-    });
+  if (exists.data.count > 0) {
+    const response = await multiFetch(`${API_URL}/words/delete/${dictionaryId}`, "DELETE");
     if (!response.ok) throw error;
   }
-  const resp = await fetch(`${API_URL}/dictionaries/${dictionaryId}`, {
-    method: "DELETE",
-  });
-
+  const resp = await multiFetch(`${API_URL}/dictionaries/delete/${dictionaryId}`, "DELETE");
   if (!resp.ok) throw error;
   return resp;
 };
@@ -319,13 +320,11 @@ export const validateEditDictionary = async (createCopy = false) => {
       status: false,
     };
   }
-  const exists = await getJSON(
-    `${API_URL}/dictionaries/search/${dictionaryName}`
-  );
 
+  const exists = await multiFetch(`${API_URL}/dictionaries/bydictionary/${dictionaryName}`);
   if (
-    (exists["data"].length > 0 && exists["data"][0]["id"] != dictionaryId) ||
-    (createCopy && exists["data"].length > 0)
+    (exists.data.data[0].id && exists.data.data[0].id != dictionaryId) ||
+    (createCopy && exists.data.data[0].id)
   ) {
     showAlertPanel(
       "#edit-dictionary-dialog #dialog-form-alert",
@@ -351,18 +350,14 @@ export const validateEditDictionary = async (createCopy = false) => {
 };
 
 export const editDictionary = async (data) => {
-  const resp = await fetch(`${API_URL}/dictionaries/${data.dictionaryId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      dictionaryId: parseInt(data.dictionaryId),
-      name: data.dictionaryName,
-      lang_1: parseInt(data.langPrimary),
-      lang_2: parseInt(data.langSeondary),
-    }),
+
+  const resp = await multiFetch(`${API_URL}/dictionaries/patch/${data.dictionaryId}`, "PATCH", {
+    dictionaryId: parseInt(data.dictionaryId),
+    dictionaryName: data.dictionaryName,
+    lang_1: parseInt(data.langPrimary),
+    lang_2: parseInt(data.langSeondary),
   });
+
   if (!resp.ok) throw error;
   showAlertPanel(
     "#edit-dictionary-dialog #dialog-form-alert",
@@ -375,6 +370,7 @@ export const editDictionary = async (data) => {
 };
 
 export const createDictionaryCopy = async (data) => {
+
   const res = await addDictionary(data);
   if (!res.ok) throw new Error();
 

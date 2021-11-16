@@ -9,7 +9,7 @@ class DbServicePractice extends DbService {
         const query = `
                 SELECT
                 id,
-                (SELECT dictionaries.dictionary_name from dictionaries where dictionaries.id = practice.fk_dictionary_id) as name,
+                dictionary_name,
                 start_time,
                 end_time,
                 relase_date,
@@ -37,7 +37,7 @@ class DbServicePractice extends DbService {
         const query = `
                 SELECT
                 id,
-                (SELECT dictionaries.dictionary_name from dictionaries where dictionaries.id = practice.fk_dictionary_id) as name,
+                dictionary_name,
                 start_time,
                 end_time,
                 relase_date,
@@ -62,7 +62,7 @@ class DbServicePractice extends DbService {
   // OK! + AUTH
   async insertPractice(
     userId,
-    fk_dictionary_id,
+    dictionary_name,
     start_time,
     end_time,
     question_count,
@@ -72,8 +72,10 @@ class DbServicePractice extends DbService {
     try {
       const dateAdded = new Date();
 
+      console.log("dictionary_name", dictionary_name);
+
       let post = [
-        fk_dictionary_id,
+        dictionary_name,
         start_time,
         end_time,
         dateAdded,
@@ -86,7 +88,7 @@ class DbServicePractice extends DbService {
       else {
         const insertId = await new Promise((resolve, reject) => {
           const query = `INSERT INTO practice
-            (fk_user_id, fk_dictionary_id, start_time, end_time, relase_date, question_count, prompter_count, skipped_count)
+            (fk_user_id, dictionary_name, start_time, end_time, relase_date, question_count, prompter_count, skipped_count)
             VALUES ((select users.id from users where users.unique_id ='${userId}'),?,?,?,?,?,?,?);`;
           connection.query(query, post, (err, result) => {
             if (err) reject(new Error(err.message));
@@ -95,8 +97,8 @@ class DbServicePractice extends DbService {
         });
         return [
           {
-            id: "insertId",
-            fk_dictionary_id: fk_dictionary_id,
+            id: insertId,
+            dictionary_name: dictionary_name,
             start_time: start_time,
             end_time: end_time,
             relase_date: dateAdded,

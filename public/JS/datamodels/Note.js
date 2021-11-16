@@ -1,4 +1,4 @@
-import { getJSON } from "../helper.js";
+import { getJSON, multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
@@ -14,7 +14,7 @@ export class Note extends DataModel {
 
   async loadNotes() {
     try {
-      const data = await getJSON(`${API_URL}/notes`);
+      const data = await multiFetch(`${API_URL}/notes`);
       state.notes = Array.from(data["data"]).map((data) => {
         return new Note(data.id, data.note, data.relase_date);
       });

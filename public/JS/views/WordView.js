@@ -10,18 +10,29 @@ export default class extends View {
     let historyWordsContainer = document.getElementById("history-words");
 
     let contentHTML = "";
-    historyWordsContainer.innerHTML = "";
-    for (const element of state.lastAddedWords) {
-      contentHTML += `
+    historyWordsContainer.innerHTML = `
+    <div class="flex-wrap d-flex">
+      <div class="bubble default history-word-element word-1-version">
+          <span class="history-word-1 d-flex">Nincs még mentett kifejezésed!</span>
+          <span class="history-word-2 d-flex d-none">Adj hozzá új szavakat!</span>
+      </div>
+    </div>
+    `;
+
+    if (state.lastAddedWords.length > 0) {
+      for (const element of state.lastAddedWords) {
+        contentHTML += `
                 <div class="bubble default history-word-element word-1-version">
                     <span class="history-word-1 d-flex">${element.word_1}</span>
                     <span class="history-word-2 d-none">${element.word_2}</span>
                 </div>
             `;
+      }
+      historyWordsContainer.innerHTML = contentHTML;
+      historyWordsContainer.classList.remove("d-block");
+      historyWordsContainer.classList.add("d-flex");
     }
-    historyWordsContainer.innerHTML = contentHTML;
-    historyWordsContainer.classList.remove("d-block");
-    historyWordsContainer.classList.add("d-flex");
+
     this.lastAddedWordHover();
   }
 

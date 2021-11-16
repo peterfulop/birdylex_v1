@@ -26,6 +26,7 @@ const controlBackToPage = async () => {
 const exportExcerciseResult = async () => {
 
     const data = await getDataFromState();
+    console.log(" getDataFromState", data);
     const res = await practiceModel.addPractice(data);
     if (!res.ok) throw new Error();
 

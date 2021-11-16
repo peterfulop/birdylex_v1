@@ -160,7 +160,6 @@ export default class extends View {
   }
 
   loadDataFromHistory(data) {
-    console.log("loadDataFromHistory", data);
     this.DOM.textToSpeech.value = data.text;
     this.DOM.listeningSelectLanguage.value = data.language;
   }

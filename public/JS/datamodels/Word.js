@@ -28,6 +28,8 @@ export class Word extends DataModel {
   async loadWords() {
     try {
       const data = await getJSON(`${API_URL}/words`);
+      console.log("loadWords", data);
+
       state.words = Array.from(data["data"]).map((data) => {
         return new Word(
           data.id,

@@ -69,13 +69,24 @@ export default class extends View {
     };
 
     async renderNotes(data) {
+
         clearDialogPanels();
         let noteListContainer = document.getElementById('note-list-block');
-        noteListContainer.innerHTML = '';
+        noteListContainer.innerHTML = `
+        <div class="notelist bubble note cursor-pointer">
+                <div class="d-flex w-100 text-content align-items-center">
+                    <i class="fas fa-thumbtack"></i>
+                    <span class="ms-2 w-100" title="">Nincs még rögzített feljegyzésed!</span>
+                </div>
+        </div>
+        `
+
         let notelistHTML = '';
 
-        data.sort().reverse().map(note => {
-            notelistHTML += `
+        if (data.length > 0) {
+
+            data.sort().reverse().map(note => {
+                notelistHTML += `
             <div class="pinned notelist bubble note" data-autoID="${note.autoID}" data-dbid="${note.id}">
                     <div class="d-flex w-100 text-content align-items-center">
                         <i class="fas fa-thumbtack"></i>
@@ -89,9 +100,9 @@ export default class extends View {
                     </div>
             </div>
             `
-            noteListContainer.innerHTML = notelistHTML;
-        });
-
+                noteListContainer.innerHTML = notelistHTML;
+            });
+        }
 
         this.getPins();
     };

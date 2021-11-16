@@ -3,7 +3,9 @@ import {
   renderDictionaryListInput,
   startSpeech,
   getLanguageId,
+  renderNoDataHTML
 } from "../helper.js";
+import { noDataInputs } from "../config.js";
 import { state } from "../state.js";
 
 export default class extends View {
@@ -75,27 +77,32 @@ export default class extends View {
   }
 
   async renderAddWordsHTML() {
-    this._mainContainer.innerHTML += `
+
+
+    this._mainContainer.innerHTML = renderNoDataHTML(noDataInputs.addnewView);
+
+
+    if (state.dictionaries.length > 0) {
+      this._mainContainer.innerHTML = `
     <div class="header mb-2">
       <strong class="text-secondary">Új szavak bevitele<strong>
     </div>
     `
-    renderDictionaryListInput(this._mainContainer);
+      renderDictionaryListInput(this._mainContainer);
 
-    let nyelv1 = this.setLanguageName("lang1");
-    let nyelv2 = this.setLanguageName("lang2");
+      let nyelv1 = this.setLanguageName("lang1");
+      let nyelv2 = this.setLanguageName("lang2");
 
 
-
-    this._mainContainer.innerHTML += `
+      this._mainContainer.innerHTML += `
             <div class="add-new-words-input">
                 <div class="col-md-12">
                     <label for="word_1_input" class="form-label"><span id="lang_1_span">${nyelv1}</span> kifejezés</label>
                     <div class="new-word-input-1">
                         <input type="text" class="form-control input-box" id="word_1_input" placeholder="${nyelv1}" required>
                         <button class="btn btn-secondary listening-btn" id="listening-btn-primary" data-langcode="${this.getLanguageCode(
-      "lang1"
-    )}"><i class="fas fa-volume-up"></i></button>
+        "lang1"
+      )}"><i class="fas fa-volume-up"></i></button>
                     </div>
                 </div>
     
@@ -104,8 +111,8 @@ export default class extends View {
                         <div class="new-word-input-2">
                             <input type="text" class="form-control input-box" id="word_2_input" placeholder="${nyelv2}" required>
                             <button class="btn btn-secondary listening-btn" id="listening-btn-secondary" data-langcode="${this.getLanguageCode(
-      "lang2"
-    )}"><i class="fas fa-volume-up"></i></button>
+        "lang2"
+      )}"><i class="fas fa-volume-up"></i></button>
                         </div>
                     </div>
                  </div>
@@ -122,8 +129,16 @@ export default class extends View {
             </div>
         `;
 
-    this.selectedDictionaryChange();
-    this.readSelectedWord();
+      this.selectedDictionaryChange();
+      this.readSelectedWord();
+
+
+    }
+
+
+
+
+
   }
 
   selectedDictionaryChange() {

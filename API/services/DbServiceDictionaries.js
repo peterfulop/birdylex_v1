@@ -154,11 +154,13 @@ class DbServiceDictionaries extends DbService {
       dictionaryId = parseInt(dictionaryId, 10);
       const response = await new Promise((resolve, reject) => {
         const query = `DELETE FROM dictionaries
-        WHERE fk_user_id=(select users.id from users where users.unique_id ='${userId}')
+        WHERE
+        fk_user_id=(select users.id from users where users.unique_id ='${userId}')
         AND
         id=?;`;
         connection.query(query, [dictionaryId], (err, result) => {
           if (err) reject(new Error(err.message));
+          console.log(result);
           resolve(result.affectedRows);
         });
       });

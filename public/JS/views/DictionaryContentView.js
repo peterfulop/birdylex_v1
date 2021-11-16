@@ -505,6 +505,7 @@ export default class extends View {
   }
 
   setAcutalDictionaryHeader(actualDictionary) {
+
     this.DOM.dictionaryNameTitle.innerHTML = `${actualDictionary.dictionary_name} szótár tartalma`;
     this.DOM.dictionaryNameTitle.dataset.dbid = actualDictionary.id;
     const addWordBtn = document.querySelector("[data-href='/addnew']");
@@ -513,9 +514,10 @@ export default class extends View {
     document.getElementById("navigate-to-add").addEventListener("click", () => {
       addWordBtn.click();
       var dbid = this.DOM.dictionaryNameTitle.dataset.dbid;
-      var options = document.querySelector("#dictionary-name-select");
-      var res = Array.from(options).filter((b) => b.dataset.dbid == dbid)[0]
-        .value;
+      var options = document.getElementById("dictionary-name-select");
+      console.log("navigálás után a dbid", dbid);
+      console.log("navigálás után az options", options);
+      var res = Array.from(options).filter((b) => b.dataset.dbid == dbid)[0].value;
       options.value = res;
     });
   }
@@ -536,6 +538,7 @@ export default class extends View {
         }" title="Utolsó módosítás: ${new Date(
           item.last_modified
         ).toLocaleString()}">
+
 
                 <div class="dictionary-item-count">
                     <span>${index + i}.</span>
@@ -618,7 +621,7 @@ export default class extends View {
       `data-lang-index=${languageInfo.langId_2} data-lang-code=${data.lang_2}`
     )}
                     </div>
-                    <small class="m-1 p-1 mb-2 text-muted">Utolsó módosítás: ${new Date(
+      <small class="m-1 p-1 mb-2 text-muted">Utolsó módosítás: ${new Date(
       data.last_modified
     ).toLocaleString()}</small>
 
@@ -636,8 +639,7 @@ export default class extends View {
                     </div>
                     <div class="d-block">
                     <span class="text-secondary">Aktuális szópár:</span>
-                    <p class="text-secondary fw-light mb-1">${data.word_1} - ${data.word_2
-      }</p>
+                    <p class="text-secondary fw-light mb-1">${data.word_1} - ${data.word_2}</p>
                 </div>
                     <div class="d-flex" id="select-dictionary-area"></div>
                     <p class="fw-normal mt-2 m-0 text-danger" id="confirm-question-text">Biztosan <span class="fw-bold" id="confirm-area-text"></span> szeretnéd a szópárt?</p>
@@ -725,14 +727,18 @@ export default class extends View {
 
   removeDictionaryFromList() {
     let options = document.querySelector("#dictionary-name-select");
-    const activeDictionaryDbId = this.DOM.dictionaryNameTitle.dataset.dbid;
 
-    for (const o of options) {
-      if (activeDictionaryDbId == o.dataset.dbid) {
-        options.remove(o.value);
+    if (options.length > 1) {
+      const activeDictionaryDbId = this.DOM.dictionaryNameTitle.dataset.dbid;
+
+      for (const o of options) {
+        if (activeDictionaryDbId == o.dataset.dbid) {
+          options.remove(o.value);
+        }
       }
     }
   }
+
 
   events = {
     save: {

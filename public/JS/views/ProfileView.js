@@ -123,7 +123,7 @@ export default class extends View {
 
     async renderHomePageHTML() {
         this._mainContainer.innerHTML = `
-        <form class="d-block" id="user-data-form">
+        <form class="d-block" id="user-data-form" autocomplete="off">
 
             <div class="header mb-3">
                 <strong class="text-secondary mb-3">Személyes adatok beállítása</strong>
@@ -135,12 +135,12 @@ export default class extends View {
 
                 <div class="d-block w-100 mb-2">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-username">Username</label></div>
-                    <input type="text" class="profile-input form-control px-2 mb-2" id="curr-username" value="username" required>
+                    <input type="text" class="profile-input form-control px-2 mb-2" id="curr-username" value="" autocomplete="off" maxlength="50" required>
                 </div>
 
                 <div class="d-block w-100 mb-3">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-email">Email</label></div>
-                    <input type="email" class="profile-input form-control px-2 mb-2" id="curr-email" value="username@birdylex.com" required>
+                    <input type="email" class="profile-input form-control px-2 mb-2" id="curr-email" value=""  autocomplete="off" required>
                 </div>
 
 
@@ -150,7 +150,7 @@ export default class extends View {
                         <label class="mb-2" for="set-new-pw">Új jelszó</label>
                             <div class="d-flex">
                                 <div class="d-flex profile-input-container w-100">
-                                    <input type="password" class="form-control px-2 mb-2 password-input" id="set-new-pw" data-input-id="0" value="">
+                                    <input type="password" class="form-control px-2 mb-2 password-input" id="set-new-pw" data-input-id="0" maxlength="30">
                                     <div class="show-hide-password-block ms-1">
                                         <input type="checkbox" class="btn-check show-password-btn" autocomplete="off" data-input-id="0" id="show-new-pw" checked="">
                                         <label class="btn btn-outline-listen btn-small password-label" for="show-new-pw" data-input-id="0" id="show-hide-btn">
@@ -165,7 +165,7 @@ export default class extends View {
                         <label class="mb-2" for="set-new-pw-conf">Új jelszó megerősítése</label>
                         <div class="d-flex">
                             <div class="d-flex profile-input-container w-100">
-                                <input type="password" class="form-control px-2 mb-2 password-input" id="set-new-pw-conf" data-input-id="1" value="">
+                                <input type="password" class="form-control px-2 mb-2 password-input" id="set-new-pw-conf" data-input-id="1" maxlength="30">
                                 <div class="show-hide-password-block ms-1">
                                     <input type="checkbox" class="btn-check show-password-btn" autocomplete="off" data-input-id="1" id="show-new-pw-conf" checked="">
                                     <label class="btn btn-outline-listen btn-small password-label" data-input-id="1" for="show-new-pw-conf" id="show-hide-btn">

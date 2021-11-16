@@ -49,7 +49,7 @@ exports.dictionaries_get_dictionaryByName = (req, res) => {
     .then((data) => {
       if (data) {
         res.status(200).json({
-          data: data,
+          data,
         });
       } else {
         res.status(404).json({ message: "Not exists ID!" });

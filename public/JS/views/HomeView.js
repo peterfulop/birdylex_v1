@@ -19,7 +19,7 @@ export default class extends View {
                 <div class="d-block w-100 flex-wrap" id="homepage-note-block">
                     <div class="d-flex input w-100">
                         <div class="form-group w-100">
-                            <input type="email" class="form-control" id="new-pin-input" placeholder="új jegyzet">
+                            <input type="email" class="form-control" id="new-pin-input" placeholder="új jegyzet" maxlength="250">
                         </div>
                         <button type="button" class="btn btn-secondary ms-2" id="fix-pin-button">
                             <i class="fas fa-thumbtack"></i>
@@ -31,7 +31,8 @@ export default class extends View {
     
             <div class="py-2" id="homepage-last-saved-block">
                 <div class="d-flex mb-3"><strong class="text-secondary">Legutóbb mentett kifejezések</strong></div>
-                <div class="d-block flex-wrap" id="history-words"></div>
+                <div class="d-block flex-wrap" id="history-words">
+                </div>
             </div>
 
             <div class="py-1" id="last-exc-block">

@@ -1,7 +1,9 @@
 import View from "./View.js";
 import { inputField, inputComboField } from "../components.js";
-import { renderSearchBar, showDialogPanel } from "../helper.js";
-import { dialogObjects } from "../config.js";
+import { renderSearchBar, showDialogPanel, renderNoDataHTML, clearDialogPanels } from "../helper.js";
+import { dialogObjects, noDataInputs } from "../config.js";
+import { state } from "../state.js";
+import { isAnyDictionary } from "../models/_controllModel.js";
 
 export default class extends View {
   constructor(params) {
@@ -102,6 +104,7 @@ export default class extends View {
     });
   }
 
+
   async handlerCerateNewDictionary(handler) {
     this.DOM.createNewForm.onsubmit = function (event) {
       event.preventDefault();
@@ -111,10 +114,11 @@ export default class extends View {
 
   async handlerHideAddNewDictionaryBlock() {
     this.DOM.createNewCloseBtn.addEventListener("click", () => {
-      this.hideAddNewBlock();
+      //this.hideAddNewBlock();
+      document.querySelector("[data-href='/dictionaries']").click();
     });
   }
-  f
+
   async handlerSortDictionaries(handler) {
     this.DOM.sortAplhaBtn.addEventListener("click", () => {
       handler();
@@ -148,7 +152,6 @@ export default class extends View {
     for (const button of deleteButtons) {
       button.addEventListener("click", () => {
         handler(button);
-        console.log("handlerLoadDeleteDictionary");
       });
     }
   }
@@ -160,7 +163,6 @@ export default class extends View {
     for (const button of editButtons) {
       button.addEventListener("click", () => {
         handler(button);
-        console.log("handlerLoadEditDictionary");
       });
     }
   }
@@ -170,7 +172,6 @@ export default class extends View {
     for (const button of openButtons) {
       button.addEventListener("click", () => {
         handler(button);
-        console.log("handlerOpenDictionary");
       });
     }
   }
@@ -179,8 +180,9 @@ export default class extends View {
     const acceptBtn = document
       .querySelector("#delete-dictionary-dialog")
       .querySelector("#dialogAcceptButton");
-    acceptBtn.addEventListener("click", () => {
+    acceptBtn.addEventListener("click", async () => {
       handler();
+      await clearDialogPanels();
     });
   }
 
@@ -227,54 +229,64 @@ export default class extends View {
   }
 
   renderDictionariesPageHTML() {
-    document.querySelector(".main-content").innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-3">
-            <strong class="text-secondary" id="main-content-title">Szótárak listája</strong>
-            </div>
-              ${this.renderNewDictionaryMenu()}
-            <div class="dictionary-list-block" id="dictionaries-block">
-              ${renderSearchBar()}
 
+    const isAny = isAnyDictionary();
+
+    document.querySelector(".main-content").innerHTML = `
+
+      <div class="portable-container ${isAny ? "d-none" : "d-block"}" id="${isAny ? "w" : "dictionaries-block"}">
+        ${renderNoDataHTML(noDataInputs.dictionaryView, `${isAny ? "" : "new-dictionary-btn"}`, false)}
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center ${isAny ? "mb-3" : ""}">
+        <strong class="text-secondary ${isAny ? "d-block" : "d-none"}" id="main-content-title">Szótárak listája</strong>
+            </div>
+            ${this.renderNewDictionaryMenu(isAny)}
+            <div class="dictionary-list-block ${isAny ? "d-block" : "d-none"}" id="${isAny ? "dictionaries-block" : "a"}">
+            <div class="${isAny ? "d-flex" : "d-none"}">${renderSearchBar()}</div>
               <div class="dictionary-list-header d-flex align-items-center border-bottom border-white py-2">
 
                 <div class="d-flex w-100 justify-content-between" style="margin-top:5px">
 
-                  <div class="d-flex">
+                  <div class="${isAny ? "d-flex" : "d-none"}">
                     <input type="checkbox" class="btn-check" id="sort-alpha-check" autocomplete="off" checked="">
                     <label class="btn btn-sm btn-outline-listen mw-50" id="sort-alpha-btn" for="sort-alpha-check" title="Rendezés"><i class="fas fa-sort-alpha-up" id="sort-alpha-icon"></i></label>
                   </div>
 
-                  <div class="d-flex add-new-block" id="new-dictionary-btn">
-                    <p class="m-0 me-2">Új szótár!</p>
-                    <i class="fas fa-plus-square" id="add-button"></i>
+                  <div class="add-new-block" id="${isAny ? "new-dictionary-btn" : "b"}">
+                    <p class="m-0 me-2 ${isAny ? "d-flex" : "d-none"}">Új szótár!</p>
+                    <i class="fas fa-plus-square ${isAny ? "d-flex" : "d-none"}" id="add-button"></i>
                   </div>
 
                 </div>
               </div>
-
-                <div class="dictionary-list-items p-2" id="dictionary-list-items">
+                <div class="dictionary-list-items p-2 ${isAny ? "d-block" : "d-none"}" id="dictionary-list-items">
                 </div>
             </div>
     
-            <div class="dictionary-item-list-pagination mt-2 d-flex align-items-center justify-content-between" id="pagination-footer">
+            <div class="dictionary-item-list-pagination mt-2 align-items-center justify-content-between ${isAny ? "d-flex" : "d-none"}" id="pagination-footer">
                 <div id="counter-block">
                 </div>
                 <div id="pagination-block">
                 </div>
-            </div>
-        `;
-    this.renderSpinner("#dictionary-list-items", "info");
+            </div>`;
+
+    //if (isAny) this.renderSpinner("#dictionary-list-items", "info");
+
+
+
   }
 
-  renderNewDictionaryMenu() {
+  renderNewDictionaryMenu(isAny) {
     return `<div class="view-menu-bar-create">
                 <div class="d-flex flex-col justify-content-center" id="new-dictionary-alert">
                 </div>
-                <div class="create-new-dictionary display-none mb-3" id="create-new-dictionary-block"">
-                    <div class="create-new-block-form w-100">
-                        <form id="new-dictionary-form">
+                <div class="create-new-dictionary display-none mb-3" id="create-new-dictionary-block">
+                <h5 class="${!isAny ? "d-block" : "d-none"}"> Szótár létrehozása</h5>
+      <div class="create-new-block-form w-100">
+        <form id="new-dictionary-form">
 
-      ${inputField(
+          ${inputField(
       "dictionary-name-input",
       "Az új szótár neve:",
       "dictionary-name",
@@ -282,32 +294,32 @@ export default class extends View {
       "szótár"
     )}
 
-        <div class="row">
-        ${inputComboField(
+          <div class="row">
+            ${inputComboField(
       "dictionary-language-primary",
       "Elsődleges nyelv:",
       "col-sm-6"
     )}
-                                    ${inputComboField(
+            ${inputComboField(
       "dictionary-language-secondary",
       "Elsődleges nyelv:",
       "col-sm-6"
     )}
-                                </div>
-                                <div id="new-dictionary-form-alert"></div>
+          </div>
+          <div id="new-dictionary-form-alert"></div>
 
-                                <div class="row create-new-block-buttons mt-3" id="create-dictionary-buttons">
-                                    <div class="col-sm-3">
-                                        <button type="button" class="btn btn-secondary w-100 mb-2" id="create-new-close">Vissza</button>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <button type="submit" class="btn btn-success w-100 mb-2" id="create-dictionary-button">Létrehozás</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                </div>
-            </div>`;
+          <div class="row create-new-block-buttons mt-3" id="create-dictionary-buttons">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary w-100 mb-2" id="create-new-close">Vissza</button>
+            </div>
+            <div class="col-sm-9">
+              <button type="submit" class="btn btn-success w-100 mb-2" id="create-dictionary-button">Létrehozás</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    </div>`;
   }
 
   renderDictionaries(renderArray, index) {
@@ -316,7 +328,7 @@ export default class extends View {
 
     renderArray.map((dictionary, i) => {
       this.DOM.dictionaryList.innerHTML += `
-                <div id="dictionary-list-item" class="d-flex py-2 justify-content-between dictionary-list-item border-bottom">
+      <div id="dictionary-list-item" class="d-flex py-2 justify-content-between dictionary-list-item border-bottom">
 
                     <div class="d-flex col-12 col-sm-8 col-xl-8 align-items-center justify-content-center justify-content-sm-start my-sm-0 my-2 px-0 dictionary-list-item-details" id="dictionary-list-item-details">
                             <i class="fas fa-bookmark d-none d-sm-flex mx-2"></i>
@@ -337,7 +349,7 @@ export default class extends View {
 
                     </div>
                 </div>
-            `;
+      `;
       indexPuffer = index + i;
     });
 

@@ -16,7 +16,11 @@ exports.words_get_all = (req, res) => {
           data: data,
         });
       } else {
-        res.status(404).json({ message: "Not exists ID!" });
+        res.status(200).json({
+          count: data.length,
+          info: "no result",
+          data: data,
+        });
       }
     })
     .catch((err) => {
