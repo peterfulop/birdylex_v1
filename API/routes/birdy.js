@@ -10,7 +10,7 @@ router.use('/', isLoggedIn, (req, res) => {
     } else {
         console.log("main ERROR");
         console.log("response message:", res.message);
-        res.render("login", { message: res.message });
+        res.render("app", { message: res.message });
     }
 });
 

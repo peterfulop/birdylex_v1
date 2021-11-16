@@ -13,7 +13,7 @@ const controlSubmit = async () => {
 
     // 1) compare inputs with db
     let res = await controlEqualWord(data);
-    if (res.count != 0) { showAlertPanel('#alert-block', "warning", "Hiba!", " A szópár már létezik az adott szótárban!", 0); return; };
+    if (res.data.count != 0) { showAlertPanel('#alert-block', "warning", "Hiba!", " A szópár már létezik az adott szótárban!", 0); return; };
 
     // 2) send data to db
     res = await addWord(data);
@@ -28,12 +28,11 @@ const controlSubmit = async () => {
 
 export default async function init() {
 
-    let isAny = isAnyDictionary();
-    anv.renderAddWordsHTML(isAny);
-
+    const isAny = isAnyDictionary();
     if (isAny) {
         anv.addHandlerResetInputs();
         anv.addHandlerChangeInputValues();
         anv.addHandlerSubmitWords(controlSubmit);
     }
+
 }

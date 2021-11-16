@@ -11,7 +11,7 @@ router.get(
   (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();
@@ -27,7 +27,7 @@ router.get(
   (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();
@@ -43,7 +43,7 @@ router.post(
   (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();

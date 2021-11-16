@@ -9,7 +9,6 @@ router.get(
   "/",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -26,10 +25,10 @@ router.get(
   "/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
+    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();
@@ -43,10 +42,10 @@ router.post(
   "/post",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
+    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();
@@ -60,10 +59,10 @@ router.patch(
   "/patch/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
+    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();
@@ -77,10 +76,10 @@ router.delete(
   "/delete/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
+    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
-      res.render("login", { message: res.message });
+      res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
       next();

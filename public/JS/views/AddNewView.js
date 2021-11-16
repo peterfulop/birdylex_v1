@@ -7,6 +7,7 @@ import {
 } from "../helper.js";
 import { noDataInputs } from "../config.js";
 import { state } from "../state.js";
+import { isAnyDictionary } from "../models/_controllModel.js";
 
 export default class extends View {
   constructor(params) {
@@ -81,8 +82,9 @@ export default class extends View {
 
     this._mainContainer.innerHTML = renderNoDataHTML(noDataInputs.addnewView);
 
+    const isAny = isAnyDictionary();
 
-    if (state.dictionaries.length > 0) {
+    if (isAny) {
       this._mainContainer.innerHTML = `
     <div class="header mb-2">
       <strong class="text-secondary">Új szavak bevitele<strong>
@@ -134,10 +136,6 @@ export default class extends View {
 
 
     }
-
-
-
-
 
   }
 

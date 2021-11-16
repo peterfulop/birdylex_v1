@@ -2,7 +2,6 @@ import { state } from "../state.js";
 import { inputField, inputComboField } from "../components.js";
 import {
   multiFetch,
-  getJSON,
   compareValues,
   sliceArray,
   showAlertPanel,
@@ -113,17 +112,7 @@ export const addDictionary = async (data) => {
       lang_1: data.langPrimary,
       lang_2: data.langSeondary,
     });
-    // const res = await fetch(`${API_URL}/dictionaries/post`, {
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     dictionaryName: data.dictionaryName,
-    //     lang_1: data.langPrimary,
-    //     lang_2: data.langSeondary,
-    //   }),
-    // });
+
     console.log("postmetod", res);
     if (!res.ok) throw error;
     return res;
@@ -135,8 +124,6 @@ export const addDictionary = async (data) => {
 async function isDictionaryNameExists(newName) {
   let searchFor = newName.toLowerCase();
   const result = await multiFetch(`${API_URL}/dictionaries/bydictionary/${searchFor}`);
-  //const result = await fetch(`${API_URL}/dictionaries/bydictionary/${searchFor}`);
-  //const data = await result.json();
   console.log("Vizsgál:", result.data.data.length);
   if (result.data.data.length > 0) return true;
   else return false;
@@ -156,12 +143,10 @@ export const showSuccessMessage = (objectDOM, dictionaryName) => {
 export const setFlagIcons = (objectDOM) => {
   objectDOM.languagePrimary.addEventListener("change", (event) => {
     let searchIcon = state.languages.filter((e) => e.id == event.target.value);
-    //objectDOM.iconPrimary.src = searchIcon[0].icon;
   });
 
   objectDOM.languageSecondary.addEventListener("change", (event) => {
     let searchIcon = state.languages.filter((e) => e.id == event.target.value);
-    //objectDOM.iconSecondary.src = searchIcon[0].icon;
   });
 };
 
@@ -244,6 +229,7 @@ export const deleteDictionary = async () => {
   const exists = await multiFetch(`${API_URL}/words/bydictionaryid/${dictionaryId}`);
 
   if (exists.data.count > 0) {
+    console.log("Vannak szavak is a szótárban!");
     const response = await multiFetch(`${API_URL}/words/delete/${dictionaryId}`, "DELETE");
     if (!response.ok) throw error;
   }
@@ -322,9 +308,13 @@ export const validateEditDictionary = async (createCopy = false) => {
   }
 
   const exists = await multiFetch(`${API_URL}/dictionaries/bydictionary/${dictionaryName}`);
+
+  let existsCount = exists.data.data.length;
+  let existsId = exists.data.data[0].id;
+
   if (
-    (exists.data.data[0].id && exists.data.data[0].id != dictionaryId) ||
-    (createCopy && exists.data.data[0].id)
+    (existsCount > 0 && existsCount > 0 && existsId != dictionaryId) ||
+    (createCopy && existsId)
   ) {
     showAlertPanel(
       "#edit-dictionary-dialog #dialog-form-alert",

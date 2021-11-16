@@ -1,4 +1,4 @@
-import { getJSON } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
@@ -28,8 +28,9 @@ export class Practice extends DataModel {
 
   async loadPractices() {
     try {
-      const data = await getJSON(`${API_URL}/practice/limit/3`);
-      state.practiceHistory = Array.from(data["data"]).map((data) => {
+
+      const data = await multiFetch(`${API_URL}/practice/limit/3`);
+      state.practiceHistory = Array.from(data.data.data).map((data) => {
         return new Practice(
           data.id,
           data.dictionary_name,

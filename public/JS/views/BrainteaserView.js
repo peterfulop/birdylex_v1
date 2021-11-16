@@ -119,8 +119,6 @@ export default class extends View {
             this.loadInputs();
         }
 
-
-
     };
 
 
@@ -130,9 +128,16 @@ export default class extends View {
         this.renderExcerciseTypeInput(brainteaserInputs);
         this.renderExcerciseRuntimeInput(brainteaserInputs);
         this.renderBrainTeaserStartButton(brainteaserInputs);
+        this.disableEmptyDictionaries();
     }
 
 
+    disableEmptyDictionaries() {
+        let options = Array.from(document.querySelectorAll("#dictionary-name-select")[0].options);
+        options.forEach(o => {
+            if (o.dataset.count == 0) o.disabled = "disabled";
+        });
+    }
 
     showHideBrainteaserInputs(show, type) {
         if (show) {

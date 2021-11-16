@@ -160,7 +160,6 @@ class DbServiceDictionaries extends DbService {
         id=?;`;
         connection.query(query, [dictionaryId], (err, result) => {
           if (err) reject(new Error(err.message));
-          console.log(result);
           resolve(result.affectedRows);
         });
       });

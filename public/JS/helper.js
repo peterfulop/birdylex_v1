@@ -64,6 +64,7 @@ export const multiFetch = async function (url, method = "GET", body = "") {
     console.log("multiFetch", res);
     if (res.redirected) {
       window.location.href = res.url;
+      return;
     }
     const data = await res.json();
     return {
@@ -424,7 +425,7 @@ export function renderDictionaryListOptions() {
   const content = document.querySelector("#dictionary-name-select");
   content.innerHTML = "";
   Object.values(state.dictionaries).map((item, i) => {
-    content.innerHTML += `<option value = "${i}" data-dictid="${item.autoID}" data-dbid="${item.id}" data-dictid="${item.id}" data-lang1="${item.lang_prim}" data-lang2="${item.lang_sec}">${item.dictionary_name}</option>`;
+    content.innerHTML += `<option value = "${i}" data-dictid="${item.autoID}" data-dbid="${item.id}" data-count="${item.lexicon.length}" data-dictid="${item.id}" data-lang1="${item.lang_prim}" data-lang2="${item.lang_sec}">${item.dictionary_name}</option>`;
   });
 }
 

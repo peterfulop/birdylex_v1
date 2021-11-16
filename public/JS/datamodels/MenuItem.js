@@ -1,4 +1,4 @@
-import { getJSON } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
@@ -21,8 +21,8 @@ export class MenuItem extends DataModel {
 
   async loadMainMenu() {
     try {
-      let data = await getJSON(`${API_URL}/menu`);
-      state.generalSettings.dashboardMenuItems = Array.from(data["data"]).map(
+      let data = await multiFetch(`${API_URL}/menu`);
+      state.generalSettings.dashboardMenuItems = Array.from(data.data.data).map(
         (data) => {
           return new MenuItem(data.icon, data.text, data.position, data.view);
         }

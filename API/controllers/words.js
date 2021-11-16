@@ -157,6 +157,8 @@ exports.words_post_word = (req, res) => {
     lang_1,
     lang_2
   );
+  console.log("words_post_word", result);
+
   result
     .then((data) => {
       if (data) {

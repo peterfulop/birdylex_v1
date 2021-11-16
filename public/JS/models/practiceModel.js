@@ -1,12 +1,12 @@
 import { state } from "../state.js";
 import { API_URL } from "../config.js";
-import { getJSON } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { Practice } from "../datamodels/Practice.js";
 
 export const getPractices = async (number) => {
   try {
-    const data = await getJSON(`${API_URL}/practice/limit/${number}`);
-    state.practiceHistory = Array.from(data.data).map((data) => {
+    const data = await multiFetch(`${API_URL}/practice/limit/${number}`);
+    state.practiceHistory = Array.from(data.data.data).map((data) => {
       return new Practice(
         data.id,
         data.dictionary_name,
@@ -25,13 +25,8 @@ export const getPractices = async (number) => {
 
 export const addPractice = async (data) => {
   try {
-    const res = await fetch(`${API_URL}/practice/post`, {
-      headers: {
-        "Content-type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    const res = await multiFetch(`${API_URL}/practice/post`, "POST", data);
+
     if (!res.ok) throw error;
     return res;
   } catch (err) {

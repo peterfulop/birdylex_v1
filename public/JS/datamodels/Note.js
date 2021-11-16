@@ -1,4 +1,4 @@
-import { getJSON, multiFetch } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";

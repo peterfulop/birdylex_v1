@@ -6,6 +6,7 @@ import {
   fillDialogPanel,
   showAlertPanel,
   getLanguageId,
+  multiFetch
 } from "../helper.js";
 import { dialogObjects } from "../config.js";
 import {
@@ -205,27 +206,21 @@ export const isFiltered = () => {
 /// Single Edit Methods
 
 export const updateWordById = async (data) => {
-  const resp = await fetch(`${API_URL}/words/patch/${data.wordId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      wordId: data.wordId,
-      word_1: data.word_1,
-      word_2: data.word_2,
-      lang_1: parseInt(data.lang_1),
-      lang_2: parseInt(data.lang_2),
-    }),
+
+  const resp = await multiFetch(`${API_URL}/words/patch/${data.wordId}`, "PATCH", {
+    wordId: data.wordId,
+    word_1: data.word_1,
+    word_2: data.word_2,
+    lang_1: parseInt(data.lang_1),
+    lang_2: parseInt(data.lang_2),
   });
+
   if (!resp.ok) throw error;
   return resp;
 };
 
 export const deleteWordById = async (wordId) => {
-  const resp = await fetch(`${API_URL}/words/bywordid/${wordId}`, {
-    method: "DELETE",
-  });
+  const resp = await multiFetch(`${API_URL}/words/bywordid/${wordId}`, "DELETE");
   if (!resp.ok) throw error;
   return resp;
 };
@@ -239,9 +234,7 @@ export const copySingleWord = async (data) => {
 export const moveSingleWord = async (data) => {
   const resp = await addWord(data);
   if (!resp.ok) throw error;
-  const resp_2 = await fetch(`${API_URL}/words/bywordid/${data.wordId}`, {
-    method: "DELETE",
-  });
+  const resp_2 = await multiFetch(`${API_URL}/words/bywordid/${data.wordId}`, "DELETE");
   if (!resp_2.ok) throw error;
   return resp;
 };
@@ -294,9 +287,7 @@ export const multiWordsAlert = async (rawArray) => {
 export const deleteMultiWords = async (data) => {
   let resp;
   for (const word of data) {
-    resp = await fetch(`${API_URL}/words/bywordid/${word.wordId}`, {
-      method: "DELETE",
-    });
+    resp = await multiFetch(`${API_URL}/words/bywordid/${word.wordId}`, "DELETE");
     if (!resp.ok) throw error;
   }
   return resp;
@@ -341,7 +332,7 @@ export const validateEditWord = async (inputData) => {
     };
   }
   const isEqual = await controlEqualWord(inputData);
-  if (isEqual.count > 0) {
+  if (isEqual.data.count > 0) {
     if (isEqual.data[0].id != inputData.wordId) {
       showAlertPanel(
         "#edit-word-dialog #dialog-form-alert",
@@ -389,7 +380,7 @@ export const validateCopyWord = async (
 
   const isEqual = await controlEqualWord(inputData);
 
-  if (isEqual.count > 0) {
+  if (isEqual.data.count > 0) {
     if (showAlert) {
       showAlertPanel(
         `${modalId} #dialog-form-alert`,

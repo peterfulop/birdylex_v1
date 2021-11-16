@@ -1,4 +1,4 @@
-import { getJSON } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
@@ -27,10 +27,9 @@ export class Word extends DataModel {
 
   async loadWords() {
     try {
-      const data = await getJSON(`${API_URL}/words`);
-      console.log("loadWords", data);
+      const data = await multiFetch(`${API_URL}/words`);
 
-      state.words = Array.from(data["data"]).map((data) => {
+      state.words = Array.from(data.data.data).map((data) => {
         return new Word(
           data.id,
           data.dictionary_id,

@@ -1,4 +1,4 @@
-import { getJSON } from "../helper.js";
+import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
@@ -27,8 +27,8 @@ export class Dictionary extends DataModel {
 
   async loadDictionaries() {
     try {
-      let data = await getJSON(`${API_URL}/dictionaries`);
-      state.dictionaries = Array.from(data["data"]).map((data) => {
+      let data = await multiFetch(`${API_URL}/dictionaries`);
+      state.dictionaries = Array.from(data.data.data).map((data) => {
         return new Dictionary(
           data.id,
           data.dictionary_name,

@@ -506,19 +506,23 @@ export default class extends View {
 
   setAcutalDictionaryHeader(actualDictionary) {
 
-    this.DOM.dictionaryNameTitle.innerHTML = `${actualDictionary.dictionary_name} szótár tartalma`;
+    this.DOM.dictionaryNameTitle.innerHTML = `${actualDictionary.dictionary_name} tartalma`;
     this.DOM.dictionaryNameTitle.dataset.dbid = actualDictionary.id;
-    const addWordBtn = document.querySelector("[data-href='/addnew']");
 
     // SET Dictionary option!
+    this.setOptionValue();
+
+  }
+
+  setOptionValue() {
+
+    const addWordBtn = document.querySelector("[data-href='/addnew']");
     document.getElementById("navigate-to-add").addEventListener("click", () => {
       addWordBtn.click();
       var dbid = this.DOM.dictionaryNameTitle.dataset.dbid;
       var options = document.getElementById("dictionary-name-select");
-      console.log("navigálás után a dbid", dbid);
-      console.log("navigálás után az options", options);
-      var res = Array.from(options).filter((b) => b.dataset.dbid == dbid)[0].value;
-      options.value = res;
+      const index = Array.from(options).filter((b) => b.dataset.dbid == dbid)[0].value;
+      options.value = index;
     });
   }
 

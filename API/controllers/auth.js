@@ -9,7 +9,7 @@ exports.login = async (req, res) => {
     const result = db.loginUser(email, password);
 
     result.then((data) => {
-        console.log(data);
+        //console.log(data);
         res.cookie("birdylexlogin", data.token, data.cookieOptions);
         res.status(200).json({
             message: data.message,
@@ -25,7 +25,7 @@ exports.register = (req, res) => {
 
     const result = db.registerUser(name, email, password, passwordconfirm);
     result.then((data) => {
-        console.log(data);
+        //console.log(data);
         res.status(200).json({
             data,
         });
