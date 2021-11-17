@@ -8,4 +8,8 @@ router.use('/register', authController.register);
 
 router.use('/logout', authController.logout);
 
+
+
+
+
 module.exports = router;

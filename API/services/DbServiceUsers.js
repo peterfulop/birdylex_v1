@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 class DbServiceUsers extends DbService {
+
   async loginUser(email, password) {
     try {
       if (!email || !password) {
@@ -65,6 +66,35 @@ class DbServiceUsers extends DbService {
     }
   }
 
+  async authUser(email, password) {
+    try {
+
+      const response = await new Promise((resolve, reject) => {
+        const query = `SELECT * FROM users WHERE email ='${email}';`;
+        connection.query(query, (err, result) => {
+          if (err) reject(new Error(err.message));
+          if (result) resolve(result);
+        });
+      });
+
+      const user = response[0];
+
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return {
+          status: false,
+          message: "A jelszó nem megfelelő, kérlek próbáld újra!",
+        };
+      }
+      return {
+        status: true,
+        user,
+      };
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   async registerUser(name, email, password, passwordconfirm) {
     try {
       if (!name || !email || !password || !passwordconfirm) {
@@ -108,7 +138,7 @@ class DbServiceUsers extends DbService {
         if (response.length > 0) {
           return {
             status: false,
-            message: "That email is allready in use!",
+            message: "Az emailcím már használatban van!",
           };
         } else {
           try {
@@ -138,6 +168,110 @@ class DbServiceUsers extends DbService {
             } else {
               throw new Error();
             }
+          } catch (error) {
+            console.log(error);
+            return {
+              status: false,
+              message: "Szerver hiba!",
+            };
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        status: false,
+        message: "Szerver hiba!",
+      };
+    }
+  }
+
+  async updateUser(userId, name, email, isNew, password, passwordconfirm, oldpassword, avatar) {
+    try {
+      if (!name || !email) {
+        return {
+          status: false,
+          message: "Bizonyos mezők kitöltése kötelező!",
+        };
+      }
+      if (
+        this.sanitizeHtml(name).length < 5 ||
+        this.sanitizeHtml(name).length > 50
+      ) {
+        console.log("A felhasználónév hossza 5 és 50 karakter között legyen!");
+        return {
+          status: false,
+          message: "A felhasználónév hossza 5 és 50 karakter között legyen!",
+        };
+      }
+
+      // Szükséges jelszó változtatás?! 
+      if (isNew && password.length < 6 || password.length > 50) {
+        console.log("A jelszó legalább 6 karakter hosszúságú legyen!");
+        return {
+          status: false,
+          message: "A jelszó legalább 6 karakter hosszúságú legyen!",
+        };
+      }
+      if (isNew && password !== passwordconfirm) {
+        console.log("A jelszavak nem egyeznek!");
+        return {
+          status: false,
+          message: "A jelszavak nem egyeznek!",
+        };
+      }
+
+      else {
+        const response = await new Promise((resolve, reject) => {
+          const query = `SELECT email FROM users
+          where email = '${email}' AND unique_id !='${userId}';`;
+          connection.query(query, (err, result) => {
+            if (err) reject(new Error(err.message));
+            if (result) resolve(result);
+          });
+        });
+        if (response.length > 0) {
+          return {
+            status: false,
+            message: "Az emailcím már használatban van!",
+          };
+        } else {
+          try {
+
+            let hashedPassword;
+
+            if (password) {
+              hashedPassword = await bcrypt.hash(password, 8);
+            } else {
+              hashedPassword = oldpassword;
+            }
+
+
+            name = this.sanitizeHtml(name);
+            email = this.sanitizeHtml(email);
+            password = hashedPassword;
+            avatar = "#";
+
+
+            const response = await new Promise((resolve, reject) => {
+              const query = `UPDATE users SET name='${name}', email='${email}', password='${password}', avatar='${avatar}' WHERE unique_id ='${userId}';`;
+              connection.query(query, (error, result) => {
+                if (error) {
+                  console.log(error);
+                }
+                if (result) resolve(result.affectedRows);
+              });
+
+            });
+            if (response > 0) {
+              return {
+                status: true,
+                message: "A módosítás sikeres volt!",
+              };
+            } else {
+              throw new Error();
+            }
+
           } catch (error) {
             console.log(error);
             return {

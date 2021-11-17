@@ -61,7 +61,6 @@ export const multiFetch = async function (url, method = "GET", body = "") {
   try {
     const res = await Promise.race([fetch(url, object), timeout(TIMEOUT_SEC)]);
     if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);
-    console.log("multiFetch", res);
     if (res.redirected) {
       window.location.href = res.url;
       return;

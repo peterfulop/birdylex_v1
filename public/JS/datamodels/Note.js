@@ -15,7 +15,7 @@ export class Note extends DataModel {
   async loadNotes() {
     try {
       const data = await multiFetch(`${API_URL}/notes`);
-      state.notes = Array.from(data["data"]).map((data) => {
+      state.notes = Array.from(data.data).map((data) => {
         return new Note(data.id, data.note, data.relase_date);
       });
     } catch (error) {

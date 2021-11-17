@@ -9,7 +9,6 @@ exports.login = async (req, res) => {
     const result = db.loginUser(email, password);
 
     result.then((data) => {
-        //console.log(data);
         res.cookie("birdylexlogin", data.token, data.cookieOptions);
         res.status(200).json({
             message: data.message,
@@ -22,10 +21,8 @@ exports.login = async (req, res) => {
 
 exports.register = (req, res) => {
     const { name, email, password, passwordconfirm } = req.body;
-
     const result = db.registerUser(name, email, password, passwordconfirm);
     result.then((data) => {
-        //console.log(data);
         res.status(200).json({
             data,
         });
@@ -46,6 +43,8 @@ exports.isLoggedIn = async (req, res, next) => {
                     email: data.user.email,
                     registered: new Date(data.user.registered).toLocaleString(),
                     last_login: new Date(data.user.last_login).toLocaleString(),
+                    avatar: data.user.avatar,
+                    password: data.user.password
                 };
                 return next();
             }

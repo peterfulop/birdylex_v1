@@ -1,24 +1,25 @@
+import { getUserData, editProfile } from "../models/profileModel.js";
 import ProfileView from "../views/ProfileView.js";
 
 let pf = new ProfileView();
 
-const submitForm = async (data) => {
+const submitForm = async () => {
+  const data = pf.grabUserInputs();
+  const res = await editProfile(data);
 };
 
-const controlNoteControlInit = async () => {
-  await noteControlInit();
+const fillInputsWithCurrData = async () => {
+  const userData = getUserData();
+  pf.loadUserData(userData);
 };
 
-const controlPracticeControlInit = async () => {
-  await practiceControlInit();
-};
 
-const controlWordControlInit = async () => {
-  await wordControlInit();
-};
+
 
 export default async function init() {
   pf.addHandlerDefDOMelements();
+  fillInputsWithCurrData();
+
   pf.addHandlerSelectFile();
   pf.addHandlerRemoveFile();
   pf.addHandlerShowHidePasswords();

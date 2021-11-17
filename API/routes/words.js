@@ -9,7 +9,6 @@ router.get(
   "/",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");

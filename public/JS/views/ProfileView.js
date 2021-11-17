@@ -24,8 +24,11 @@ export default class extends View {
     async addHandlerDefDOMelements() {
         this.DOM = {
             userForm: document.getElementById("user-data-form"),
-            userNewName: document.getElementById("curr-username"),
-            userNewEmail: document.getElementById("curr-email"),
+            userName: document.getElementById("curr-username"),
+            userEmail: document.getElementById("curr-email"),
+            avatar: document.getElementById("user-avatar"),
+            registered: document.getElementById("registered-date"),
+            lastlogin: document.getElementById("last-login-date"),
             userNewPw: document.getElementById("set-new-pw"),
             userNewPwConf: document.getElementById("set-new-pw-conf"),
             userCurrPw: document.getElementById("set-curr-pw"),
@@ -71,7 +74,9 @@ export default class extends View {
         this.DOM.submitModifyBtn.addEventListener("click", async () => {
             hideAlertPanel("#edit-profil-form-alert");
             resetInputValidation([this.DOM.userNewPw, this.DOM.userNewPwConf]);
-
+            [this.DOM.showNewPw, this.DOM.showNewConfPw, this.DOM.showCurrPw].forEach(btn => {
+                if (!btn.checked) btn.click();
+            });
             let required = document.querySelectorAll("[required]");
             if (
                 this.DOM.userNewPw.value.trim().length != 0 ||
@@ -108,17 +113,29 @@ export default class extends View {
                 };
             }
             handler(this.grabUserInputs());
+
         });
     }
 
     grabUserInputs() {
         return {
-            username: this.DOM.userNewName.value,
-            email: this.DOM.userNewEmail.value,
-            newPassword: this.DOM.userNewPwConf.value,
+            name: this.DOM.userName.value,
+            email: this.DOM.userEmail.value,
             currPassword: this.DOM.userCurrPw.value,
-            profileImage: this.DOM.userProfileImage.value,
+            password: this.DOM.userNewPw.value,
+            passwordconfirm: this.DOM.userNewPwConf.value,
+            avatar: this.DOM.userProfileImage.value,
         };
+    }
+
+
+    loadUserData(data) {
+        this.DOM.userName.value = data.name;
+        this.DOM.userEmail.value = data.email;
+        this.DOM.avatar.src = data.avatar;
+        this.DOM.lastlogin.innerHTML = data.last_login;
+        this.DOM.registered.innerHTML = data.registered;
+        //this.DOM.userName.value = data.username;
     }
 
     async renderHomePageHTML() {
@@ -177,12 +194,16 @@ export default class extends View {
                     </div>
 
                 </div>
+                <div>
+                    <div class="d-block mb-1"><strong>Regisztráció: </strong><br><small id="registered-date"></small></div>
+                    <div class="d-block"><strong>Utolsó bejelentkezés: </strong><br><small id="last-login-date"></small></div>
+                </div>
             </div>
 
 
 
             <div class="d-flex flex-column col-3 mt-4">
-                <img src="https://peterfulop.github.io/birdy/images/avatar.png" alt="..." class="img-thumbnail">
+                <img src="../images/avatar.png" alt="profile_image" class="img-thumbnail" id="user-avatar" style="min-width:120px">
 
                 <div class="btn btn-secondary my-2 p-0">
                 <label for="file-upload" class="d-block w-100 cursor-pointer"><i class="fas fa-upload"></i></label>
@@ -206,10 +227,10 @@ export default class extends View {
                 <div class="accordion accordion-flush mt-3" id="accordionFlushExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="btn btn-listen w-100 card-header justify-content-between collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">Tovább</button>
+                                    <button class="btn btn-listen w-100 card-header justify-content-between collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">Mentés</button>
                                 </h2>
 
-                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" style="">
+                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 
                                     <div class="accordion-body">
 
@@ -226,7 +247,7 @@ export default class extends View {
                                                     </div>
                                                 </div>
 
-                                        <button type="button" class="btn btn-success w-100 mt-2" id="submit-user-password-btn">Módosítás</button>
+                                        <button type="button" class="btn btn-success w-100 mt-2" id="submit-user-password-btn">Mentés megerősítése</button>
                                         </div>
 
                                     </div>
