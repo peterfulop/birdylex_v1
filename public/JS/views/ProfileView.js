@@ -26,7 +26,7 @@ export default class extends View {
             userForm: document.getElementById("user-data-form"),
             userName: document.getElementById("curr-username"),
             userEmail: document.getElementById("curr-email"),
-            avatar: document.getElementById("user-avatar"),
+            avatar: document.getElementById("avatar-img"),
             registered: document.getElementById("registered-date"),
             lastlogin: document.getElementById("last-login-date"),
             userNewPw: document.getElementById("set-new-pw"),
@@ -132,10 +132,9 @@ export default class extends View {
     loadUserData(data) {
         this.DOM.userName.value = data.name;
         this.DOM.userEmail.value = data.email;
-        this.DOM.avatar.src = data.avatar;
+        //this.DOM.avatar.src = data.avatar;
         this.DOM.lastlogin.innerHTML = data.last_login;
         this.DOM.registered.innerHTML = data.registered;
-        //this.DOM.userName.value = data.username;
     }
 
     async renderHomePageHTML() {
@@ -146,18 +145,18 @@ export default class extends View {
                 <strong class="text-secondary mb-3">Személyes adatok beállítása</strong>
             </div>
 
-            <div class="d-flex block-1 justify-content-between">
+            <div class="row justify-content-start flex-wrap">
 
-            <div class="col-8">
+            <div class="col-md-8">
 
                 <div class="d-block w-100 mb-2">
-                    <div class="font-weight-bold"><label class="mb-2" for="curr-username">Username</label></div>
-                    <input type="text" class="profile-input form-control px-2 mb-2" id="curr-username" value="" autocomplete="off" maxlength="50" required>
+                    <div class="font-weight-bold"><label class="mb-2" for="curr-username">Felhasználónév</label></div>
+                    <input type="text" class="profile-input form-control px-2 mb-2" id="curr-username" autocomplete="off" maxlength="50" required>
                 </div>
 
                 <div class="d-block w-100 mb-3">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-email">Email</label></div>
-                    <input type="email" class="profile-input form-control px-2 mb-2" id="curr-email" value=""  autocomplete="off" required>
+                    <input type="email" class="profile-input form-control px-2 mb-2" id="curr-email" autocomplete="off" required>
                 </div>
 
 
@@ -194,19 +193,21 @@ export default class extends View {
                     </div>
 
                 </div>
-                <div>
-                    <div class="d-block mb-1"><strong>Regisztráció: </strong><br><small id="registered-date"></small></div>
-                    <div class="d-block"><strong>Utolsó bejelentkezés: </strong><br><small id="last-login-date"></small></div>
+                <div class="d-flex flex-wrap flex-md-nowrap mb-2">
+                    <div class="p-2 bg-light me-2 mb-2 rounded-3"><p class="m-0 p-0 text-dark">Regisztráció</p><small id="registered-date"></small></div>
+                    <div class="p-2 bg-light mb-2 rounded-3"><p class="m-0 p-0 text-dark">Utolsó bejelentkezés</p><small id="last-login-date"></small></div>
                 </div>
             </div>
 
 
 
-            <div class="d-flex flex-column col-3 mt-4">
-                <img src="../images/avatar.png" alt="profile_image" class="img-thumbnail" id="user-avatar" style="min-width:120px">
+            <div class="col-md-4" style="max-width:200px">
+                <label class="mb-2">Avatarod</label>
 
-                <div class="btn btn-secondary my-2 p-0">
-                <label for="file-upload" class="d-block w-100 cursor-pointer"><i class="fas fa-upload"></i></label>
+                <img src="../images/avatar.png" alt="profile_image" class="img-thumbnail" id="profile-avatar">
+
+                <div class="btn btn-secondary w-100 my-2 p-0">
+                <label for="file-upload" class="d-block cursor-pointer"><i class="fas fa-upload"></i></label>
                 <input id="file-upload" type="file" accept="image/*"></input>
                 </div>
 
@@ -230,7 +231,7 @@ export default class extends View {
                                     <button class="btn btn-listen w-100 card-header justify-content-between collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">Mentés</button>
                                 </h2>
 
-                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div id="flush-collapseOne" class="accordion-collapse collapse bg-light" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
 
                                     <div class="accordion-body">
 

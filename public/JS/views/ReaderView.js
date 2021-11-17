@@ -251,7 +251,7 @@ export default class extends View {
                         <i class="fas fa-cog me-2"></i>További beállítások<i class="fas fa-caret-down ms-2"></i>
                     </button>
                 </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                <div id="flush-collapseOne" class="accordion-collapse collapse bg-light" aria-labelledby="flush-headingOne"
                     data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                         <div class="card-body d-flex row flex-wrap justify-content-between">
