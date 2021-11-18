@@ -9,8 +9,7 @@ router.use('/', isLoggedIn, (req, res) => {
             user: req.user,
         });
     } else {
-        console.log("main ERROR");
-        console.log("response message:", res.message);
+        console.log(res.message);
         res.render("app", { message: res.message });
     }
 });

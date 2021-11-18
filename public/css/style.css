@@ -279,6 +279,8 @@ main {
   object-fit: cover;
 }
 
+
+
 #avatar.tight {
   width: 60px;
   height: 60px;
@@ -1159,6 +1161,7 @@ main {
   color: white;
   border-radius: 10px;
   cursor: pointer;
+  height: fit-content;
   padding: 5px 15px;
   margin: 2.5px 3px;
   align-items: center;
@@ -1341,17 +1344,22 @@ main {
     margin: 0;
   }
 
+  #history-excercises,
   #note-list-block,
   #history-words {
-    height: 20vh;
+        max-height: 30vh;
+
   }
+
+
 
   .mobile-menu-item:last-child:hover {
     border-radius: 0;
   }
 
-  .dictionary-list-block {
-    height: 60vh;
+
+  #dictionary-list-items{
+    max-height: 55vh;
   }
 
   .dictionary-item-words {

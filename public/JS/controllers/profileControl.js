@@ -25,28 +25,36 @@ const fillInputsWithCurrData = async () => {
   pf.loadUserData(userData);
 };
 
-const controlLoadImagePrev = async (file) => {
-  console.log(file);
-  if (file) {
-    const formData = new FormData();
-    formData.append('profile', file);
-    const resp = await multiFetch(`${API_URL}/users/avatar/preview`, "POST", formData, true);
-    if (resp) {
-      document.querySelector("#profile-avatar").src = "/images/prev/" + resp.data.img;
+const controlLoadPreview = async (file) => {
+  console.log("controlLoadPreview", file);
 
+  if (file) {
+
+    const resp = await multiFetch(`${API_URL}/users/avatar/preview`, "POST", file, true);
+
+    if (resp) {
+      const userData = getUserData();
+      document.querySelector("#profile-avatar").src = `/images/users/${userData.unique_id}/prev/` + resp.data.img;
     }
   }
 }
 
+const controlRemovePreview = async () => {
+  await user.setUser();
+  const userData = getUserData();
+  pf.loadUserImage(userData);
+
+}
 
 
 export default async function init() {
   pf.addHandlerDefDOMelements();
   fillInputsWithCurrData();
 
-  pf.addHandlerSelectFile(controlLoadImagePrev);
+  pf.addHandlerSelectFile(controlLoadPreview);
 
-  pf.addHandlerRemoveFile();
+  pf.addHandlerRemoveFile(controlRemovePreview);
+
   pf.addHandlerShowHidePasswords();
 
   pf.addHandlerEditInputs();

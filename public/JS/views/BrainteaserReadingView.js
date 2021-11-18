@@ -65,7 +65,6 @@ export default class extends View {
     this.DOM.pauseSpeechBtn.addEventListener("click", async () => {
       this.DOM.pauseSpeechBtn.disabled = true;
       this.DOM.resumeSpeechBtn.disabled = false;
-
       const data = await this.grabSpeechData(this.DOM.pauseSpeechBtn);
       handler(data);
     });
@@ -75,7 +74,6 @@ export default class extends View {
     this.DOM.resumeSpeechBtn.addEventListener("click", async () => {
       this.DOM.pauseSpeechBtn.disabled = false;
       this.DOM.resumeSpeechBtn.disabled = true;
-
       const data = await this.grabSpeechData(this.DOM.resumeSpeechBtn);
       handler(data);
     });

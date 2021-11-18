@@ -4,6 +4,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const uuid = require("uuid");
+const sharp = require('sharp');
 
 const UserController = require('../controllers/user.js');
 
@@ -60,11 +61,25 @@ router.post("/avatar", isLoggedIn,
                 const fileName = req.files.profile.name;
                 const g = /(.*)\.(.+)/;
                 const ext = fileName.match(g)[2];
-                // const ext = fileName.split('.').pop();
 
                 const unique_name = `${req.user.unique_id}.${ext}`;
 
-                file.mv("./public/images/avatars/" + unique_name, (err) => {
+                const basePath = `./public/images/users/${req.user.unique_id}/avatar/`;
+
+                if (!fs.existsSync(basePath)) {
+                    fs.mkdirSync(basePath);
+                }
+
+                const currAvatar = basePath + req.user.unique_id + ".*";
+                fs.unlink(currAvatar, (err) => {
+                    if (err) {
+                        console.error(err)
+                        return;
+                    }
+                });
+
+
+                file.mv(basePath + unique_name, (err) => {
                     if (err) {
                         res.send(err);
                         return;
@@ -81,34 +96,56 @@ router.post("/avatar", isLoggedIn,
 
 
 router.post("/avatar/preview", isLoggedIn,
-    (req, res) => {
+    async (req, res) => {
+
         if (!req.user) {
             console.log("response message:", res.message);
             res.redirect("/");
         } else {
             req.body.userId = req.user.unique_id;
+
             if (req.files) {
+
+
                 const file = req.files.profile;
                 const fileName = req.files.profile.name;
+
                 const g = /(.*)\.(.+)/;
                 const ext = fileName.match(g)[2];
+                const rnd = uuid.v4();
+                const unique_name = `${rnd}.${ext}`;
+                const basePath = `./public/images/users/${req.user.unique_id}/`;
 
-                const newName = uuid.v4();
-                const unique_name = `${newName}.${ext}`;
+                if (!fs.existsSync(basePath)) {
+                    fs.mkdirSync(basePath);
+                }
+                if (!fs.existsSync(basePath + "/avatar")) {
+                    fs.mkdirSync(basePath + "/avatar");
+                }
+                if (!fs.existsSync(basePath + "/prev")) {
+                    fs.mkdirSync(basePath + "/prev");
+                }
 
-                const directory = './public/images/prev/';
+                const prevDir = basePath + "prev/";
 
-                fs.readdir(directory, (err, files) => {
+                fs.readdir(prevDir, (err, files) => {
                     if (err) throw err;
-
-                    for (const file of files) {
-                        fs.unlink(path.join(directory, file), err => {
-                            if (err) throw err;
-                        });
+                    if (files.length > 0) {
+                        console.log("A mappa nem üres!");
+                        for (const file of files) {
+                            fs.unlink(path.join(prevDir, file), err => {
+                                if (err) throw err;
+                            });
+                        }
+                    } else {
+                        console.log("Üres a mappa!");
                     }
                 });
 
-                file.mv(directory + unique_name, (err) => {
+
+
+
+                file.mv(basePath + "prev/" + unique_name, (err) => {
                     if (err) {
                         res.send(err);
                         return;
@@ -119,40 +156,20 @@ router.post("/avatar/preview", isLoggedIn,
                         })
                     }
                 });
+
+                // await sharp(basePath + "prev/" + unique_name).resize(300, 300).toFile(basePath + "prev/" + "__" + unique_name);
+
+
+            }
+            else {
+                return {
+                    status: false
+                }
             }
 
         }
     })
 
 
-
-
-// router.post("/avatar/preview", (req, res) => {
-//     if (req.files) {
-//         const file = req.files.profile;
-//         const fileName = req.files.profile.name;
-//         const g = /(.*)\.(.+)/;
-//         const ext = fileName.match(g)[2];
-//         const unique_name = `${req.user.unique_id}.${ext}`;
-
-//         file.mv("./public/images/avatars/prev/" + unique_name, (err) => {
-//             if (err) {
-//                 res.send(err)
-//             } else {
-//                 res.status(200).json({
-//                     message: "Feltöltés kész."
-//                 })
-//             }
-//         });
-//     }
-
-// })
-
-// router.get('/search/:email', UserController.users_get_userByEmail);
-// router.get('/equal/:search', UserController.users_get_name_email);
-// router.get('/login/:check', UserController.user_login);
-// router.post('/', UserController.users_post_user);
-// router.patch('/:userId');
-// router.delete('/:userId');
 
 module.exports = router;

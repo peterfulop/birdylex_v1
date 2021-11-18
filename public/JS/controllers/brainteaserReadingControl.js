@@ -16,10 +16,15 @@ const controlStartReading = async () => {
   setExcerciseStatus(1);
 
   let reading = await startReading(brv.DOM);
+  console.log("controlStartReading", reading);
 
   if (reading.reset && reading.end) {
     controlStartReading();
   }
+  else if (reading.end) {
+    document.getElementById("stop-speech-btn").click();
+  }
+
 };
 
 const controlResumeToSpeech = async () => {
@@ -29,6 +34,10 @@ const controlResumeToSpeech = async () => {
   if (reading.reset && reading.end) {
     controlStartReading();
   }
+  else if (reading.end) {
+    document.getElementById("stop-speech-btn").click();
+  }
+
 };
 
 const controlPauseToSpeech = async () => {

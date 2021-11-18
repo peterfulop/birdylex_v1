@@ -65,6 +65,7 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
     object.body = body;
   }
 
+
   try {
     const res = await Promise.race([fetch(url, object), timeout(TIMEOUT_SEC)]);
     if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);

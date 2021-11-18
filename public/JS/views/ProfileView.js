@@ -47,17 +47,21 @@ export default class extends View {
             if (this.DOM.userProfileImage.files[0]) {
                 this.DOM.profileImageName.innerHTML = this.DOM.userProfileImage.files[0].name;
                 this.DOM.removeSelectedImage.classList.remove("d-none");
-                handler(this.DOM.userProfileImage.files[0]);
+                let file = this.DOM.userProfileImage.files[0];
+                const formData = new FormData();
+                formData.append('profile', file);
+                handler(formData);
             }
         });
     }
 
-    async addHandlerRemoveFile() {
+    async addHandlerRemoveFile(handler) {
         this.DOM.removeSelectedImage.addEventListener("click", async () => {
             if (this.DOM.userProfileImage.files[0]) {
                 this.DOM.userProfileImage.value = "";
-                this.DOM.profileImageName.innerHTML = "Nincs kép!";
+                this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
                 this.DOM.removeSelectedImage.classList.add("d-none");
+                handler();
             }
         });
     }
@@ -135,10 +139,14 @@ export default class extends View {
         this.DOM.userName.value = data.name;
         this.DOM.userEmail.value = data.email;
         this.DOM.avatar.src = data.avatar;
-        document.getElementById("avatar").src = data.avatar;
         document.querySelector("#user-avatar > h6").innerHTML = data.name;
         this.DOM.lastlogin.innerHTML = data.last_login;
         this.DOM.registered.innerHTML = data.registered;
+        document.getElementById("avatar").src = data.avatar;
+    }
+
+    loadUserImage(data) {
+        document.querySelector("#profile-avatar").src = data.avatar;
     }
 
     async renderHomePageHTML() {
@@ -151,7 +159,7 @@ export default class extends View {
 
             <div class="row justify-content-between flex-wrap-reverse" style="max-width:1200px">
 
-            <div class="col-md-8">
+            <div class="col-md-8 text-center text-md-start">
 
                 <div class="d-block w-100 mb-2">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-username">Felhasználónév</label></div>
@@ -205,7 +213,7 @@ export default class extends View {
 
 
 
-            <div class="col-md-4 text-center" style="max-width:250px">
+            <div id="avatar-content-block" class="col-md-4 text-center">
 
                 <img src="#" alt="profile_image" class="img-thumbnail" id="profile-avatar">
 
@@ -214,8 +222,8 @@ export default class extends View {
                 <input id="file-upload" type="file" name="upload-image" accept="image/*"></input>
                 </div>
 
-                <div class="d-flex wrap align-items-center p-1" style="height:24px">
-                <small maxlength="2" class="text-sort" id="profile-image-name">Nincs kép!</small>
+                <div class="d-flex wrap align-items-center p-1 mb-3" style="height:24px">
+                <small maxlength="2" class="text-sort" id="profile-image-name">Nincs kép kiválasztva!</small>
                 <button type="button" class="btn-close col-2 d-none" id="remove-selected-image"></button>
                 </div>
 
