@@ -10,10 +10,7 @@ export const editProfile = async (data) => {
 
     hideAlertPanel("#edit-profil-form-alert");
 
-
-
     const isValid = await multiFetch(`${API_URL}/users/control`, "POST", { password: data.currPassword, email: state.user.email });
-
 
     if (!isValid.data.status) {
         showAlertPanel(
@@ -28,12 +25,32 @@ export const editProfile = async (data) => {
         };
     }
 
+    const file = data.avatar.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append('profile', file);
+        const resp = await multiFetch(`${API_URL}/users/avatar`, "POST", formData, true);
+        // console.log(resp);
+        // if (!resp.ok) {
+        //     showAlertPanel(
+        //         "#edit-profil-form-alert",
+        //         "danger",
+        //         "Hiba!",
+        //         ` ${resp.data.message}`,
+        //         0
+        //     );
+        //     return {
+        //         status: resp.data.status,
+        //     };
+        // }
+    }
+
     const resp = await multiFetch(`${API_URL}/users/patch`, "PATCH", {
         name: data.name,
         email: data.email,
         password: data.password,
         passwordconfirm: data.passwordconfirm,
-        avatar: data.avatar,
         isNew: data.password.length > 0 ? true : false
     });
     if (!resp.data.status) {
@@ -59,7 +76,5 @@ export const editProfile = async (data) => {
             status: resp.data.status,
         };
     }
-
-
 
 }

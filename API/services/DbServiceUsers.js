@@ -150,6 +150,7 @@ class DbServiceUsers extends DbService {
               email: this.sanitizeHtml(email),
               password: hashedPassword,
               registered: datetime,
+              avatar: "avatar.png"
             };
             const response = await new Promise((resolve, reject) => {
               const query = "INSERT INTO users SET ?;";
@@ -186,7 +187,7 @@ class DbServiceUsers extends DbService {
     }
   }
 
-  async updateUser(userId, name, email, isNew, password, passwordconfirm, oldpassword, avatar) {
+  async updateUser(userId, name, email, isNew, password, passwordconfirm, oldpassword) {
     try {
       if (!name || !email) {
         return {
@@ -246,15 +247,12 @@ class DbServiceUsers extends DbService {
               hashedPassword = oldpassword;
             }
 
-
             name = this.sanitizeHtml(name);
             email = this.sanitizeHtml(email);
             password = hashedPassword;
-            avatar = "#";
-
 
             const response = await new Promise((resolve, reject) => {
-              const query = `UPDATE users SET name='${name}', email='${email}', password='${password}', avatar='${avatar}' WHERE unique_id ='${userId}';`;
+              const query = `UPDATE users SET name='${name}', email='${email}', password='${password}' WHERE unique_id ='${userId}';`;
               connection.query(query, (error, result) => {
                 if (error) {
                   console.log(error);
@@ -282,6 +280,36 @@ class DbServiceUsers extends DbService {
         }
       }
     } catch (error) {
+      console.error(error);
+      return {
+        status: false,
+        message: "Szerver hiba!",
+      };
+    }
+  }
+
+  async updateAvatar(userId, avatarId) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query = `UPDATE users SET avatar='${avatarId}' WHERE unique_id ='${userId}';`;
+        connection.query(query, (error, result) => {
+          if (error) {
+            console.log(error);
+          }
+          if (result) resolve(result.affectedRows);
+        });
+      });
+      if (response > 0) {
+        return {
+          status: true,
+          message: "A képfeltöltés sikeres!",
+          avatarId
+        };
+      } else {
+        throw new Error();
+      }
+    }
+    catch (error) {
       console.error(error);
       return {
         status: false,

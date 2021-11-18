@@ -22,10 +22,8 @@ exports.users_control_user = async (req, res) => {
 };
 
 exports.users_update_user = async (req, res) => {
-  const { userId, name, email, isNew, password, oldpassword, passwordconfirm, avatar } = req.body;
-  // const { avatar } = req.files;
-  const result = db.updateUser(userId, name, email, isNew, password, passwordconfirm, oldpassword, avatar);
-
+  const { userId, name, email, isNew, password, oldpassword, passwordconfirm } = req.body;
+  const result = db.updateUser(userId, name, email, isNew, password, passwordconfirm, oldpassword);
   result.then((data) => {
     res.status(200).json({
       status: data.status,
@@ -34,6 +32,29 @@ exports.users_update_user = async (req, res) => {
   });
 };
 
+// exports.users_update_preview = async (req, res) => {
+//   const { userId, avatarId } = req.body;
+//   const result = db.updateAvatar(userId, avatarId);
+//   result.then((data) => {
+//     res.status(200).json({
+//       status: data.status,
+//       message: data.message,
+//       img: data.avatarId
+//     });
+//   });
+// };
+
+exports.users_update_avatar = async (req, res) => {
+  const { userId, avatarId } = req.body;
+  const result = db.updateAvatar(userId, avatarId);
+  result.then((data) => {
+    res.status(200).json({
+      status: data.status,
+      message: data.message,
+      img: data.avatarId
+    });
+  });
+};
 
 // exports.users_get_all = (req, res) => {
 //   const result = db.getUsers();

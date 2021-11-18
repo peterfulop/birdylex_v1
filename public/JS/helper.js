@@ -48,14 +48,21 @@ export const getJSON = async function (url) {
   }
 };
 
-export const multiFetch = async function (url, method = "GET", body = "") {
+export const multiFetch = async function (url, method = "GET", body = "", file = false) {
 
-  let object = {
+  let object = {};
+
+  object = {
     headers: {
       "Content-type": "application/json",
     },
     method: method,
     body: body === "" ? null : JSON.stringify(body),
+  }
+
+  if (file) {
+    object.headers = {};
+    object.body = body;
   }
 
   try {

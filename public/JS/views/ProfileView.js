@@ -26,7 +26,7 @@ export default class extends View {
             userForm: document.getElementById("user-data-form"),
             userName: document.getElementById("curr-username"),
             userEmail: document.getElementById("curr-email"),
-            avatar: document.getElementById("avatar-img"),
+            avatar: document.getElementById("profile-avatar"),
             registered: document.getElementById("registered-date"),
             lastlogin: document.getElementById("last-login-date"),
             userNewPw: document.getElementById("set-new-pw"),
@@ -42,11 +42,13 @@ export default class extends View {
         };
     }
 
-    async addHandlerSelectFile() {
+    async addHandlerSelectFile(handler) {
         this.DOM.userProfileImage.addEventListener("change", async () => {
-            this.DOM.profileImageName.innerHTML =
-                this.DOM.userProfileImage.files[0].name;
-            this.DOM.removeSelectedImage.classList.remove("d-none");
+            if (this.DOM.userProfileImage.files[0]) {
+                this.DOM.profileImageName.innerHTML = this.DOM.userProfileImage.files[0].name;
+                this.DOM.removeSelectedImage.classList.remove("d-none");
+                handler(this.DOM.userProfileImage.files[0]);
+            }
         });
     }
 
@@ -124,7 +126,7 @@ export default class extends View {
             currPassword: this.DOM.userCurrPw.value,
             password: this.DOM.userNewPw.value,
             passwordconfirm: this.DOM.userNewPwConf.value,
-            avatar: this.DOM.userProfileImage.value,
+            avatar: this.DOM.userProfileImage,
         };
     }
 
@@ -132,7 +134,9 @@ export default class extends View {
     loadUserData(data) {
         this.DOM.userName.value = data.name;
         this.DOM.userEmail.value = data.email;
-        //this.DOM.avatar.src = data.avatar;
+        this.DOM.avatar.src = data.avatar;
+        document.getElementById("avatar").src = data.avatar;
+        document.querySelector("#user-avatar > h6").innerHTML = data.name;
         this.DOM.lastlogin.innerHTML = data.last_login;
         this.DOM.registered.innerHTML = data.registered;
     }
@@ -145,7 +149,7 @@ export default class extends View {
                 <strong class="text-secondary mb-3">Személyes adatok beállítása</strong>
             </div>
 
-            <div class="row justify-content-start flex-wrap">
+            <div class="row justify-content-between flex-wrap-reverse" style="max-width:1200px">
 
             <div class="col-md-8">
 
@@ -201,14 +205,13 @@ export default class extends View {
 
 
 
-            <div class="col-md-4" style="max-width:200px">
-                <label class="mb-2">Avatarod</label>
+            <div class="col-md-4 text-center" style="max-width:250px">
 
-                <img src="../images/avatar.png" alt="profile_image" class="img-thumbnail" id="profile-avatar">
+                <img src="#" alt="profile_image" class="img-thumbnail" id="profile-avatar">
 
                 <div class="btn btn-secondary w-100 my-2 p-0">
                 <label for="file-upload" class="d-block cursor-pointer"><i class="fas fa-upload"></i></label>
-                <input id="file-upload" type="file" accept="image/*"></input>
+                <input id="file-upload" type="file" name="upload-image" accept="image/*"></input>
                 </div>
 
                 <div class="d-flex wrap align-items-center p-1" style="height:24px">

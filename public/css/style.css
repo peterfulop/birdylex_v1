@@ -256,14 +256,27 @@ main {
 }
 
 #avatar {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   transition: 0.5s;
   background: rgb(255, 255, 255);
-  margin: 10px;
-  padding: 10px;
+  margin: 5px;
+  padding: 5px;
   border-radius: 50%;
   box-shadow: 1px 1px 10px rgba(122, 122, 122, 0.1);
+  object-fit: cover;
+}
+
+#profile-avatar{
+  min-width: 150px;
+  min-height: 150px;
+  width: 180px;
+  height: 180px;
+    margin: 5px;
+  padding: 5px;
+    border-radius: 50%;
+  box-shadow: 1px 1px 10px rgba(122, 122, 122, 0.1);
+  object-fit: cover;
 }
 
 #avatar.tight {

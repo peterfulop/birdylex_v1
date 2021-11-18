@@ -1,12 +1,13 @@
 import { multiFetch } from "../helper.js";
-import { API_URL } from "../config.js";
+import { API_URL, IMG_ROOT } from "../config.js";
 import DataModel from "./DataModel.js";
 import { state } from "../state.js";
 
 export class User extends DataModel {
+
   constructor(unique_id, name, email, registered, last_login, avatar) {
     super();
-    this.avatar = avatar;
+    this.avatar = IMG_ROOT + avatar;
     this.name = name;
     this.unique_id = unique_id;
     this.email = email;
@@ -17,7 +18,6 @@ export class User extends DataModel {
 
   async setUser() {
     const res = await multiFetch(`${API_URL}/users/active`);
-    console.log(res.data.user);
 
     state.user = new User(
       res.data.user.unique_id,
