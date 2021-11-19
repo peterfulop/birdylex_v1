@@ -1,11 +1,14 @@
-import { getUserData, editProfile, setAvatarPreview, deleteCurrentAvatar } from "../models/profileModel.js";
+import {
+  getUserData,
+  editProfile,
+  setAvatarPreview,
+  deleteCurrentAvatar,
+} from "../models/profileModel.js";
 import ProfileView from "../views/ProfileView.js";
 import { User } from "../datamodels/User.js";
 
-
 let pf = new ProfileView();
 let user = new User();
-
 
 const submitForm = async () => {
   const data = pf.grabUserInputs();
@@ -26,19 +29,19 @@ const fillInputsWithCurrData = async () => {
 const controlLoadPreview = async (file) => {
   if (file) {
     const res = await setAvatarPreview(file);
+    console.log(res);
     if (res.ok) {
       pf.loadAvatarPreview(res.data.user, res.data.img);
     }
   }
-}
+};
 
 const controlRemovePreview = async () => {
   await user.setUser();
   const userData = getUserData();
   pf.loadCurrentAvatar(userData);
   return userData.img;
-
-}
+};
 
 const controlDeleteAvatar = async () => {
   const res = await deleteCurrentAvatar();
@@ -47,12 +50,9 @@ const controlDeleteAvatar = async () => {
     const userData = getUserData();
     pf.loadUserData(userData);
   }
-
-}
-
+};
 
 export default async function init() {
-
   pf.addHandlerDefDOMelements();
   fillInputsWithCurrData();
 

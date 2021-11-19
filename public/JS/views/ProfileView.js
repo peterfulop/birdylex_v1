@@ -1,216 +1,230 @@
 import View from "./View.js";
 import {
-    showPassword,
-    inputEqualityControll,
-    validateInputsBy,
-    validateInputs,
-    showAlertPanel,
-    hideAlertPanel,
-    resetInputValidation,
-    showHidePasswords,
+  showPassword,
+  inputEqualityControll,
+  validateInputsBy,
+  validateInputs,
+  showAlertPanel,
+  hideAlertPanel,
+  resetInputValidation,
+  showHidePasswords,
 } from "../helper.js";
 import { DEFAULT_AVATAR } from "../config.js";
 
 export default class extends View {
-    constructor(params) {
-        super(params);
-        this.setPageParams(window.location.pathname);
-    }
+  constructor(params) {
+    super(params);
+    this.setPageParams(window.location.pathname);
+  }
 
-    async loadPage() {
-        this._clear();
-        await this.renderHomePageHTML();
-    }
+  async loadPage() {
+    this._clear();
+    await this.renderHomePageHTML();
+  }
 
-    async addHandlerDefDOMelements() {
-        this.DOM = {
-            userForm: document.getElementById("user-data-form"),
-            userName: document.getElementById("curr-username"),
-            userEmail: document.getElementById("curr-email"),
-            avatar: document.getElementById("profile-avatar"),
-            deleteAvatarBtn: document.getElementById("delete-avatar-btn"),
-            avatarUploadControllers: document.getElementById("avatar-upload-controllers"),
-            avatarDeleteControllers: document.getElementById("avatar-delete-controllers"),
-            deleteAvatarConfirm: document.getElementById("delete-avatar-confirm"),
-            deleteAvatarBack: document.getElementById("delete-avatar-back"),
-            registered: document.getElementById("registered-date"),
-            lastlogin: document.getElementById("last-login-date"),
-            userNewPw: document.getElementById("set-new-pw"),
-            userNewPwConf: document.getElementById("set-new-pw-conf"),
-            userCurrPw: document.getElementById("set-curr-pw"),
-            submitModifyBtn: document.getElementById("submit-user-password-btn"),
-            showNewPw: document.getElementById("show-new-pw"),
-            showNewConfPw: document.getElementById("show-new-pw-conf"),
-            showCurrPw: document.getElementById("show-curr-pw"),
-            userProfileImage: document.getElementById("file-upload"),
-            uploadImageBlock: document.getElementById("upload-image-block"),
-            fileNameBlock: document.getElementById("file-name-block"),
-            profileImageName: document.getElementById("profile-image-name"),
-            removeSelectedImage: document.getElementById("remove-selected-image"),
-        };
-    }
+  async addHandlerDefDOMelements() {
+    this.DOM = {
+      userForm: document.getElementById("user-data-form"),
+      userName: document.getElementById("curr-username"),
+      userEmail: document.getElementById("curr-email"),
+      avatar: document.getElementById("profile-avatar"),
+      deleteAvatarBtn: document.getElementById("delete-avatar-btn"),
+      avatarUploadControllers: document.getElementById(
+        "avatar-upload-controllers"
+      ),
+      avatarDeleteControllers: document.getElementById(
+        "avatar-delete-controllers"
+      ),
+      deleteAvatarConfirm: document.getElementById("delete-avatar-confirm"),
+      deleteAvatarBack: document.getElementById("delete-avatar-back"),
+      registered: document.getElementById("registered-date"),
+      lastlogin: document.getElementById("last-login-date"),
+      userNewPw: document.getElementById("set-new-pw"),
+      userNewPwConf: document.getElementById("set-new-pw-conf"),
+      userCurrPw: document.getElementById("set-curr-pw"),
+      submitModifyBtn: document.getElementById("submit-user-password-btn"),
+      showNewPw: document.getElementById("show-new-pw"),
+      showNewConfPw: document.getElementById("show-new-pw-conf"),
+      showCurrPw: document.getElementById("show-curr-pw"),
+      userProfileImage: document.getElementById("file-upload"),
+      uploadImageBlock: document.getElementById("upload-image-block"),
+      fileNameBlock: document.getElementById("file-name-block"),
+      profileImageName: document.getElementById("profile-image-name"),
+      removeSelectedImage: document.getElementById("remove-selected-image"),
+    };
+  }
 
-    async addHandlerSelectFile(handler) {
-        this.DOM.userProfileImage.addEventListener("change", async () => {
-            if (this.DOM.userProfileImage.files[0]) {
-                this.DOM.profileImageName.innerHTML = this.DOM.userProfileImage.files[0].name;
-                this.DOM.removeSelectedImage.classList.remove("d-none");
-                this.DOM.uploadImageBlock.classList.add("d-none");
-                this.DOM.deleteAvatarBtn.classList.add("d-none");
-                this.DOM.fileNameBlock.classList.add("bg-corn", "justify-content-between");
-                let file = this.DOM.userProfileImage.files[0];
-                const formData = new FormData();
-                formData.append('profile', file);
-                handler(formData);
-            }
-        });
-    }
+  async addHandlerSelectFile(handler) {
+    this.DOM.userProfileImage.addEventListener("change", async () => {
+      if (this.DOM.userProfileImage.files[0]) {
+        this.DOM.profileImageName.innerHTML =
+          this.DOM.userProfileImage.files[0].name;
+        this.DOM.removeSelectedImage.classList.remove("d-none");
+        this.DOM.uploadImageBlock.classList.add("d-none");
+        this.DOM.deleteAvatarBtn.classList.add("d-none");
+        this.DOM.fileNameBlock.classList.add(
+          "bg-corn",
+          "justify-content-between"
+        );
+        let file = this.DOM.userProfileImage.files[0];
+        const formData = new FormData();
+        formData.append("profile", file);
+        handler(formData);
+      }
+    });
+  }
 
-    async addHandlerRemoveFile(handler) {
-        this.DOM.removeSelectedImage.addEventListener("click", async () => {
-            const img = await handler();
-            console.log(img);
-            this.removeUploadedFile(img);
-        });
-    }
+  async addHandlerRemoveFile(handler) {
+    this.DOM.removeSelectedImage.addEventListener("click", async () => {
+      const img = await handler();
+      console.log(img);
+      this.removeUploadedFile(img);
+    });
+  }
 
-    removeUploadedFile(img) {
-        if (this.DOM.userProfileImage.files[0]) {
-            this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
-            this.DOM.removeSelectedImage.classList.add("d-none");
-            this.DOM.userProfileImage.value = "";
-            this.DOM.uploadImageBlock.classList.remove("d-none");
-            this.DOM.fileNameBlock.classList.remove("bg-corn", "justify-content-between");
-            this.DOM.fileNameBlock.classList.add("justify-content-center");
-            this.showHideAvatarDeleteBtn(img);
+  removeUploadedFile(img) {
+    if (this.DOM.userProfileImage.files[0]) {
+      this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
+      this.DOM.removeSelectedImage.classList.add("d-none");
+      this.DOM.userProfileImage.value = "";
+      this.DOM.uploadImageBlock.classList.remove("d-none");
+      this.DOM.fileNameBlock.classList.remove(
+        "bg-corn",
+        "justify-content-between"
+      );
+      this.DOM.fileNameBlock.classList.add("justify-content-center");
+      this.showHideAvatarDeleteBtn(img);
+    }
+  }
+
+  addHandlerDeleteAvatar() {
+    this.DOM.deleteAvatarBtn.addEventListener("click", () => {
+      this.DOM.avatarUploadControllers.classList.add("d-none");
+      this.DOM.avatarDeleteControllers.classList.remove("d-none");
+    });
+  }
+  addHandlerDeleteAvatarConfirm(handler) {
+    this.DOM.deleteAvatarConfirm.addEventListener("click", () => {
+      this.DOM.avatarUploadControllers.classList.remove("d-none");
+      this.DOM.avatarDeleteControllers.classList.add("d-none");
+      handler();
+    });
+  }
+
+  addHandlerDeleteAvatarBack() {
+    this.DOM.deleteAvatarBack.addEventListener("click", () => {
+      this.DOM.avatarUploadControllers.classList.remove("d-none");
+      this.DOM.avatarDeleteControllers.classList.add("d-none");
+    });
+  }
+
+  async addHandlerShowHidePasswords() {
+    showHidePasswords([
+      this.DOM.showNewPw,
+      this.DOM.showNewConfPw,
+      this.DOM.showCurrPw,
+    ]);
+  }
+
+  async addHandlerEditInputs() {
+    let required = document.querySelectorAll("[required]");
+    validateInputsBy(required, "input");
+  }
+
+  async addHandlerSubmitForm(handler) {
+    this.DOM.submitModifyBtn.addEventListener("click", async () => {
+      hideAlertPanel("#edit-profil-form-alert");
+      resetInputValidation([this.DOM.userNewPw, this.DOM.userNewPwConf]);
+      [this.DOM.showNewPw, this.DOM.showNewConfPw, this.DOM.showCurrPw].forEach(
+        (btn) => {
+          if (!btn.checked) btn.click();
         }
-    }
-
-
-    addHandlerDeleteAvatar() {
-        this.DOM.deleteAvatarBtn.addEventListener("click", () => {
-            this.DOM.avatarUploadControllers.classList.add("d-none");
-            this.DOM.avatarDeleteControllers.classList.remove("d-none");
-        })
-    }
-    addHandlerDeleteAvatarConfirm(handler) {
-        this.DOM.deleteAvatarConfirm.addEventListener("click", () => {
-            this.DOM.avatarUploadControllers.classList.remove("d-none");
-            this.DOM.avatarDeleteControllers.classList.add("d-none");
-            handler();
-        })
-    }
-
-    addHandlerDeleteAvatarBack() {
-        this.DOM.deleteAvatarBack.addEventListener("click", () => {
-            this.DOM.avatarUploadControllers.classList.remove("d-none");
-            this.DOM.avatarDeleteControllers.classList.add("d-none");
-        })
-    }
-
-    async addHandlerShowHidePasswords() {
-        showHidePasswords([this.DOM.showNewPw, this.DOM.showNewConfPw, this.DOM.showCurrPw])
-    }
-
-    async addHandlerEditInputs() {
-        let required = document.querySelectorAll("[required]");
-        validateInputsBy(required, "input");
-    }
-
-    async addHandlerSubmitForm(handler) {
-
-        this.DOM.submitModifyBtn.addEventListener("click", async () => {
-            hideAlertPanel("#edit-profil-form-alert");
-            resetInputValidation([this.DOM.userNewPw, this.DOM.userNewPwConf]);
-            [this.DOM.showNewPw, this.DOM.showNewConfPw, this.DOM.showCurrPw].forEach(btn => {
-                if (!btn.checked) btn.click();
-            });
-            let required = document.querySelectorAll("[required]");
-            if (
-                this.DOM.userNewPw.value.trim().length != 0 ||
-                this.DOM.userNewPwConf.value.trim().length != 0
-            ) {
-                let isEqual = inputEqualityControll(
-                    this.DOM.userNewPw,
-                    this.DOM.userNewPwConf
-                );
-                if (!isEqual) {
-                    showAlertPanel(
-                        "#edit-profil-form-alert",
-                        "danger",
-                        "HIBA!",
-                        " A megadott új jelszavak nem egyeznek!",
-                        0
-                    );
-                    return {
-                        status: false,
-                    };
-                }
-            }
-            let req = validateInputs(required);
-            if (!req) {
-                showAlertPanel(
-                    "#edit-profil-form-alert",
-                    "danger",
-                    "HIBA!",
-                    " Minden jelölt mező kitöltése kötelező!",
-                    0
-                );
-                return {
-                    status: false,
-                };
-            }
-            const img = await handler();
-            this.removeUploadedFile(img);
-
-        });
-    }
-
-    grabUserInputs() {
+      );
+      let required = document.querySelectorAll("[required]");
+      if (
+        this.DOM.userNewPw.value.trim().length != 0 ||
+        this.DOM.userNewPwConf.value.trim().length != 0
+      ) {
+        let isEqual = inputEqualityControll(
+          this.DOM.userNewPw,
+          this.DOM.userNewPwConf
+        );
+        if (!isEqual) {
+          showAlertPanel(
+            "#edit-profil-form-alert",
+            "danger",
+            "HIBA!",
+            " A megadott új jelszavak nem egyeznek!",
+            0
+          );
+          return {
+            status: false,
+          };
+        }
+      }
+      let req = validateInputs(required);
+      if (!req) {
+        showAlertPanel(
+          "#edit-profil-form-alert",
+          "danger",
+          "HIBA!",
+          " Minden jelölt mező kitöltése kötelező!",
+          0
+        );
         return {
-            name: this.DOM.userName.value,
-            email: this.DOM.userEmail.value,
-            currPassword: this.DOM.userCurrPw.value,
-            password: this.DOM.userNewPw.value,
-            passwordconfirm: this.DOM.userNewPwConf.value,
-            avatar: this.DOM.userProfileImage,
+          status: false,
         };
+      }
+      const img = await handler();
+      this.removeUploadedFile(img);
+    });
+  }
+
+  grabUserInputs() {
+    return {
+      name: this.DOM.userName.value,
+      email: this.DOM.userEmail.value,
+      currPassword: this.DOM.userCurrPw.value,
+      password: this.DOM.userNewPw.value,
+      passwordconfirm: this.DOM.userNewPwConf.value,
+      avatar: this.DOM.userProfileImage,
+    };
+  }
+
+  loadUserData(data) {
+    this.DOM.userName.value = data.name;
+    this.DOM.userEmail.value = data.email;
+    this.DOM.avatar.src = data.avatar;
+    document.querySelector("#user-avatar > h6").innerHTML = data.name;
+    this.DOM.lastlogin.innerHTML = data.last_login;
+    this.DOM.registered.innerHTML = data.registered;
+    document.getElementById("avatar").src = data.avatar;
+    this.showHideAvatarDeleteBtn(data.img);
+    this.DOM.userCurrPw.value = "";
+    this.DOM.userNewPw.value = "";
+    this.DOM.userNewPwConf.value = "";
+  }
+
+  showHideAvatarDeleteBtn(img) {
+    if (img == DEFAULT_AVATAR) {
+      this.DOM.deleteAvatarBtn.classList.add("d-none");
+    } else {
+      this.DOM.deleteAvatarBtn.classList.remove("d-none");
     }
+  }
 
+  loadCurrentAvatar(data) {
+    document.querySelector("#profile-avatar").src = data.avatar;
+  }
 
-    loadUserData(data) {
-        this.DOM.userName.value = data.name;
-        this.DOM.userEmail.value = data.email;
-        this.DOM.avatar.src = data.avatar;
-        document.querySelector("#user-avatar > h6").innerHTML = data.name;
-        this.DOM.lastlogin.innerHTML = data.last_login;
-        this.DOM.registered.innerHTML = data.registered;
-        document.getElementById("avatar").src = data.avatar;
-        this.showHideAvatarDeleteBtn(data.img);
-        this.DOM.userCurrPw.value = "";
-        this.DOM.userNewPw.value = "";
-        this.DOM.userNewPwConf.value = "";
-    }
+  loadAvatarPreview(userId, img) {
+    document.querySelector(
+      "#profile-avatar"
+    ).src = `/images/users/${userId}/prev/${img}`;
+  }
 
-    showHideAvatarDeleteBtn(img) {
-        if (img == DEFAULT_AVATAR) {
-            this.DOM.deleteAvatarBtn.classList.add("d-none");
-        } else {
-            this.DOM.deleteAvatarBtn.classList.remove("d-none");
-        }
-    }
-
-    loadCurrentAvatar(data) {
-        document.querySelector("#profile-avatar").src = data.avatar;
-    }
-
-    loadAvatarPreview(userId, img) {
-        document.querySelector("#profile-avatar").src = `/images/users/${userId}/prev/${img}`;
-    }
-
-
-    async renderHomePageHTML() {
-        this._mainContainer.innerHTML = `
+  async renderHomePageHTML() {
+    this._mainContainer.innerHTML = `
         <form class="d-block" id="user-data-form" autocomplete="off">
 
             <div class="header mb-3">
@@ -340,6 +354,6 @@ export default class extends View {
 
         `;
 
-        hideAlertPanel("#edit-profil-form-alert");
-    }
+    hideAlertPanel("#edit-profil-form-alert");
+  }
 }
