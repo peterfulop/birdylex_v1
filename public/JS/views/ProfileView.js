@@ -9,6 +9,7 @@ import {
     resetInputValidation,
     showHidePasswords,
 } from "../helper.js";
+import { DEFAULT_AVATAR } from "../config.js";
 
 export default class extends View {
     constructor(params) {
@@ -27,6 +28,11 @@ export default class extends View {
             userName: document.getElementById("curr-username"),
             userEmail: document.getElementById("curr-email"),
             avatar: document.getElementById("profile-avatar"),
+            deleteAvatarBtn: document.getElementById("delete-avatar-btn"),
+            avatarUploadControllers: document.getElementById("avatar-upload-controllers"),
+            avatarDeleteControllers: document.getElementById("avatar-delete-controllers"),
+            deleteAvatarConfirm: document.getElementById("delete-avatar-confirm"),
+            deleteAvatarBack: document.getElementById("delete-avatar-back"),
             registered: document.getElementById("registered-date"),
             lastlogin: document.getElementById("last-login-date"),
             userNewPw: document.getElementById("set-new-pw"),
@@ -37,6 +43,8 @@ export default class extends View {
             showNewConfPw: document.getElementById("show-new-pw-conf"),
             showCurrPw: document.getElementById("show-curr-pw"),
             userProfileImage: document.getElementById("file-upload"),
+            uploadImageBlock: document.getElementById("upload-image-block"),
+            fileNameBlock: document.getElementById("file-name-block"),
             profileImageName: document.getElementById("profile-image-name"),
             removeSelectedImage: document.getElementById("remove-selected-image"),
         };
@@ -47,6 +55,9 @@ export default class extends View {
             if (this.DOM.userProfileImage.files[0]) {
                 this.DOM.profileImageName.innerHTML = this.DOM.userProfileImage.files[0].name;
                 this.DOM.removeSelectedImage.classList.remove("d-none");
+                this.DOM.uploadImageBlock.classList.add("d-none");
+                this.DOM.deleteAvatarBtn.classList.add("d-none");
+                this.DOM.fileNameBlock.classList.add("bg-corn", "justify-content-between");
                 let file = this.DOM.userProfileImage.files[0];
                 const formData = new FormData();
                 formData.append('profile', file);
@@ -57,13 +68,44 @@ export default class extends View {
 
     async addHandlerRemoveFile(handler) {
         this.DOM.removeSelectedImage.addEventListener("click", async () => {
-            if (this.DOM.userProfileImage.files[0]) {
-                this.DOM.userProfileImage.value = "";
-                this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
-                this.DOM.removeSelectedImage.classList.add("d-none");
-                handler();
-            }
+            const img = await handler();
+            console.log(img);
+            this.removeUploadedFile(img);
         });
+    }
+
+    removeUploadedFile(img) {
+        if (this.DOM.userProfileImage.files[0]) {
+            this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
+            this.DOM.removeSelectedImage.classList.add("d-none");
+            this.DOM.userProfileImage.value = "";
+            this.DOM.uploadImageBlock.classList.remove("d-none");
+            this.DOM.fileNameBlock.classList.remove("bg-corn", "justify-content-between");
+            this.DOM.fileNameBlock.classList.add("justify-content-center");
+            this.showHideAvatarDeleteBtn(img);
+        }
+    }
+
+
+    addHandlerDeleteAvatar() {
+        this.DOM.deleteAvatarBtn.addEventListener("click", () => {
+            this.DOM.avatarUploadControllers.classList.add("d-none");
+            this.DOM.avatarDeleteControllers.classList.remove("d-none");
+        })
+    }
+    addHandlerDeleteAvatarConfirm(handler) {
+        this.DOM.deleteAvatarConfirm.addEventListener("click", () => {
+            this.DOM.avatarUploadControllers.classList.remove("d-none");
+            this.DOM.avatarDeleteControllers.classList.add("d-none");
+            handler();
+        })
+    }
+
+    addHandlerDeleteAvatarBack() {
+        this.DOM.deleteAvatarBack.addEventListener("click", () => {
+            this.DOM.avatarUploadControllers.classList.remove("d-none");
+            this.DOM.avatarDeleteControllers.classList.add("d-none");
+        })
     }
 
     async addHandlerShowHidePasswords() {
@@ -118,7 +160,8 @@ export default class extends View {
                     status: false,
                 };
             }
-            handler(this.grabUserInputs());
+            const img = await handler();
+            this.removeUploadedFile(img);
 
         });
     }
@@ -143,11 +186,28 @@ export default class extends View {
         this.DOM.lastlogin.innerHTML = data.last_login;
         this.DOM.registered.innerHTML = data.registered;
         document.getElementById("avatar").src = data.avatar;
+        this.showHideAvatarDeleteBtn(data.img);
+        this.DOM.userCurrPw.value = "";
+        this.DOM.userNewPw.value = "";
+        this.DOM.userNewPwConf.value = "";
     }
 
-    loadUserImage(data) {
+    showHideAvatarDeleteBtn(img) {
+        if (img == DEFAULT_AVATAR) {
+            this.DOM.deleteAvatarBtn.classList.add("d-none");
+        } else {
+            this.DOM.deleteAvatarBtn.classList.remove("d-none");
+        }
+    }
+
+    loadCurrentAvatar(data) {
         document.querySelector("#profile-avatar").src = data.avatar;
     }
+
+    loadAvatarPreview(userId, img) {
+        document.querySelector("#profile-avatar").src = `/images/users/${userId}/prev/${img}`;
+    }
+
 
     async renderHomePageHTML() {
         this._mainContainer.innerHTML = `
@@ -159,7 +219,7 @@ export default class extends View {
 
             <div class="row justify-content-between flex-wrap-reverse" style="max-width:1200px">
 
-            <div class="col-md-8 text-center text-md-start">
+            <div class="col-lg-8 text-center text-md-start">
 
                 <div class="d-block w-100 mb-2">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-username">Felhasználónév</label></div>
@@ -203,34 +263,43 @@ export default class extends View {
                             </div>
                         </div>                
                     </div>
-
                 </div>
+
                 <div class="d-flex flex-wrap flex-md-nowrap mb-2">
                     <div class="p-2 bg-light me-2 mb-2 rounded-3"><p class="m-0 p-0 text-dark">Regisztráció</p><small id="registered-date"></small></div>
                     <div class="p-2 bg-light mb-2 rounded-3"><p class="m-0 p-0 text-dark">Utolsó bejelentkezés</p><small id="last-login-date"></small></div>
                 </div>
+                
             </div>
 
 
+                <div id="avatar-content-block" class="col-lg-4 text-center">
 
-            <div id="avatar-content-block" class="col-md-4 text-center">
+                    <img src="#" alt="profile_image" class="img-thumbnail" id="profile-avatar">
 
-                <img src="#" alt="profile_image" class="img-thumbnail" id="profile-avatar">
+                    <div class="row justify-content-center">
+                        <div id="avatar-upload-controllers" class="">
+                            <div id="upload-image-block" class="col-8 btn btn-secondary my-2 p-0">
+                                <label for="file-upload" class="d-block cursor-pointer"><i class="fas fa-upload"></i></label>
+                                <input id="file-upload" type="file" name="upload-image" accept="image/*"></input>
+                            </div>
+                            <button type="button" id="delete-avatar-btn" class="col-3 btn btn-danger my-2 p-0 ms-1"><i class="fas fa-trash"></i></button>
+                                <div id="file-name-block" class="d-flex wrap rounded-3 align-items-center justify-content-center p-2 mb-3">
+                                <small maxlength="3" class="text-sort" id="profile-image-name">Nincs kép kiválasztva!</small>
+                                <button type="button" class="btn-close d-none" id="remove-selected-image"></button>
+                            </div>
+                        </div>
 
-                <div class="btn btn-secondary w-100 my-2 p-0">
-                <label for="file-upload" class="d-block cursor-pointer"><i class="fas fa-upload"></i></label>
-                <input id="file-upload" type="file" name="upload-image" accept="image/*"></input>
+                        <div class="row d-none" id="avatar-delete-controllers">
+                            <label class="d-block"> Biztosan törlöd a jelenlegi profilképed?</label>
+                            <div class="d-flex">
+                                <button type="button" id="delete-avatar-confirm" class="col-6 btn btn-danger my-2 p-0"><small>Törlés!</small></button>
+                                <button type="button" id="delete-avatar-back" class="col-6 btn btn-secondary my-2 p-0 ms-2"><small>Mégsem!</small></button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="d-flex wrap align-items-center p-1 mb-3" style="height:24px">
-                <small maxlength="2" class="text-sort" id="profile-image-name">Nincs kép kiválasztva!</small>
-                <button type="button" class="btn-close col-2 d-none" id="remove-selected-image"></button>
-                </div>
-
-            </div>
-
-               
-
             </div>
 
             <div class="d-block block-2">

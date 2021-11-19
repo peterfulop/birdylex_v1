@@ -5,6 +5,7 @@ const uuid = require("uuid");
 const jwt = require("jsonwebtoken");
 const connection = require("../database/db");
 const dotenv = require("dotenv");
+const fs = require("fs");
 dotenv.config();
 
 class DbServiceUsers extends DbService {
@@ -158,10 +159,19 @@ class DbServiceUsers extends DbService {
                 if (error) {
                   console.log(error);
                 }
-                if (result) resolve(result.affectedRows);
+                if (result) resolve(result.affectedRows)
+                else reject(error)
               });
             });
+
             if (response > 0) {
+
+              this.setUserFolders(newUser.unique_id);
+              const basePath = `./public/images/users/${newUser.unique_id}/avatar/`;
+              fs.copyFile('./public/images/avatar.png', `${basePath}/avatar.png`, (err) => {
+                if (err) throw error;
+              })
+
               return {
                 status: true,
                 message: "A regisztráció sikeres volt!",

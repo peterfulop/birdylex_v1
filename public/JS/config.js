@@ -1,6 +1,7 @@
 export const API_URL = "http://localhost:5000/api";
 export const TIMEOUT_SEC = 10;
 export const IMG_ROOT = "/images/users/";
+export const DEFAULT_AVATAR = "avatar.png";
 
 export const menuItems = Object.freeze({
   home: {

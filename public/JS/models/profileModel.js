@@ -31,7 +31,6 @@ export const editProfile = async (data) => {
         const formData = new FormData();
         formData.append('profile', file);
         const resp = await multiFetch(`${API_URL}/users/avatar`, "POST", formData, true);
-        // console.log(resp);
         // if (!resp.ok) {
         //     showAlertPanel(
         //         "#edit-profil-form-alert",
@@ -76,5 +75,20 @@ export const editProfile = async (data) => {
             status: resp.data.status,
         };
     }
+
+}
+
+
+export const setAvatarPreview = async (file) => {
+
+    const res = await multiFetch(`${API_URL}/users/avatar/preview`, "POST", file, true);
+    return res;
+
+}
+
+export const deleteCurrentAvatar = async () => {
+
+    const res = await multiFetch(`${API_URL}/users/avatar`, "DELETE");
+    return res;
 
 }

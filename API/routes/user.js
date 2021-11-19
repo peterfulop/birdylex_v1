@@ -7,6 +7,9 @@ const uuid = require("uuid");
 const sharp = require('sharp');
 
 const UserController = require('../controllers/user.js');
+const dbService = require("../services/dbService.js");
+const dbs = new dbService();
+
 
 
 router.get("/active", isLoggedIn,
@@ -48,7 +51,6 @@ router.patch("/patch", isLoggedIn,
     }, UserController.users_update_user);
 
 
-
 router.post("/avatar", isLoggedIn,
     (req, res, next) => {
         if (!req.user) {
@@ -59,25 +61,43 @@ router.post("/avatar", isLoggedIn,
             if (req.files) {
                 const file = req.files.profile;
                 const fileName = req.files.profile.name;
-                const g = /(.*)\.(.+)/;
-                const ext = fileName.match(g)[2];
+                const ext = path.extname(fileName);
 
-                const unique_name = `${req.user.unique_id}.${ext}`;
+                const unique_id = req.user.unique_id;
 
-                const basePath = `./public/images/users/${req.user.unique_id}/avatar/`;
 
-                if (!fs.existsSync(basePath)) {
-                    fs.mkdirSync(basePath);
-                }
+                dbs.setUserFolders(unique_id);
 
-                const currAvatar = basePath + req.user.unique_id + ".*";
-                fs.unlink(currAvatar, (err) => {
+                const basePath = (`./public/images/users/${unique_id}/avatar/`);
+
+                fs.readdir(basePath, (err, files) => {
                     if (err) {
-                        console.error(err)
-                        return;
+                        console.log(err);
+                        return res.json({
+                            message: "Hiba történt!"
+                        })
                     }
-                });
+                    else {
+                        if (files.length > 0) {
 
+                            for (const file of files) {
+                                console.log(file);
+                                fs.unlink(path.join(basePath, file), err => {
+                                    if (err) return console.log(err);
+                                });
+                            }
+                        }
+                        else {
+                            return res.json({
+                                message: "Nincs törölhető kép!"
+                            })
+                        }
+                    }
+                })
+
+                const rnd = uuid.v4();
+                const randomId = rnd;
+                const unique_name = `${randomId}${ext}`;
 
                 file.mv(basePath + unique_name, (err) => {
                     if (err) {
@@ -88,8 +108,57 @@ router.post("/avatar", isLoggedIn,
                         next();
                     }
                 });
+
             } else {
-                return next();
+                return res.json({
+                    message: "Nincs file csatolva!"
+                })
+            }
+        }
+    }, UserController.users_update_avatar);
+
+
+router.delete("/avatar", isLoggedIn,
+    (req, res, next) => {
+        if (!req.user) {
+            console.log("response message:", res.message);
+            res.redirect("/");
+        } else {
+            req.body.userId = req.user.unique_id;
+            const unique_id = req.user.unique_id;
+            const basePath = `./public/images/users/${unique_id}/avatar/`;
+            try {
+                fs.readdir(basePath, (err, files) => {
+                    if (err) {
+                        console.log(err);
+                        return res.json({
+                            message: "Hiba történt!"
+                        })
+                    }
+                    else {
+                        if (files.length > 0) {
+                            for (const file of files) {
+                                fs.unlink(path.join(basePath, file), err => {
+                                    if (err) throw err;
+                                });
+                            }
+                            fs.copyFile('./public/images/avatar.png', `${basePath}/avatar.png`, (err) => {
+                                if (err) throw error;
+                            })
+                            req.body.avatarId = "avatar.png";
+                            next();
+                        }
+                        else {
+                            return res.json({
+                                message: "Nincs törölhető kép!"
+                            })
+                        }
+                    }
+
+                })
+
+            } catch (error) {
+                return error.message;
             }
         }
     }, UserController.users_update_avatar);
@@ -106,29 +175,46 @@ router.post("/avatar/preview", isLoggedIn,
 
             if (req.files) {
 
-
                 const file = req.files.profile;
                 const fileName = req.files.profile.name;
+                const fileExt = path.extname(fileName);
 
-                const g = /(.*)\.(.+)/;
-                const ext = fileName.match(g)[2];
-                const rnd = uuid.v4();
-                const unique_name = `${rnd}.${ext}`;
-                const basePath = `./public/images/users/${req.user.unique_id}/`;
 
-                if (!fs.existsSync(basePath)) {
-                    fs.mkdirSync(basePath);
-                }
-                if (!fs.existsSync(basePath + "/avatar")) {
-                    fs.mkdirSync(basePath + "/avatar");
-                }
-                if (!fs.existsSync(basePath + "/prev")) {
-                    fs.mkdirSync(basePath + "/prev");
-                }
+                // Elérési útvonalak beállítása, ha hiányozna
+                const unique_id = req.user.unique_id;
+                const basePath = `./public/images/users/${unique_id}/`;
+                dbs.setUserFolders(unique_id);
 
+
+                const pufferPath = basePath + "puffer/";
+                const previewPath = basePath + "prev/";
+
+                // PUFFER mappa ürítése
+
+                fs.readdir(pufferPath, (err, files) => {
+                    if (err) throw err;
+                    if (files.length > 0) {
+                        for (const file of files) {
+                            fs.unlinkSync(path.join(pufferPath, file), err => {
+                                if (err) throw err;
+                            });
+                        }
+                    }
+                })
+
+                // // Előnézeti kép betöltése pufferbe
+                file.mv(pufferPath + "/pufered" + fileExt, (err) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+
+                // }
+
+
+                // // Előézeti mappa ürítése
                 const prevDir = basePath + "prev/";
-
-                fs.readdir(prevDir, (err, files) => {
+                fs.readdir(prevDir, async (err, files) => {
                     if (err) throw err;
                     if (files.length > 0) {
                         console.log("A mappa nem üres!");
@@ -137,27 +223,18 @@ router.post("/avatar/preview", isLoggedIn,
                                 if (err) throw err;
                             });
                         }
-                    } else {
-                        console.log("Üres a mappa!");
                     }
                 });
 
+                // Végleges kép paramétereinek meghatározása, majd másolás
+                const rnd = uuid.v4();
+                const unique_name = rnd + fileExt;
 
-
-
-                file.mv(basePath + "prev/" + unique_name, (err) => {
-                    if (err) {
-                        res.send(err);
-                        return;
-                    } else {
-                        res.status(200).json({
-                            message: "Előnézet",
-                            img: unique_name
-                        })
-                    }
-                });
-
-                // await sharp(basePath + "prev/" + unique_name).resize(300, 300).toFile(basePath + "prev/" + "__" + unique_name);
+                let input = pufferPath + "puffered" + fileExt;
+                console.log(input);
+                await sharp(input)
+                    .resize({ width: 300 })
+                    .toFile(prevDir + unique_name)
 
 
             }

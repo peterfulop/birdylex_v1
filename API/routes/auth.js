@@ -10,6 +10,4 @@ router.use('/logout', authController.logout);
 
 
 
-
-
 module.exports = router;

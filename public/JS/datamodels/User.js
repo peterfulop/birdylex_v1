@@ -8,6 +8,7 @@ export class User extends DataModel {
   constructor(unique_id, name, email, registered, last_login, avatar) {
     super();
     this.avatar = IMG_ROOT + unique_id + "/avatar/" + avatar;
+    this.img = avatar;
     this.name = name;
     this.unique_id = unique_id;
     this.email = email;
