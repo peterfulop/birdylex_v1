@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2021. Nov 14. 11:22
+-- Létrehozás ideje: 2021. Nov 19. 20:29
 -- Kiszolgáló verziója: 10.4.14-MariaDB
 -- PHP verzió: 7.2.34
 
@@ -18,8 +18,9 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `birdy_db`
+-- Adatbázis: `birdylex`
 --
+
 -- --------------------------------------------------------
 
 --
@@ -46,7 +47,10 @@ INSERT INTO `dictionaries` (`id`, `dictionary_name`, `fk_language_code_1`, `fk_l
 (4, 'Francia-Magyar', 7, 1, '2021-03-29 00:00:00', 1),
 (5, 'Human Body', 4, 1, '2021-03-29 00:00:00', 1),
 (268, 'Zöldségek, fűszernövények', 4, 1, '2021-06-19 13:18:35', 1),
-(333, 'Wedding Day', 4, 1, '2021-07-28 14:36:55', 1);
+(333, 'Wedding Day', 4, 1, '2021-07-28 14:36:55', 1),
+(391, 'Teszt szótár 1.', 1, 1, '2021-11-16 13:00:53', 1),
+(392, 'Teszt szótár 2.', 1, 1, '2021-11-16 13:35:05', 1),
+(393, 'Első szótáram', 1, 1, '2021-11-16 14:24:52', 7);
 
 -- --------------------------------------------------------
 
@@ -145,42 +149,59 @@ INSERT INTO `notes` (`id`, `fk_user_id`, `note`, `relase_date`) VALUES
 
 CREATE TABLE `practice` (
   `id` int(11) NOT NULL,
+  `dictionary_name` varchar(50) NOT NULL,
   `fk_user_id` int(11) NOT NULL,
-  `fk_dictionary_id` int(11) NOT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
   `relase_date` datetime NOT NULL,
   `question_count` int(11) NOT NULL,
   `prompter_count` int(11) NOT NULL,
   `skipped_count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- A tábla adatainak kiíratása `practice`
 --
 
-INSERT INTO `practice` (`id`, `fk_user_id`, `fk_dictionary_id`, `start_time`, `end_time`, `relase_date`, `question_count`, `prompter_count`, `skipped_count`) VALUES
-(1, 1, 1, '2021-04-01 17:08:55', '2021-04-01 17:11:05', '2021-04-01 17:11:05', 15, 3, 3),
-(2, 1, 5, '2021-04-03 11:15:45', '2021-04-03 11:20:05', '2021-04-03 11:20:05', 20, 5, 1),
-(3, 1, 5, '2021-04-03 13:08:55', '2021-04-03 13:11:05', '2021-04-03 13:11:05', 36, 8, 2),
-(4, 1, 1, '2021-04-08 20:11:35', '2021-04-08 20:19:49', '2021-04-08 20:19:49', 40, 10, 2),
-(5, 1, 1, '2021-04-01 15:08:55', '2021-04-01 15:11:05', '2021-06-08 15:33:09', 11, 3, 2),
-(6, 1, 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 15:34:15', 40, 10, 10),
-(8, 1, 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 16:15:59', 40, 10, 10),
-(9, 1, 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 16:16:14', 38, 3, 5),
-(14, 1, 4, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2021-06-08 16:27:32', 10, 1, 9),
-(17, 1, 2, '2021-06-08 14:32:55', '2021-06-08 14:33:19', '2021-06-08 16:33:33', 5, 2, 0),
-(22, 1, 2, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 17:05:21', 38, 3, 5),
-(25, 1, 1, '2021-06-08 15:08:04', '2021-06-08 15:08:07', '2021-06-08 17:08:10', 8, 1, 8),
-(28, 1, 1, '2021-06-08 15:28:32', '2021-06-08 15:28:34', '2021-06-08 17:28:36', 3, 0, 3),
-(29, 1, 1, '2021-06-08 15:29:41', '2021-06-08 15:29:42', '2021-06-08 17:29:46', 3, 0, 3),
-(30, 1, 1, '2021-06-08 15:30:19', '2021-06-08 15:30:22', '2021-06-08 17:30:23', 3, 0, 3),
-(31, 1, 3, '2021-06-08 15:32:03', '2021-06-08 15:32:06', '2021-06-08 17:32:13', 9, 0, 9),
-(32, 1, 1, '2021-06-08 15:43:57', '2021-06-08 15:43:58', '2021-06-08 17:44:00', 5, 0, 5),
-(33, 1, 1, '2021-06-16 12:02:28', '2021-06-16 12:02:30', '2021-06-16 14:02:32', 3, 0, 3),
-(34, 1, 1, '2021-06-16 12:04:38', '2021-06-16 12:04:40', '2021-06-16 14:04:42', 3, 0, 3),
-(35, 1, 333, '2021-07-28 12:48:03', '2021-07-28 12:49:07', '2021-07-28 14:49:21', 12, 0, 0),
-(36, 1, 333, '2021-07-28 13:35:43', '2021-07-28 13:36:55', '2021-07-28 15:36:58', 12, 0, 12);
+INSERT INTO `practice` (`id`, `dictionary_name`, `fk_user_id`, `start_time`, `end_time`, `relase_date`, `question_count`, `prompter_count`, `skipped_count`) VALUES
+(1, 'Korábbi tesztszótár', 1, '2021-04-01 17:08:55', '2021-04-01 17:11:05', '2021-04-01 17:11:05', 15, 3, 3),
+(2, 'Korábbi tesztszótár', 1, '2021-04-03 11:15:45', '2021-04-03 11:20:05', '2021-04-03 11:20:05', 20, 5, 1),
+(3, 'Korábbi tesztszótár', 1, '2021-04-03 13:08:55', '2021-04-03 13:11:05', '2021-04-03 13:11:05', 36, 8, 2),
+(4, 'Korábbi tesztszótár', 1, '2021-04-08 20:11:35', '2021-04-08 20:19:49', '2021-04-08 20:19:49', 40, 10, 2),
+(5, 'Korábbi tesztszótár', 1, '2021-04-01 15:08:55', '2021-04-01 15:11:05', '2021-06-08 15:33:09', 11, 3, 2),
+(6, 'Korábbi tesztszótár', 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 15:34:15', 40, 10, 10),
+(8, 'Korábbi tesztszótár', 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 16:15:59', 40, 10, 10),
+(9, 'Korábbi tesztszótár', 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 16:16:14', 38, 3, 5),
+(17, 'Korábbi tesztszótár', 1, '2021-06-08 14:32:55', '2021-06-08 14:33:19', '2021-06-08 16:33:33', 5, 2, 0),
+(22, 'Korábbi tesztszótár', 1, '2021-06-01 15:08:55', '2021-06-01 15:11:05', '2021-06-08 17:05:21', 38, 3, 5),
+(25, 'Korábbi tesztszótár', 1, '2021-06-08 15:08:04', '2021-06-08 15:08:07', '2021-06-08 17:08:10', 8, 1, 8),
+(28, 'Korábbi tesztszótár', 1, '2021-06-08 15:28:32', '2021-06-08 15:28:34', '2021-06-08 17:28:36', 3, 0, 3),
+(29, 'Korábbi tesztszótár', 1, '2021-06-08 15:29:41', '2021-06-08 15:29:42', '2021-06-08 17:29:46', 3, 0, 3),
+(30, 'Korábbi tesztszótár', 1, '2021-06-08 15:30:19', '2021-06-08 15:30:22', '2021-06-08 17:30:23', 3, 0, 3),
+(31, 'Korábbi tesztszótár', 1, '2021-06-08 15:32:03', '2021-06-08 15:32:06', '2021-06-08 17:32:13', 9, 0, 9),
+(32, 'Korábbi tesztszótár', 1, '2021-06-08 15:43:57', '2021-06-08 15:43:58', '2021-06-08 17:44:00', 5, 0, 5),
+(33, 'Korábbi tesztszótár', 1, '2021-06-16 12:02:28', '2021-06-16 12:02:30', '2021-06-16 14:02:32', 3, 0, 3),
+(34, 'Korábbi tesztszótár', 1, '2021-06-16 12:04:38', '2021-06-16 12:04:40', '2021-06-16 14:04:42', 3, 0, 3),
+(35, 'Korábbi tesztszótár', 1, '2021-07-28 12:48:03', '2021-07-28 12:49:07', '2021-07-28 14:49:21', 12, 0, 0),
+(36, 'Korábbi tesztszótár', 1, '2021-07-28 13:35:43', '2021-07-28 13:36:55', '2021-07-28 15:36:58', 12, 0, 12),
+(37, 'Korábbi tesztszótár', 1, '2021-11-15 12:07:49', '2021-11-15 12:07:55', '2021-11-15 13:07:58', 10, 4, 10),
+(38, 'Korábbi tesztszótár', 1, '2021-11-15 12:09:02', '2021-11-15 12:09:07', '2021-11-15 13:09:09', 10, 5, 10),
+(39, 'Teszt szótár 1.', 1, '2021-11-16 12:46:33', '2021-11-16 12:46:35', '2021-11-16 13:46:37', 3, 0, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `text`
+--
+
+CREATE TABLE `text` (
+  `id` int(11) NOT NULL,
+  `fk_user_id` int(11) NOT NULL,
+  `fk_language_code` int(11) NOT NULL,
+  `content` longtext NOT NULL,
+  `relase_date` date DEFAULT NULL,
+  `last_modified` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -196,7 +217,7 @@ CREATE TABLE `users` (
   `password` varchar(255) CHARACTER SET utf8 NOT NULL,
   `registered` datetime NOT NULL,
   `last_login` datetime DEFAULT NULL,
-  `avatar` mediumblob DEFAULT NULL
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -204,8 +225,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `unique_id`, `name`, `email`, `password`, `registered`, `last_login`, `avatar`) VALUES
-(1, '39112b13-9a19-4a08-b360-28e4e71ad21a', 'birdy', 'birdy@birdylex.com', '$2b$08$G6py0KdXXRoh8uQou3SFU.2AN0ucQWUXydh/npXVjpWe4M7L8xjRG', '2021-11-12 17:09:10', '2021-11-12 21:07:08', NULL),
-(2, 'bcfc21fe-4633-44dd-9423-2f148c547295', 'admin', 'admin@email.com', 'f7744dba48e7f5877d5c6b7f280dd28dcaa53c444231facf227882b614394292', '2021-07-06 16:41:33', '2021-07-06 16:41:33', 0x30);
+(1, '39112b13-9a19-4a08-b360-28e4e71ad21a', 'Péter', 'master@birdylex.com', '$2b$08$C5kh/vBrynLr54sUk/6e9uy5vqIuy0U2Pb9kyf7fOUqhqbSqk8yfy', '2021-11-12 17:09:10', '2021-11-18 17:06:11', '39112b13-9a19-4a08-b360-28e4e71ad21a.jpg'),
+(7, 'dec42d2a-5657-4f97-a090-ff1a541cad45', 'birdy', 'birdy@birdylex.com', '$2b$08$TKNKXvcKDtH0//2qf.mAfurJyUVVOYFOeTyAs441B8JdGqLo3/IxK', '2021-11-15 15:31:43', '2021-11-18 17:24:12', 'dec42d2a-5657-4f97-a090-ff1a541cad45.png'),
+(14, 'e032f52a-17b7-4e68-a435-8694cae094eb', 'Jennifer', 'jennifer@email.com', '$2b$08$rztqBAeBWBhWa4MIVBCYPO9sh3l/y9hn0r3wbqgIwEOdPf15JlAWu', '2021-11-19 12:29:01', '2021-11-19 12:29:11', 'dd881403-c2fe-4ed2-8231-ee4fa9cd2118.JPG'),
+(17, '28965d04-ecb9-4e4d-9bf2-e8225951c181', 'register', 'register@email.com', '$2b$08$Tp/BMFqbjjN.zPAzFyMPl.erScDOGmVba04TJvhmbucVJTp5kpx52', '2021-11-19 17:30:23', '2021-11-19 17:30:41', 'avatar.png');
 
 -- --------------------------------------------------------
 
@@ -230,7 +253,7 @@ CREATE TABLE `words` (
 --
 
 INSERT INTO `words` (`id`, `fk_user_id`, `fk_dictionary_id`, `word_1`, `word_2`, `fk_language_code_1`, `fk_language_code_2`, `relase_date`, `last_modified`) VALUES
-(1, 1, 1, 'apple', 'alma', 3, 1, '2021-07-22 23:16:37', '2021-07-22 23:16:37'),
+(1, 1, 1, 'apple', 'alma', 3, 1, '2021-07-22 23:16:37', '2021-11-16 14:21:39'),
 (2, 1, 1, 'book', 'könyv', 3, 1, '2021-03-29 00:00:00', '2021-03-29 00:00:00'),
 (3, 1, 1, 'car', 'autó', 3, 1, '2021-03-29 00:00:00', '2021-03-29 00:00:00'),
 (4, 1, 1, 'dictionary', 'szótár', 3, 1, '2021-03-29 00:00:00', '2021-03-29 00:00:00'),
@@ -363,7 +386,6 @@ INSERT INTO `words` (`id`, `fk_user_id`, `fk_dictionary_id`, `word_1`, `word_2`,
 (292, 1, 268, 'parsley', 'petrezselyem', 4, 1, '2021-06-19 13:22:41', '2021-06-19 13:22:41'),
 (293, 1, 268, 'tarragon', 'tárkony', 4, 1, '2021-06-19 13:22:53', '2021-06-19 13:22:53'),
 (294, 1, 268, 'chives', 'metélőhagyma, snidling', 4, 1, '2021-06-19 13:23:11', '2021-06-19 13:23:11'),
-(295, 1, 268, 'cilantro', 'koriander', 4, 1, '2021-06-19 13:23:22', '2021-06-19 13:23:22'),
 (296, 1, 268, 'basil', 'bazsalikom', 4, 1, '2021-06-19 13:23:48', '2021-06-19 13:23:48'),
 (297, 1, 268, 'fennel', 'édeskömény', 4, 1, '2021-06-19 13:24:52', '2021-06-19 13:24:52'),
 (298, 1, 268, 'anise', 'ánizs', 4, 1, '2021-06-19 13:24:57', '2021-06-19 13:24:57'),
@@ -485,7 +507,12 @@ INSERT INTO `words` (`id`, `fk_user_id`, `fk_dictionary_id`, `word_1`, `word_2`,
 (912, 1, 333, 'Could you just come over here?', 'Át tudnál jönni ide? ', 4, 1, '2021-07-28 18:20:24', '2021-07-28 18:20:24'),
 (913, 1, 333, 'please go ahead!', 'Kérlek menj előre!', 4, 1, '2021-08-11 23:25:32', '2021-08-11 23:25:32'),
 (914, 1, 333, 'make her/him  laugh', 'megnevetteti', 4, 1, '2021-08-11 23:28:52', '2021-08-11 23:28:52'),
-(915, 1, 333, 'Give her some little kisses on the cheek.', 'Adj neki néhány csókot az arcára.', 4, 1, '2021-08-11 23:35:24', '2021-08-11 23:35:24');
+(915, 1, 333, 'Give her some little kisses on the cheek.', 'Adj neki néhány csókot az arcára.', 4, 1, '2021-08-11 23:35:24', '2021-08-11 23:35:24'),
+(943, 1, 268, 'cilantro', 'koriander', 4, 1, '2021-11-15 12:55:51', '2021-11-15 12:55:51'),
+(972, 1, 391, 'apple', 'alma', 3, 1, '2021-11-16 13:44:45', '2021-11-16 13:44:45'),
+(973, 1, 391, 'phony baloney', 'mesebeszéd', 1, 1, '2021-11-16 13:44:45', '2021-11-16 13:44:45'),
+(974, 1, 391, 'test', 'elegánsan', 1, 1, '2021-11-16 13:44:45', '2021-11-16 13:44:45'),
+(977, 7, 393, 'phony baloney', 'test', 1, 1, '2021-11-16 14:25:00', '2021-11-16 14:25:00');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -524,8 +551,13 @@ ALTER TABLE `notes`
 --
 ALTER TABLE `practice`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_dictionary_id` (`fk_dictionary_id`) USING BTREE,
   ADD KEY `fk_user_id` (`fk_user_id`);
+
+--
+-- A tábla indexei `text`
+--
+ALTER TABLE `text`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- A tábla indexei `users`
@@ -552,7 +584,7 @@ ALTER TABLE `words`
 -- AUTO_INCREMENT a táblához `dictionaries`
 --
 ALTER TABLE `dictionaries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=336;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=396;
 
 --
 -- AUTO_INCREMENT a táblához `languages`
@@ -570,25 +602,25 @@ ALTER TABLE `main_menu_hu`
 -- AUTO_INCREMENT a táblához `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT a táblához `practice`
 --
 ALTER TABLE `practice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT a táblához `words`
 --
 ALTER TABLE `words`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=918;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=979;
 
 --
 -- Megkötések a kiírt táblákhoz
@@ -598,9 +630,11 @@ ALTER TABLE `words`
 -- Megkötések a táblához `dictionaries`
 --
 ALTER TABLE `dictionaries`
-  ADD CONSTRAINT `dictionaries_ibfk_1` FOREIGN KEY (`FK_language_code_1`) REFERENCES `languages` (`id`),
-  ADD CONSTRAINT `dictionaries_ibfk_2` FOREIGN KEY (`FK_language_code_2`) REFERENCES `languages` (`id`),
-  ADD CONSTRAINT `dictionaries_ibfk_3` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `dictionaries_ibfk_1` FOREIGN KEY (`fk_language_code_1`) REFERENCES `languages` (`id`),
+  ADD CONSTRAINT `dictionaries_ibfk_2` FOREIGN KEY (`fk_language_code_2`) REFERENCES `languages` (`id`),
+  ADD CONSTRAINT `dictionaries_ibfk_3` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `dictionaries_ibfk_4` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Megkötések a táblához `notes`
@@ -612,19 +646,19 @@ ALTER TABLE `notes`
 -- Megkötések a táblához `practice`
 --
 ALTER TABLE `practice`
-  ADD CONSTRAINT `practice_ibfk_1` FOREIGN KEY (`FK_dictionary_id`) REFERENCES `dictionaries` (`id`),
-  ADD CONSTRAINT `practice_ibfk_2` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `practice_ibfk_1` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`);
 
 --
 -- Megkötések a táblához `words`
 --
 ALTER TABLE `words`
-  ADD CONSTRAINT `FK_dictionary_id` FOREIGN KEY (`FK_dictionary_id`) REFERENCES `dictionaries` (`id`),
-  ADD CONSTRAINT `words_ibfk_1` FOREIGN KEY (`FK_language_code_1`) REFERENCES `languages` (`id`),
-  ADD CONSTRAINT `words_ibfk_2` FOREIGN KEY (`FK_language_code_2`) REFERENCES `languages` (`id`),
-  ADD CONSTRAINT `words_ibfk_3` FOREIGN KEY (`FK_dictionary_id`) REFERENCES `dictionaries` (`id`),
-  ADD CONSTRAINT `words_ibfk_4` FOREIGN KEY (`FK_dictionary_id`) REFERENCES `dictionaries` (`id`),
-  ADD CONSTRAINT `words_ibfk_5` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `FK_dictionary_id` FOREIGN KEY (`fk_dictionary_id`) REFERENCES `dictionaries` (`id`),
+  ADD CONSTRAINT `words_ibfk_1` FOREIGN KEY (`fk_language_code_1`) REFERENCES `languages` (`id`),
+  ADD CONSTRAINT `words_ibfk_2` FOREIGN KEY (`fk_language_code_2`) REFERENCES `languages` (`id`),
+  ADD CONSTRAINT `words_ibfk_3` FOREIGN KEY (`fk_dictionary_id`) REFERENCES `dictionaries` (`id`),
+  ADD CONSTRAINT `words_ibfk_4` FOREIGN KEY (`fk_dictionary_id`) REFERENCES `dictionaries` (`id`),
+  ADD CONSTRAINT `words_ibfk_5` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `words_ibfk_6` FOREIGN KEY (`fk_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
