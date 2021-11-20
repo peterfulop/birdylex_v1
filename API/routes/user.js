@@ -4,10 +4,15 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const uploads = multer({ storage });
 const sharp = require("sharp");
 
 const UserController = require("../controllers/user.js");
 const dbService = require("../services/dbService.js");
+const { fail } = require("assert");
+const { registerHelper } = require("hbs");
 const dbs = new dbService();
 
 router.get(
@@ -67,9 +72,10 @@ router.post(
       res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
+
       if (req.files) {
-        const file = req.files.profile;
-        const fileName = req.files.profile.name;
+        const file = req.files.image;
+        const fileName = req.files.image.name;
         const ext = path.extname(fileName);
 
         const unique_id = req.user.unique_id;
@@ -180,8 +186,8 @@ router.post("/avatar/preview", isLoggedIn, async (req, res) => {
     req.body.userId = req.user.unique_id;
 
     if (req.files) {
-      const file = req.files.profile;
-      const fileName = req.files.profile.name;
+      const file = req.files.image;
+      const fileName = req.files.image.name;
       const fileExt = path.extname(fileName);
 
       // Elérési útvonalak beállítása, ha hiányozna
@@ -263,5 +269,107 @@ router.post("/avatar/preview", isLoggedIn, async (req, res) => {
     }
   }
 });
+
+router.post(
+  "/avatar/prev",
+  isLoggedIn,
+  async (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.redirect("/");
+    } else {
+      if (req.files) {
+        // Elérési útvonalak beállítása, ha hiányozna
+        const unique_id = req.user.unique_id;
+        const path = await dbs.setUserFolders(unique_id);
+        req.body.userId = req.user.unique_id;
+        //await dbs.clearPufferFolder(path.pufferPath);
+        req.body.fp = path;
+        next();
+      } else {
+        res.json({
+          ok: false,
+          message: "no files",
+        });
+      }
+    }
+  },
+  (req, res, next) => {
+    const file = req.files.image;
+    const fileName = path.basename(req.files.image.name);
+    const fileExt = path.extname(fileName);
+    const pufferedImage = uuid.v4() + fileExt;
+
+    file.mv(req.body.fp.pufferPath + pufferedImage, (err) => {
+      if (err) {
+        res.send(err);
+      } else {
+        console.log("Másolás kész!");
+        req.body.pufferedImage = pufferedImage;
+        next();
+      }
+    });
+  },
+  async (req, res) => {
+    const pufferedName = req.body.pufferedImage;
+    const pufferPath = req.body.fp.pufferPath;
+    const prevPath = req.body.fp.prevPath;
+
+    fs.access(pufferPath + pufferedName, async (err) => {
+      if (err) {
+        console.log("Nem létezik a file");
+      } else {
+        console.log("Létezik a file!");
+        //await dbs.clearPreviewFolder(prevPath);
+
+        const pufferedImage = pufferPath + pufferedName;
+        const final = await sharp(pufferedImage)
+          .resize({ width: 300 })
+          .toFile(prevPath + pufferedName)
+          .catch((err) => {
+            console.log(err);
+          });
+        if (final) {
+          res.json({
+            ok: true,
+            message: "Sikerült az átméretezés!",
+            img: pufferedName,
+            user: req.user.unique_id,
+          });
+        }
+      }
+    });
+  }
+);
+
+router.delete(
+  "/avatar/prev",
+  isLoggedIn,
+  async (req, res, next) => {
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.redirect("/");
+    } else {
+      const unique_id = req.user.unique_id;
+      const ph = await dbs.setUserFolders(unique_id);
+      const files = await dbs.getFolderFiles(ph.pufferPath);
+      await dbs.removeFoldersFile(ph.pufferPath, files);
+      next();
+    }
+  },
+  async (req, res) => {
+    console.log("járok itt?");
+    const unique_id = req.user.unique_id;
+    const ph = await dbs.setUserFolders(unique_id);
+    const files = await dbs.getFolderFiles(ph.prevPath);
+    const stat = await dbs.removeFoldersFile(ph.prevPath, files);
+    if (stat) {
+      res.json({
+        ok: true,
+        message: "mappák törölve!",
+      });
+    }
+  }
+);
 
 module.exports = router;

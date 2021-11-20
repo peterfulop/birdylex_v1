@@ -68,7 +68,7 @@ export default class extends View {
         );
         let file = this.DOM.userProfileImage.files[0];
         const formData = new FormData();
-        formData.append("profile", file);
+        formData.append("image", file);
         handler(formData);
       }
     });
@@ -77,7 +77,6 @@ export default class extends View {
   async addHandlerRemoveFile(handler) {
     this.DOM.removeSelectedImage.addEventListener("click", async () => {
       const img = await handler();
-      console.log(img);
       this.removeUploadedFile(img);
     });
   }

@@ -3,6 +3,7 @@ import {
   editProfile,
   setAvatarPreview,
   deleteCurrentAvatar,
+  clearPufferPreviewFolders,
 } from "../models/profileModel.js";
 import ProfileView from "../views/ProfileView.js";
 import { User } from "../datamodels/User.js";
@@ -39,6 +40,9 @@ const controlLoadPreview = async (file) => {
 const controlRemovePreview = async () => {
   await user.setUser();
   const userData = getUserData();
+  const deleted = await clearPufferPreviewFolders();
+  console.log(deleted);
+
   pf.loadCurrentAvatar(userData);
   return userData.img;
 };
