@@ -216,9 +216,9 @@ export default class extends View {
     document.querySelector("#profile-avatar").src = data.avatar;
   }
 
-  loadAvatarPreview(userId, img) {
-    document.querySelector(
-      "#profile-avatar"
+  async loadAvatarPreview(userId, img) {
+    document.getElementById(
+      "profile-avatar"
     ).src = `/images/users/${userId}/prev/${img}`;
   }
 

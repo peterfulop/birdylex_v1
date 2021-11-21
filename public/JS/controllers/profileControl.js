@@ -30,9 +30,8 @@ const fillInputsWithCurrData = async () => {
 const controlLoadPreview = async (file) => {
   if (file) {
     const res = await setAvatarPreview(file);
-    console.log(res);
     if (res.ok) {
-      pf.loadAvatarPreview(res.data.user, res.data.img);
+      await pf.loadAvatarPreview(res.data.user, res.data.img);
     }
   }
 };

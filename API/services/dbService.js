@@ -93,7 +93,6 @@ class DbService {
     });
   };
 
-
   getFolderFiles = async (folderPath) => {
     return new Promise((resolve, reject) => {
       return fs.readdir(folderPath, (err, filenames) =>
@@ -102,97 +101,57 @@ class DbService {
     });
   };
 
-
   removeFolderContent = async (folderPath) => {
-
     let files = await this.getFolderFiles(folderPath);
     let i = files.length;
+    console.log("folder count before delete:", i);
 
-    new Promise(async (resolve, rejects) => {
+    await new Promise(async (resolve, rejects) => {
       if (i > 0) {
         for (const file of files) {
           let curPath = path.join(folderPath, file);
-          console.log(file);
           i--;
           fs.unlink(curPath, (err) => {
             if (err) rejects(err);
           });
-          if (i === 0) {
-            console.log(`${folderPath} >> vége!`);
-            resolve(i);
-          }
+        }
+        if (i === 0) {
+          resolve();
         }
       } else {
-        console.log(`${folderPath} >> üres!`);
-        resolve(i);
+        resolve();
       }
-
     });
   };
 
-  removeContent = async (folderPath) => {
-
-    let files = await new Promise((resolve, reject) => {
-      return fs.readdir(folderPath, (err, filenames) =>
-        err != null ? reject(err) : resolve(filenames)
-      );
-    });
-
-
-    let i = files.length;
-    console.log("i értéke:", i);
-    if (i > 0) {
-      for (const file of files) {
-        let curPath = path.join(folderPath, file);
-        console.log(file);
-        i--;
-
-        //await fs.unlink(curPath);
-
-        if (i === 0) {
-          console.log(`${folderPath} >> vége!`);
-          return (i);
-        }
-      }
-    } else {
-      console.log(`${folderPath} >> üres!`);
-      return (i);
-    }
-
-
-  };
-
-
-  setPufferImage = async (file, pufferPath, pufferedName) => {
-    new Promise((resolve, rejects) => {
-      file.mv(pufferPath + pufferedName, (err) => {
+  setPufferImage = async (file, pufferPath, pufferedName, prevPath) => {
+    return await new Promise(async (resolve, rejects) => {
+      await file.mv(pufferPath + pufferedName, async (err) => {
         if (err) {
-          rejects(err)
+          rejects(err);
         } else {
-          console.log("Kép pufferelve!");
-          resolve(pufferPath + pufferedName);
+          resolve(
+            await this.setResizedImage(pufferPath, pufferedName, prevPath)
+          );
         }
       });
-    })
-  }
+    });
+  };
 
   setResizedImage = async (pufferPath, imageName, prevPath) => {
-
-    new Promise((resolve, rejects) => {
+    return await new Promise(async (resolve, rejects) => {
       const pufferedImage = pufferPath + imageName;
-      const finalImage = sharp(pufferedImage)
+      await sharp(pufferedImage)
         .resize({ width: 300 })
         .toFile(prevPath + imageName)
-        .then(x => {
-          console.log("Kép átméretezve!");
-          resolve(finalImage);
+        .finally(() => {
+          resolve(sharp.cache({ files: 0 })); /// VERY IMPORTANT TO CLEAR THE CACHE!!!!
         })
         .catch((err) => {
           rejects(err);
-        })
-    })
-
-  }
+        });
+    });
+  };
 }
 
 module.exports = DbService;
