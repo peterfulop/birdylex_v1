@@ -11,8 +11,9 @@ const sharp = require("sharp");
 
 const UserController = require("../controllers/user.js");
 const dbService = require("../services/dbService.js");
-const { fail } = require("assert");
+const { fail, rejects } = require("assert");
 const { registerHelper } = require("hbs");
+const { resolve } = require("path");
 const dbs = new dbService();
 
 router.get(
@@ -273,19 +274,59 @@ router.post("/avatar/preview", isLoggedIn, async (req, res) => {
 router.post(
   "/avatar/prev",
   isLoggedIn,
-  async (req, res, next) => {
+  async (req, res) => {
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
       if (req.files) {
-        // Elérési útvonalak beállítása, ha hiányozna
+
+        // 0. Elérési utak meghatározása
         const unique_id = req.user.unique_id;
-        const path = await dbs.setUserFolders(unique_id);
-        req.body.userId = req.user.unique_id;
-        //await dbs.clearPufferFolder(path.pufferPath);
-        req.body.fp = path;
-        next();
+        const prevPath = `./public/images/users/test/prev/`;
+        const pufferPath = `./public/images/users/test/puffer/`;
+        // const prevPath = `./public/images/users/${unique_id}/prev/`;
+        // const pufferPath = `./public/images/users/${unique_id}/puffer/`;
+
+        const file = req.files.image;
+        const fileName = path.basename(file.name);
+        const fileExt = path.extname(fileName);
+        const pufferName = uuid.v4() + fileExt;
+
+        let proc_01 = new Promise(async (resolve, rejects) => {
+          // const res = await dbs.removeFolderContent(pufferPath);
+          const i = await dbs.removeContent(pufferPath);
+          console.log("proc_01", i);
+          resolve(i);
+          // return resolve(res);
+
+        })
+
+        let proc_02 = new Promise(async (resolve, rejects) => {
+          // const res = await dbs.removeContent(prevPath);
+          const i = await dbs.removeContent(prevPath);
+          console.log("proc_02", i);
+          resolve(i);
+          // return resolve(res);
+
+        })
+
+        Promise.race(
+          [
+            proc_01,
+            proc_02
+            //dbs.removeFolderContent(pufferPath),
+            //dbs.removeFolderContent(prevPath),
+            // dbs.setPufferImage(file, pufferPath, pufferName),
+            // dbs.setResizedImage(pufferPath, pufferName, prevPath)
+          ]
+        ).then(x => {
+          res.status(200).json({
+            ok: true,
+            message: "Preview kép betöltve!"
+          })
+        })
+
       } else {
         res.json({
           ok: false,
@@ -293,81 +334,59 @@ router.post(
         });
       }
     }
-  },
-  (req, res, next) => {
-    const file = req.files.image;
-    const fileName = path.basename(req.files.image.name);
-    const fileExt = path.extname(fileName);
-    const pufferedImage = uuid.v4() + fileExt;
-
-    file.mv(req.body.fp.pufferPath + pufferedImage, (err) => {
-      if (err) {
-        res.send(err);
-      } else {
-        console.log("Másolás kész!");
-        req.body.pufferedImage = pufferedImage;
-        next();
-      }
-    });
-  },
-  async (req, res) => {
-    const pufferedName = req.body.pufferedImage;
-    const pufferPath = req.body.fp.pufferPath;
-    const prevPath = req.body.fp.prevPath;
-
-    fs.access(pufferPath + pufferedName, async (err) => {
-      if (err) {
-        console.log("Nem létezik a file");
-      } else {
-        console.log("Létezik a file!");
-        //await dbs.clearPreviewFolder(prevPath);
-
-        const pufferedImage = pufferPath + pufferedName;
-        const final = await sharp(pufferedImage)
-          .resize({ width: 300 })
-          .toFile(prevPath + pufferedName)
-          .catch((err) => {
-            console.log(err);
-          });
-        if (final) {
-          res.json({
-            ok: true,
-            message: "Sikerült az átméretezés!",
-            img: pufferedName,
-            user: req.user.unique_id,
-          });
-        }
-      }
-    });
   }
 );
 
 router.delete(
   "/avatar/prev",
   isLoggedIn,
-  async (req, res, next) => {
+  async (req, res) => {
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
+
       const unique_id = req.user.unique_id;
-      const ph = await dbs.setUserFolders(unique_id);
-      const files = await dbs.getFolderFiles(ph.pufferPath);
-      await dbs.removeFoldersFile(ph.pufferPath, files);
-      next();
+      const pufferPath = `./public/images/users/${unique_id}/puffer/`;
+      const prevPath = `./public/images/users/${unique_id}/prev/`;
+
+      await Promise.race(
+        [
+          dbs.setUserFolders(unique_id),
+          dbs.removeFolderContent(pufferPath),
+          dbs.removeFolderContent(prevPath)
+        ]
+      )
+        .then(
+          res.json({ ok: true, message: "Mappák törölve" })
+        )
     }
-  },
+  }
+);
+
+
+router.delete(
+  "/test",
+  isLoggedIn,
   async (req, res) => {
-    console.log("járok itt?");
-    const unique_id = req.user.unique_id;
-    const ph = await dbs.setUserFolders(unique_id);
-    const files = await dbs.getFolderFiles(ph.prevPath);
-    const stat = await dbs.removeFoldersFile(ph.prevPath, files);
-    if (stat) {
-      res.json({
-        ok: true,
-        message: "mappák törölve!",
-      });
+    if (!req.user) {
+      console.log("response message:", res.message);
+      res.redirect("/");
+    } else {
+
+
+      //const unique_id = req.user.unique_id;
+      //const ufp = await dbs.setUserFolders(unique_id);
+
+      const URL_1 = "./public/images/users/test/puffer/";
+      const URL_2 = "./public/images/users/test/prev/";
+
+      Promise.race(dbs.removeFolderContent(URL_1), dbs.removeFolderContent(URL_2)).then((value) => {
+        console.log(value);
+      })
+
+
+
     }
   }
 );

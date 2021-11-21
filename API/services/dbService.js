@@ -1,8 +1,6 @@
-const { rejects } = require("assert");
 const fs = require("fs");
 const path = require("path");
-const { promisify } = require("util");
-const mv = promisify(fs.rename);
+const sharp = require("sharp");
 class DbService {
   sanitizeHtml = require("sanitize-html");
 
@@ -95,6 +93,7 @@ class DbService {
     });
   };
 
+
   getFolderFiles = async (folderPath) => {
     return new Promise((resolve, reject) => {
       return fs.readdir(folderPath, (err, filenames) =>
@@ -103,21 +102,96 @@ class DbService {
     });
   };
 
-  removeFoldersFile = async (folderPath, files) => {
-    return new Promise(async (resolve, rejects) => {
-      let status = false;
-      for (const file of files) {
-        let curPath = path.join(folderPath, file);
-        fs.unlink(curPath, (err) => {
-          if (err) rejects(err);
-        });
-        status = (await this.getFolderFiles(folderPath)) == null ? true : false;
+
+  removeFolderContent = async (folderPath) => {
+
+    let files = await this.getFolderFiles(folderPath);
+    let i = files.length;
+
+    new Promise(async (resolve, rejects) => {
+      if (i > 0) {
+        for (const file of files) {
+          let curPath = path.join(folderPath, file);
+          console.log(file);
+          i--;
+          fs.unlink(curPath, (err) => {
+            if (err) rejects(err);
+          });
+          if (i === 0) {
+            console.log(`${folderPath} >> vége!`);
+            resolve(i);
+          }
+        }
+      } else {
+        console.log(`${folderPath} >> üres!`);
+        resolve(i);
       }
-      if (status) {
-        resolve(status);
-      }
+
     });
   };
+
+  removeContent = async (folderPath) => {
+
+    let files = new Promise((resolve, reject) => {
+      return fs.readdir(folderPath, (err, filenames) =>
+        err != null ? reject(err) : resolve(filenames)
+      );
+    });
+
+    let i = files.length;
+    if (i > 0) {
+      for (const file of files) {
+        let curPath = path.join(folderPath, file);
+        console.log(file);
+        i--;
+
+        await fs.unlink(curPath);
+        console.log("Unlink után....");
+
+        if (i === 0) {
+          console.log(`${folderPath} >> vége!`);
+          return (i);
+        }
+      }
+    } else {
+      console.log(`${folderPath} >> üres!`);
+      return (i);
+    }
+
+
+  };
+
+
+  setPufferImage = async (file, pufferPath, pufferedName) => {
+    new Promise((resolve, rejects) => {
+      file.mv(pufferPath + pufferedName, (err) => {
+        if (err) {
+          rejects(err)
+        } else {
+          console.log("Kép pufferelve!");
+          resolve(pufferPath + pufferedName);
+        }
+      });
+    })
+  }
+
+  setResizedImage = async (pufferPath, imageName, prevPath) => {
+
+    new Promise((resolve, rejects) => {
+      const pufferedImage = pufferPath + imageName;
+      const finalImage = sharp(pufferedImage)
+        .resize({ width: 300 })
+        .toFile(prevPath + imageName)
+        .then(x => {
+          console.log("Kép átméretezve!");
+          resolve(finalImage);
+        })
+        .catch((err) => {
+          rejects(err);
+        })
+    })
+
+  }
 }
 
 module.exports = DbService;
