@@ -132,21 +132,22 @@ class DbService {
 
   removeContent = async (folderPath) => {
 
-    let files = new Promise((resolve, reject) => {
+    let files = await new Promise((resolve, reject) => {
       return fs.readdir(folderPath, (err, filenames) =>
         err != null ? reject(err) : resolve(filenames)
       );
     });
 
+
     let i = files.length;
+    console.log("i értéke:", i);
     if (i > 0) {
       for (const file of files) {
         let curPath = path.join(folderPath, file);
         console.log(file);
         i--;
 
-        await fs.unlink(curPath);
-        console.log("Unlink után....");
+        //await fs.unlink(curPath);
 
         if (i === 0) {
           console.log(`${folderPath} >> vége!`);
