@@ -31,8 +31,6 @@ const tryToLogin = async (reqBody) => {
 };
 
 
-
-
 const addHandlerLogin = async () => {
 
     const submiters = [DOM.loginForm, DOM.loginButton];

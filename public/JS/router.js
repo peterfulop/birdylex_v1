@@ -8,8 +8,6 @@ import DictionariesView from "./views/DictionariesView.js";
 import AddNewView from "./views/AddNewView.js";
 import BrainteaserView from "./views/BrainteaserView.js";
 import ReaderView from "./views/ReaderView.js";
-import SignInView from "./views/SignInView.js";
-import SignUpView from "./views/SignUpView.js";
 
 import homeControl from "./controllers/homeControl.js";
 import profileControl from "./controllers/profileControl.js";
@@ -18,11 +16,8 @@ import dictionariesControl from "./controllers/dictionariesControl.js";
 import addNewControl from "./controllers/addNewControl.js";
 import brainteaserControl from "./controllers/brainteaserControl.js";
 import readerControl from "./controllers/readerControl.js";
-import signInControl from "./controllers/signInControl.js";
-import signUpControl from "./controllers/signUpControl.js";
 
 import { mobileMenuShowHide } from "./helper.js";
-
 
 const getParams = (match) => {
     const values = match.result.slice(1);
@@ -39,8 +34,6 @@ const getParams = (match) => {
 export const pathToRegex = (path) =>
     new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
-
-
 export const router = async () => {
 
     const routes = [
@@ -55,8 +48,7 @@ export const router = async () => {
         { path: "/addnew", view: AddNewView, init: addNewControl },
         { path: "/brainteaser", view: BrainteaserView, init: brainteaserControl },
         { path: "/reader", view: ReaderView, init: readerControl },
-        { path: "/login", view: SignInView, init: signInControl },
-        { path: "/register", view: SignUpView, init: signUpControl },
+
     ];
 
     // Test each route for potential match

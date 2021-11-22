@@ -31,25 +31,13 @@ export const editProfile = async (data) => {
 
   if (file) {
     const formData = new FormData();
-    formData.append("profile", file);
+    formData.append("image", file);
     const resp = await multiFetch(
       `${API_URL}/users/avatar`,
       "POST",
       formData,
       true
     );
-    // if (!resp.ok) {
-    //     showAlertPanel(
-    //         "#edit-profil-form-alert",
-    //         "danger",
-    //         "Hiba!",
-    //         ` ${resp.data.message}`,
-    //         0
-    //     );
-    //     return {
-    //         status: resp.data.status,
-    //     };
-    // }
   }
 
   const resp = await multiFetch(`${API_URL}/users/patch`, "PATCH", {
@@ -91,7 +79,18 @@ export const setAvatarPreview = async (file) => {
     file,
     true
   );
-  return res;
+  if (!res.data.valid && !res.data.ok) {
+    showAlertPanel(
+      "#edit-profil-form-alert",
+      "danger",
+      "HIBA!",
+      ` ${res.data.message}`,
+      0
+    );
+    return res;
+  } else {
+    return res;
+  }
 };
 
 export const deleteCurrentAvatar = async () => {

@@ -55,13 +55,3 @@ exports.users_update_avatar = async (req, res) => {
     });
   });
 };
-
-exports.imageResize = async (req, res) => {
-  const file = req.files;
-  // const fileName = req.files.image.name;
-  // const fileExt = path.extname(fileName);
-
-  console.log(req.body.userId);
-  console.log(req.body.paths);
-  console.log(file);
-};

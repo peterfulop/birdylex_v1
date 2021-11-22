@@ -522,7 +522,7 @@ export function renderSearchBar() {
                 <form id="search-form">
                     <div class="line-1 d-flex">
                         <div class="search-input w-100">
-                            <input type="search" class="form-control" id="search-element-input" placeholder="Keresés...">
+                            <input type="search" class="form-control" id="search-element-input" max-length="250" placeholder="Keresés...">
                         </div>
                         <div class="search-buttons d-flex">
                             <button type="submit" class="btn btn-secondary ms-1" id="search-element-button"><i class="fas fa-search"></i></button>

@@ -6,10 +6,6 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 
-// const multer = require("multer");
-// const storage = multer.memoryStorage();
-// const uploads = multer({ storage });
-
 dotenv.config();
 
 const auth = require("./API/routes/auth");

@@ -30,8 +30,8 @@ const fillInputsWithCurrData = async () => {
 const controlLoadPreview = async (file) => {
   if (file) {
     const res = await setAvatarPreview(file);
-    if (res.ok) {
-      await pf.loadAvatarPreview(res.data.user, res.data.img);
+    if (res.data.ok) {
+      await pf.setUploadedImage(res.data.user, res.data.img);
     }
   }
 };
@@ -40,7 +40,6 @@ const controlRemovePreview = async () => {
   await user.setUser();
   const userData = getUserData();
   const deleted = await clearPufferPreviewFolders();
-  console.log(deleted);
 
   pf.loadCurrentAvatar(userData);
   return userData.img;

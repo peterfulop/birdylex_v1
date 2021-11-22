@@ -1,14 +1,13 @@
 const express = require("express");
 const { isLoggedIn } = require("../controllers/auth.js");
 const router = express.Router();
-const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
-
+const fs = require("fs");
+const sharp = require("sharp");
 const UserController = require("../controllers/user.js");
-const dbService = require("../services/dbService.js");
-
-const dbs = new dbService();
+const dotenv = require("dotenv");
+dotenv.config();
 
 router.get(
   "/active",
@@ -61,59 +60,48 @@ router.patch(
 router.post(
   "/avatar",
   isLoggedIn,
-  (req, res, next) => {
+  async (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
       req.body.userId = req.user.unique_id;
 
-      if (req.files) {
-        const file = req.files.image;
-        const fileName = req.files.image.name;
-        const ext = path.extname(fileName);
+      const mime = req.files.image.mimetype;
+      const extension = mime.split('/').pop();
+      const validImage = await validateImageExtension(extension.toLowerCase());
 
+      if (!validImage) {
+        return res.status(200).json({
+          ok: validImage,
+          valid: validImage,
+          message: "Nem megfelelő a kép formátuma!"
+        })
+      }
+
+      if (req.files && validImage) {
         const unique_id = req.user.unique_id;
+        const pufferPath = `./public/images/users/${unique_id}/puffer/`;
+        const avatarPath = `./public/images/users/${unique_id}/avatar/`;
 
-        dbs.setUserFolders(unique_id);
+        const file = req.files.image;
+        const fileName = path.basename(file.name);
+        const fileExt = path.extname(fileName);
+        const pufferName = uuid.v4() + fileExt;
 
-        const basePath = `./public/images/users/${unique_id}/avatar/`;
-
-        fs.readdir(basePath, (err, files) => {
-          if (err) {
-            console.log(err);
-            return res.json({
-              message: "Hiba történt!",
-            });
-          } else {
-            if (files.length > 0) {
-              for (const file of files) {
-                console.log(file);
-                fs.unlink(path.join(basePath, file), (err) => {
-                  if (err) return console.log(err);
-                });
-              }
-            } else {
-              return res.json({
-                message: "Nincs törölhető kép!",
-              });
-            }
-          }
-        });
-
-        const rnd = uuid.v4();
-        const randomId = rnd;
-        const unique_name = `${randomId}${ext}`;
-
-        file.mv(basePath + unique_name, (err) => {
-          if (err) {
-            res.send(err);
-            return;
-          } else {
-            req.body.avatarId = unique_name;
+        await Promise.allSettled([
+          await setUserFolders(unique_id),
+          await removeFolderContent(pufferPath),
+          await removeFolderContent(avatarPath),
+          await setPufferImage(file, pufferPath, pufferName, avatarPath),
+        ]).then(async () => {
+          let count = await getFolderFiles(avatarPath);
+          if (count.length > 0) {
+            req.body.avatarId = pufferName;
             next();
           }
         });
+
       } else {
         return res.json({
           message: "Nincs file csatolva!",
@@ -127,50 +115,29 @@ router.post(
 router.delete(
   "/avatar",
   isLoggedIn,
-  (req, res, next) => {
+  async (req, res, next) => {
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
-      req.body.userId = req.user.unique_id;
+
       const unique_id = req.user.unique_id;
-      const basePath = `./public/images/users/${unique_id}/avatar/`;
-      try {
-        fs.readdir(basePath, (err, files) => {
-          if (err) {
-            console.log(err);
-            return res.json({
-              message: "Hiba történt!",
-            });
-          } else {
-            if (files.length > 0) {
-              for (const file of files) {
-                fs.unlink(path.join(basePath, file), (err) => {
-                  if (err) throw err;
-                });
-              }
-              fs.copyFile(
-                "./public/images/avatar.png",
-                `${basePath}/avatar.png`,
-                (err) => {
-                  if (err) throw error;
-                }
-              );
-              req.body.avatarId = "avatar.png";
-              next();
-            } else {
-              return res.json({
-                message: "Nincs törölhető kép!",
-              });
-            }
-          }
-        });
-      } catch (error) {
-        return error.message;
-      }
+      req.body.userId = unique_id;
+
+      const avatarPath = `./public/images/users/${unique_id}/avatar/`;
+      const originalAvatar = `./public/images/${process.env.DEFAULT_AVATAR}`;
+
+      Promise.allSettled([
+        await setUserFolders(unique_id),
+        await removeFolderContent(avatarPath),
+        await copyFileTo(originalAvatar, avatarPath + process.env.DEFAULT_AVATAR)
+      ])
+        .then(() => {
+          req.body.avatarId = process.env.DEFAULT_AVATAR;
+          next();
+        })
     }
-  },
-  UserController.users_update_avatar
+  }, UserController.users_update_avatar
 );
 
 router.post("/avatar/prev", isLoggedIn, async (req, res) => {
@@ -178,8 +145,19 @@ router.post("/avatar/prev", isLoggedIn, async (req, res) => {
     console.log("response message:", res.message);
     res.redirect("/");
   } else {
-    if (req.files) {
-      // 0. Elérési utak meghatározása
+    const mime = req.files.image.mimetype;
+    const extension = mime.split('/').pop();
+    const validImage = await validateImageExtension(extension.toLowerCase());
+
+    if (!validImage) {
+      return res.status(200).json({
+        ok: validImage,
+        valid: validImage,
+        message: "Nem megfelelő a kép formátuma!"
+      })
+    }
+
+    if (req.files && validImage) {
       const unique_id = req.user.unique_id;
       const prevPath = `./public/images/users/${unique_id}/prev/`;
       const pufferPath = `./public/images/users/${unique_id}/puffer/`;
@@ -190,12 +168,12 @@ router.post("/avatar/prev", isLoggedIn, async (req, res) => {
       const pufferName = uuid.v4() + fileExt;
 
       await Promise.allSettled([
-        await dbs.setUserFolders(unique_id),
-        await dbs.removeFolderContent(pufferPath),
-        await dbs.removeFolderContent(prevPath),
-        await dbs.setPufferImage(file, pufferPath, pufferName, prevPath),
+        await setUserFolders(unique_id),
+        await removeFolderContent(pufferPath),
+        await removeFolderContent(prevPath),
+        await setPufferImage(file, pufferPath, pufferName, prevPath),
       ]).then(async () => {
-        let count = await dbs.getFolderFiles(prevPath);
+        let count = await getFolderFiles(prevPath);
         if (count.length > 0) {
           res.json({
             ok: true,
@@ -224,11 +202,127 @@ router.delete("/avatar/prev", isLoggedIn, async (req, res) => {
     const prevPath = `./public/images/users/${unique_id}/prev/`;
 
     Promise.allSettled([
-      await dbs.setUserFolders(unique_id),
-      await dbs.removeFolderContent(pufferPath),
-      await dbs.removeFolderContent(prevPath),
+      await setUserFolders(unique_id),
+      await removeFolderContent(pufferPath),
+      await removeFolderContent(prevPath),
     ]).then(res.json({ ok: true, message: "Mappák törölve" }));
   }
 });
+
+
+/// ROUT METHODS
+const setUserFolders = async (userId) => {
+  const basePath = `./public/images/users/${userId}/`;
+  const avatarPath = `./public/images/users/${userId}/avatar/`;
+  const prevPath = `./public/images/users/${userId}/prev/`;
+  const pufferPath = `./public/images/users/${userId}/puffer/`;
+
+  fs.access(basePath, (err) => {
+    if (err) {
+      fs.mkdirSync(basePath);
+    }
+  });
+
+  fs.access(avatarPath, (err) => {
+    if (err) {
+      fs.mkdirSync(avatarPath);
+    }
+  });
+
+  fs.access(prevPath, (err) => {
+    if (err) {
+      fs.mkdirSync(prevPath);
+    }
+  });
+
+  fs.access(pufferPath, (err) => {
+    if (err) {
+      fs.mkdirSync(pufferPath);
+    }
+  });
+
+  return {
+    basePath,
+    prevPath,
+    avatarPath,
+    pufferPath,
+  };
+};
+
+const getFolderFiles = async (folderPath) => {
+  return await new Promise((resolve, reject) => {
+    return fs.readdir(folderPath, (err, filenames) =>
+      err != null ? reject(err) : resolve(filenames)
+    );
+  });
+};
+
+const removeFolderContent = async (folderPath) => {
+  let files = await getFolderFiles(folderPath);
+  let i = files.length;
+  await new Promise(async (resolve, reject) => {
+    if (i > 0) {
+      for (const file of files) {
+        let curPath = path.join(folderPath, file);
+        i--;
+        fs.unlink(curPath, (err) => {
+          if (err) reject(err);
+        });
+      }
+      if (i === 0) {
+        resolve();
+      }
+    } else {
+      resolve();
+    }
+  });
+};
+
+const setPufferImage = async (file, pufferPath, pufferedName, prevPath) => {
+  await new Promise(async (resolve, reject) => {
+    await file.mv(pufferPath + pufferedName, async (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(
+          await setResizedImage(pufferPath, pufferedName, prevPath)
+        );
+      }
+    });
+  });
+};
+
+const copyFileTo = async (copyFrom, pasteTo) => {
+  await new Promise(async (resolve, reject) => {
+    fs.copyFile(copyFrom, pasteTo, (err) => {
+      if (err) reject(err);
+      else resolve();
+    })
+  })
+}
+
+const setResizedImage = async (pufferPath, imageName, prevPath) => {
+  await new Promise(async (resolve, reject) => {
+    const pufferedImage = pufferPath + imageName;
+    await sharp(pufferedImage)
+      .resize({ width: 300 })
+      .rotate()
+      .toFile(prevPath + imageName)
+      .finally(() => {
+        resolve(sharp.cache({ files: 0 })); /// VERY IMPORTANT TO CLEAR THE CACHE!!!!
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+const validateImageExtension = (fileExt) => {
+
+  const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg', 'tiff', 'avif'];
+  return validExtensions.includes(fileExt.toLowerCase());
+
+}
+
 
 module.exports = router;

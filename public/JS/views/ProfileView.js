@@ -57,15 +57,6 @@ export default class extends View {
   async addHandlerSelectFile(handler) {
     this.DOM.userProfileImage.addEventListener("change", async () => {
       if (this.DOM.userProfileImage.files[0]) {
-        this.DOM.profileImageName.innerHTML =
-          this.DOM.userProfileImage.files[0].name;
-        this.DOM.removeSelectedImage.classList.remove("d-none");
-        this.DOM.uploadImageBlock.classList.add("d-none");
-        this.DOM.deleteAvatarBtn.classList.add("d-none");
-        this.DOM.fileNameBlock.classList.add(
-          "bg-corn",
-          "justify-content-between"
-        );
         let file = this.DOM.userProfileImage.files[0];
         const formData = new FormData();
         formData.append("image", file);
@@ -216,6 +207,20 @@ export default class extends View {
     document.querySelector("#profile-avatar").src = data.avatar;
   }
 
+
+  async setUploadedImage(userId, img) {
+    this.DOM.profileImageName.innerHTML =
+      this.DOM.userProfileImage.files[0].name;
+    this.DOM.removeSelectedImage.classList.remove("d-none");
+    this.DOM.uploadImageBlock.classList.add("d-none");
+    this.DOM.deleteAvatarBtn.classList.add("d-none");
+    this.DOM.fileNameBlock.classList.add(
+      "bg-corn",
+      "justify-content-between"
+    );
+    this.loadAvatarPreview(userId, img);
+  }
+
   async loadAvatarPreview(userId, img) {
     document.getElementById(
       "profile-avatar"
@@ -241,7 +246,7 @@ export default class extends View {
 
                 <div class="d-block w-100 mb-3">
                     <div class="font-weight-bold"><label class="mb-2" for="curr-email">Email</label></div>
-                    <input type="email" class="profile-input form-control px-2 mb-2" id="curr-email" autocomplete="off" required>
+                    <input type="email" maxlength="250" class="profile-input form-control px-2 mb-2" id="curr-email" autocomplete="off" required>
                 </div>
 
 

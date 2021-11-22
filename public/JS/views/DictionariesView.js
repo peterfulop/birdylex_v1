@@ -270,11 +270,6 @@ export default class extends View {
                 <div id="pagination-block">
                 </div>
             </div>`;
-
-    //if (isAny) this.renderSpinner("#dictionary-list-items", "info");
-
-
-
   }
 
   renderNewDictionaryMenu(isAny) {
@@ -291,7 +286,7 @@ export default class extends View {
       "Az új szótár neve:",
       "dictionary-name",
       true,
-      "szótár"
+      "szótár", "", "", "", "250"
     )}
 
           <div class="row">

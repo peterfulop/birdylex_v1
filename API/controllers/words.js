@@ -4,9 +4,7 @@ const db = new DbServiceWords();
 // OK! + AUTH
 exports.words_get_all = (req, res) => {
   const { userId } = req.body;
-  console.log("words_get_all for:", userId);
   const result = db.getWords(userId);
-  console.log(result);
   result
     .then((data) => {
       if (data[0]) {
@@ -79,7 +77,6 @@ exports.words_get_wordsBySearch = (req, res) => {
 exports.words_get_wordsByDictionaryId = (req, res) => {
   const { dictionaryId } = req.params;
   const { userId } = req.body;
-  console.log(dictionaryId, userId);
   const result = db.getWordsByDictionaryId(userId, dictionaryId);
   result
     .then((data) => {
@@ -129,7 +126,6 @@ exports.words_get_equalsWord = (req, res) => {
   const result = db.getEqualsWord(userId, dictionaryId, word_1, word_2);
   result
     .then((data) => {
-      console.log(data);
       if (data) {
         res.status(200).json({
           count: data.length,
@@ -157,7 +153,6 @@ exports.words_post_word = (req, res) => {
     lang_1,
     lang_2
   );
-  console.log("words_post_word", result);
 
   result
     .then((data) => {
