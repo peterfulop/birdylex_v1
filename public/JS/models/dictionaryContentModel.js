@@ -333,7 +333,7 @@ export const validateEditWord = async (inputData) => {
   }
   const isEqual = await controlEqualWord(inputData);
   if (isEqual.data.count > 0) {
-    if (isEqual.data[0].id != inputData.wordId) {
+    if (isEqual.data.data[0].id != inputData.wordId) {
       showAlertPanel(
         "#edit-word-dialog #dialog-form-alert",
         "warning",

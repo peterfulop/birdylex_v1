@@ -1,6 +1,6 @@
 import View from "./View.js";
 import { readerControlPanelHTML } from "../components.js"
-import { copyToClipboard, pasteClipboardValue } from "../helper.js";
+import { copyToClipboard, pasteClipboardValue, renderLanguageCombobox } from "../helper.js";
 
 export default class extends View {
   _viewIndex;
@@ -187,7 +187,7 @@ export default class extends View {
     return {
       option: parseInt(this.DOM.listeningSelectLanguage.value),
       lang_code:
-        this.DOM.listeningSelectLanguage.selectedOptions[0].dataset.languageid,
+        this.DOM.listeningSelectLanguage.selectedOptions[0].dataset.lang_code,
       text: this.DOM.textToSpeech.value.trim(),
     };
   }
@@ -279,17 +279,11 @@ export default class extends View {
             </div>
         </div>
         `;
+    renderLanguageCombobox("listening-select-language");
+
   }
 
 
-
-  async renderLanguageOptions(data) {
-
-    this.DOM.listeningSelectLanguage.innerHTML = "";
-    data.map((item, i) => {
-      this.DOM.listeningSelectLanguage.innerHTML += `<option value = "${i}" data-languageid="${item.lang}"> ${item.name}</option>`;
-    });
-  }
 
   historyBtnDisabled(isDisabled) {
     if (isDisabled) {
@@ -301,4 +295,3 @@ export default class extends View {
   }
 }
 
-//https://zolomohan.github.io/text-to-speech/

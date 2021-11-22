@@ -318,6 +318,7 @@ export default class extends View {
   }
 
   renderDictionaries(renderArray, index) {
+
     this.DOM.dictionaryList.innerHTML = "";
     let indexPuffer;
 
@@ -350,4 +351,5 @@ export default class extends View {
 
     return indexPuffer;
   }
+
 }

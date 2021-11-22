@@ -162,8 +162,6 @@ export default async function init() {
   await dv.handlerClearFiltration(controlClearFilter);
   await dv.handlerSortDictionaries(controlSortDictionaries);
   await loadDictionariesHandlers();
-
-
 }
 
 export const loadDictionariesHandlers = async () => {

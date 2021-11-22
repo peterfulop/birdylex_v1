@@ -10,8 +10,6 @@ export class Dictionary extends DataModel {
     lang_prim,
     lang_sec,
     relase_date,
-    flag_1,
-    flag_2
   ) {
     super();
     this.id = id;
@@ -20,8 +18,6 @@ export class Dictionary extends DataModel {
     this.lang_prim = lang_prim;
     this.lang_sec = lang_sec;
     this.relase_date = relase_date;
-    this.flag_1 = flag_1;
-    this.flag_2 = flag_2;
     this.lexicon = [];
   }
 
@@ -35,8 +31,6 @@ export class Dictionary extends DataModel {
           data.lang_prim,
           data.lang_sec,
           data.relase_date,
-          data.flag_1,
-          data.flag_2
         );
       });
     } catch (error) {

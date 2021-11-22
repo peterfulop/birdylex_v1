@@ -37,7 +37,6 @@ import {
 
   window.addEventListener("popstate", router());
 
-
 })();
 
 

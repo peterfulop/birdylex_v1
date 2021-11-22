@@ -9,13 +9,15 @@ import {
   loadHistoryRound,
   isEqualToLastSaved
 } from "../models/readerModel.js";
-import { startSpeech } from "../helper.js";
+import { renderLanguageCombobox, startSpeech } from "../helper.js";
 
 const loadPageBasicMethods = async () => {
   const isStoreExists = await isStorageEnabled();
   if (!isStoreExists) await createHistoryStorage();
   const isEmpty = await getHistoryStorageIndex() == -1 ? true : false;
-  rv.renderLanguageOptions(await getLanguages());
+
+  //rv.renderLanguageOptions(await getLanguages());
+  //renderLanguageCombobox(await getLanguages());
   rv.historyBtnDisabled(isEmpty);
 };
 

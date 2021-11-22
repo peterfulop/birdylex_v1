@@ -8,7 +8,6 @@ import { state } from "./state.js";
 export const loadVisualisation = async () => {
 
   console.log("state", state);
-  //await renderAppHTML();
   await renderMainMenu();
   renderMobileMenu();
   displayMobileMenu();
@@ -638,7 +637,6 @@ export const copyToClipboard = async (text) => {
 
   navigator.clipboard.writeText(text).then(
     function () {
-      //console.log('Async: Copying to clipboard was successful!');
       ret = {
         txt: text,
         status: true,
@@ -693,10 +691,7 @@ export const showHidePasswords = async (nodeList) => {
         showPassword(btn, label, input);
       })
   );
-
 }
-
-
 
 
 export const inputEqualityControll = (input_1, input_2) => {
