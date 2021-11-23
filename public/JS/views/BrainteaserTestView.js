@@ -18,7 +18,6 @@ export default class extends View {
         showDialogPanel('exitExcercise');
     };
 
-    // HANDLERS
     async addHandlerDefDOMelements() {
         this.DOM = {
             questionBox: document.querySelector(".question-box-value"),
@@ -43,7 +42,6 @@ export default class extends View {
     };
 
     async addHandlerSendAnswer(handler) {
-
         this.DOM.answerBoxAcceptButton.addEventListener('click', () => {
             handler();
         });
@@ -52,25 +50,25 @@ export default class extends View {
                 handler();
             }
         });
-    }
+    };
 
     async addHandlerGetHelp(handler) {
         this.DOM.helpButton.addEventListener('click', () => {
             handler();
         });
-    }
+    };
 
     async addHandlerSkipQuestion(handler) {
         this.DOM.skipButton.addEventListener('click', () => {
             handler();
         });
-    }
+    };
 
     async addHandlerSpeechWord(handler) {
         this.DOM.listeningModeBtn.addEventListener('click', () => {
             handler();
         });
-    }
+    };
 
     async addHandlerStopExcercise(handler) {
         this.DOM.stopExcercise.onclick = () => {
@@ -79,14 +77,13 @@ export default class extends View {
                 handler();
             }
         };
-    }
+    };
 
     async addHandlerBackToExcercisePage(handler) {
         this.DOM.backToPage.addEventListener('click', () => {
             handler();
         });
-    }
-
+    };
 
     renderExcerciseHTML() {
         clearDialogPanels();
@@ -139,6 +136,5 @@ export default class extends View {
             </div>
         </div>`
     };
-
 
 }

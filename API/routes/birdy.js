@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.use('/', isLoggedIn, (req, res) => {
     if (req.user) {
-        console.log("App render!");
         res.render("app", {
             user: req.user,
         });

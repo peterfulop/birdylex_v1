@@ -12,7 +12,6 @@ export const isAnyNote = () => {
     return state.notes.length > 0 ? true : false;
 }
 
-
 export const isAnyPractice = () => {
     return state.practiceHistory.length > 0 ? true : false;
 }

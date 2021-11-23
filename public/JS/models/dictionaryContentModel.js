@@ -307,7 +307,6 @@ export const validateMultiWords = async (data) => {
 };
 
 export const copyMultiWords = async (data) => {
-  // Add words as new
   let res;
   for (const word of data) {
     let resp = await addWord(word);

@@ -1,7 +1,4 @@
 import { state } from "../state.js";
-import { getVoices } from "../helper.js";
-
-
 
 export const isStorageEnabled = async () => {
   return window.localStorage.getItem('readerHistory') == null ? false : true;
@@ -32,10 +29,6 @@ export const setHistoryStorageIndex = async (newIndex) => {
 
   window.localStorage.setItem('readerHistory', JSON.stringify(newItem));
 }
-
-export const getLanguages = async () => {
-  return await getVoices();
-};
 
 export const isEqualToLastSaved = async (input) => {
 

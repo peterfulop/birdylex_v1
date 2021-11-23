@@ -34,6 +34,7 @@ const getParams = (match) => {
 export const pathToRegex = (path) =>
     new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
 
+
 export const router = async () => {
 
     const routes = [
@@ -140,4 +141,4 @@ export async function pageNavigation() {
             mobileMenuShowHide();
         });
     }
-}
+};

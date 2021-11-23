@@ -1,6 +1,5 @@
 import View from "./View.js";
 import {
-  showPassword,
   inputEqualityControll,
   validateInputsBy,
   validateInputs,

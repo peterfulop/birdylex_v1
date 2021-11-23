@@ -16,7 +16,6 @@ const controlStartReading = async () => {
   setExcerciseStatus(1);
 
   let reading = await startReading(brv.DOM);
-  console.log("controlStartReading", reading);
 
   if (reading.reset && reading.end) {
     controlStartReading();

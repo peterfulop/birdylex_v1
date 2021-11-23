@@ -45,7 +45,6 @@ exports.users_update_user = async (req, res) => {
 
 exports.users_update_avatar = async (req, res) => {
   const { userId, avatarId } = req.body;
-  console.log("users_update_avatar", avatarId);
   const result = db.updateAvatar(userId, avatarId);
   result.then((data) => {
     res.status(200).json({

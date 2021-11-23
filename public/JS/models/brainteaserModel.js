@@ -38,10 +38,6 @@ const resetExcerciseData = async () => {
   };
 };
 
-export const getDictionaryId = async (objectDOM) => {
-  //return objectDOM.dictionaryNameSelect.dataset.dbid;
-};
-
 export const getEnabledWordsCount = async (objectDOM) => {
   const option = objectDOM.dictionaryNameSelect.value;
   const dbId = parseInt(
@@ -70,7 +66,6 @@ export const setMinMaxValues = async (objectDOM, maxValue) => {
       break;
   }
 };
-
 
 export const getStateOfExcercise = () => {
   return state.excercise.run;

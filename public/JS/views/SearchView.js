@@ -58,7 +58,6 @@ export default class extends View {
     this.DOM.resultContainer.innerHTML = `<div><span>Nincs találat!</span></div>`;
   }
 
-  // Handlers
   async addHandlerSearch(handler) {
     this.DOM.searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -72,7 +71,6 @@ export default class extends View {
     });
   }
 
-  // PAGE ENTRY POINT
   async loadPage() {
     this._clear();
     await this.renderSearchPageHTML();
@@ -138,28 +136,22 @@ export default class extends View {
                 <div class="d-flex flex-column p-1 justify-content-start align-items-start col-6">
                         <div class="d-flex my-2 search-result first-word align-items-center">
                             <span>${res.word_1}</span>
-                            <i class="fas fa-volume-up listening-mode" data-langcode="${res.lang_1
-        }"></i>
+                            <i class="fas fa-volume-up listening-mode" data-langcode="${res.lang_1}"></i>
                         </div>
                         <div class="d-flex my-2 search-result second-word align-items-center">
                             <span>${res.word_2}</span>
-                            <i class="fas fa-volume-up listening-mode" data-langcode="${res.lang_2
-        }"></i>
+                            <i class="fas fa-volume-up listening-mode" data-langcode="${res.lang_2}"></i>
                         </div>
                     </div>
                     <div class="d-flex flex-column p-1 justify-content-center align-items-end col-5">
                         <div class="my-2 text-end">
-                            <span class="dictionary-name fw-bold">${res.dictionary
-        }</span>
+                            <span class="dictionary-name fw-bold">${res.dictionary}</span>
                         </div>
                         <div class="my-2 text-end">
-                            <span class="relase-date fw-lighter">${new Date(
-          res.relase_date
-        ).toLocaleString()}</span>
+                            <span class="relase-date fw-lighter">${new Date(res.relase_date).toLocaleString()}</span>
                         </div>
                     </div>
-                </div>
-                `;
+                </div>`;
       state.pagination.itemNumber = index + i;
     });
 

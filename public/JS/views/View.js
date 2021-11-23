@@ -1,5 +1,3 @@
-import { loadVisualisation, renderAppHTML } from "../helper.js";
-import { pageNavigation, router } from "../router.js";
 import { state, resetState } from "../state.js";
 
 export default class {
@@ -19,7 +17,6 @@ export default class {
     return "";
   }
 
-
   urlFormat(url) {
     return url
       .replaceAll("/", " - ")
@@ -32,13 +29,11 @@ export default class {
 
   clearContent() {
     this._mainContainer.innerHTML = "";
-    //document.getElementById("main-content-box").innerHTML = "";
     this.resetState();
   }
 
   _clear() {
     this._mainContainer.innerHTML = "";
-    //document.getElementById("main-content-box").innerHTML = "";
     this.resetState();
   }
 

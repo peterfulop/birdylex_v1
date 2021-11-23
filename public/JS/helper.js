@@ -1,12 +1,10 @@
 import { TIMEOUT_SEC } from "./config.js";
 import { dialogObjects } from "./config.js";
 import { inputComboField } from "./components.js";
-
 import { state } from "./state.js";
 
 
 export const loadVisualisation = async () => {
-
   console.log("state", state);
   await renderMainMenu();
   renderMobileMenu();
@@ -14,15 +12,7 @@ export const loadVisualisation = async () => {
   showHideDashboard();
   fullScreenMode();
   mediaQuery();
-}
-
-export function generateID_short() {
-  return "xxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
+};
 
 const timeout = function (s) {
   return new Promise(function (_, reject) {
@@ -32,25 +22,9 @@ const timeout = function (s) {
   });
 };
 
-export const getJSON = async function (url) {
-  try {
-    const res = await Promise.race([fetch(url), timeout(TIMEOUT_SEC)]);
-    if (!res.ok) throw new Error(`${data.message}\nError: (${res.status})`);
-    console.log("getJSON", res);
-    if (res.redirected) {
-      window.location.href = "/login";
-    }
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const multiFetch = async function (url, method = "GET", body = "", file = false) {
 
   let object = {};
-
   object = {
     headers: {
       "Content-type": "application/json",
@@ -63,7 +37,6 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
     object.headers = {};
     object.body = body;
   }
-
 
   try {
     const res = await Promise.race([fetch(url, object), timeout(TIMEOUT_SEC)]);
@@ -82,16 +55,14 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
   }
 };
 
-
-export function mediaQuery() {
+export const mediaQuery = () => {
   const mediaQuery = window.matchMedia("(max-width: 960px)");
   autoFullScreen(mediaQuery);
   mediaQuery.addListener(autoFullScreen);
-}
+};
 
-export function fullScreenMode() {
+export const fullScreenMode = () => {
   const fullScreenButton = document.getElementById("full-screen-button");
-
   fullScreenButton.addEventListener("click", () => {
     if (state.screenMode == 1) {
       disableFullScreen();
@@ -99,19 +70,18 @@ export function fullScreenMode() {
       enableFullScreen();
     }
   });
-}
+};
 
-function enableFullScreen() {
+const enableFullScreen = () => {
   const appWindow = document.querySelector(".app");
   const fullScreenButton = document.getElementById("full-screen-button");
-
   appWindow.classList.remove("full-screen");
   document.getElementById("dashboard").classList.remove("full-screen");
   fullScreenButton.className = "fas fa-expand-arrows-alt";
   state.screenMode = 1;
-}
+};
 
-function disableFullScreen() {
+const disableFullScreen = () => {
   const appWindow = document.querySelector(".app");
   const fullScreenButton = document.getElementById("full-screen-button");
 
@@ -119,9 +89,9 @@ function disableFullScreen() {
   document.getElementById("dashboard").classList.add("full-screen");
   fullScreenButton.className = "fas fa-compress-arrows-alt";
   state.screenMode = 0;
-}
+};
 
-function autoFullScreen(mediaQuery) {
+const autoFullScreen = (mediaQuery) => {
   if (document.getElementById("dashboard") != undefined) {
     if (mediaQuery.matches) {
       disableFullScreen();
@@ -129,7 +99,7 @@ function autoFullScreen(mediaQuery) {
       enableFullScreen();
     }
   }
-}
+};
 
 export const renderNoDataHTML = (objectData, uniqueId = "helper-btn", click = true) => {
   let event = click ? `document.querySelector("[data-href='/${objectData.buttonHref}']").click()` : "";
@@ -145,9 +115,9 @@ export const renderNoDataHTML = (objectData, uniqueId = "helper-btn", click = tr
                 </div>
             </div>
         </div>`
-}
+};
 
-export async function renderMainMenu() {
+export const renderMainMenu = async () => {
   const dashboardLinkContainer = document.querySelector(".links");
 
   state.generalSettings.dashboardMenuItems
@@ -171,9 +141,9 @@ export async function renderMainMenu() {
 
   document.getElementById("app-spinner").classList.add("d-none");
   document.getElementById("app-box").classList.remove("d-none");
-}
+};
 
-export function renderMobileMenu() {
+export const renderMobileMenu = () => {
   const mobileMenuContainer = document.querySelector(".mobile-menu-container");
 
   mobileMenuContainer.innerHTML = "";
@@ -195,27 +165,27 @@ export function renderMobileMenu() {
     <i class="link-icon-box fas fa-sign-out-alt"></i>
     <h3 class="hideable">Kijelentkezés</h3>
   </a>`
-}
+};
 
-export function displayMobileMenu() {
+export const displayMobileMenu = () => {
   const mobileMenuButton = document.getElementById("mobile-menu-button");
   mobileMenuButton.addEventListener("click", () => {
     mobileMenuShowHide();
   });
 
   mobileMenuHoverEffect();
-}
+};
 
-function mobileMenuHoverEffect() {
+const mobileMenuHoverEffect = () => {
   const mobileMenuContainer = document.querySelector(".mobile-menu-container");
   if (mobileMenuContainer) {
     mobileMenuContainer.addEventListener("mouseleave", () => {
       mobileMenuContainer.classList.add("d-none");
     });
   }
-}
+};
 
-export function mobileMenuShowHide() {
+export const mobileMenuShowHide = () => {
   const mobileMenuContainer = document.querySelector(".mobile-menu-container");
   if (mobileMenuContainer) {
     if (mobileMenuContainer.classList.contains("d-none")) {
@@ -224,25 +194,25 @@ export function mobileMenuShowHide() {
       mobileMenuContainer.classList.add("d-none");
     }
   }
-}
+};
 
-function hideMainMenuText() {
+const hideMainMenuText = () => {
   const hideableText = document.querySelectorAll(".hideable");
   hideableText.forEach((element) => {
     element.style.display = "none";
   });
   addTightClass();
-}
+};
 
-function showMainMenuText() {
+const showMainMenuText = () => {
   const hideableText = document.querySelectorAll(".hideable");
   hideableText.forEach((element) => {
     element.style.display = "block";
   });
   addWideClass();
-}
+};
 
-function addTightClass() {
+const addTightClass = () => {
   const dashboardLinks = document.querySelectorAll(".link");
   dashboardLinks.forEach((element) => {
     element.classList.remove("wide");
@@ -250,9 +220,9 @@ function addTightClass() {
   });
   document.getElementById("avatar").classList.add("tight");
   document.getElementById("user-avatar").classList.add("tight");
-}
+};
 
-function addWideClass() {
+const addWideClass = () => {
   const dashboardLinks = document.querySelectorAll(".link");
   dashboardLinks.forEach((element) => {
     element.classList.remove("tight");
@@ -260,9 +230,9 @@ function addWideClass() {
   });
   document.getElementById("avatar").classList.remove("tight");
   document.getElementById("user-avatar").classList.remove("tight");
-}
+};
 
-export function showHideDashboard() {
+export const showHideDashboard = () => {
   const showHideBtn = document.getElementById("show-hide-button");
   let show = true;
   showHideBtn.addEventListener("click", () => {
@@ -280,9 +250,9 @@ export function showHideDashboard() {
       showMainMenuText();
     }
   });
-}
+};
 
-export async function renderAppHTML() {
+export const renderAppHTML = async () => {
   var section = document.createElement("section");
   section.setAttribute("id", "circles");
   document.body.appendChild(section);
@@ -344,9 +314,9 @@ export async function renderAppHTML() {
     `;
 
 
-}
+};
 
-export async function showDialogPanel(dialogIndex) {
+export const showDialogPanel = async (dialogIndex) => {
   var dialogID = dialogObjects[dialogIndex].id;
   var dialogTitle = dialogObjects[dialogIndex].title;
   var dialogBody = dialogObjects[dialogIndex].body;
@@ -360,15 +330,15 @@ export async function showDialogPanel(dialogIndex) {
     acceptBtnColor,
     acceptBtnText
   );
-}
+};
 
-export async function renderDialogPanel(
+export const renderDialogPanel = async (
   dialogID,
   dialogTitle,
   dialogBody,
   acceptBtnColor,
   acceptBtnText
-) {
+) => {
   const dialogArea = document.getElementById("dialog-area");
   dialogArea.innerHTML += `
         <div class="modal fade" id="${dialogID}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -396,44 +366,44 @@ export async function renderDialogPanel(
             </div>
         </div>
     `;
-}
+};
 
-export async function fillDialogPanel(dialogPanelId, data) {
+export const fillDialogPanel = async (dialogPanelId, data) => {
   const dialogPanel = document.querySelector(`#${dialogPanelId}`);
   const parameter = dialogPanel.querySelector("p");
   document
     .querySelector(`#${dialogPanelId}`)
     .querySelector("#dialog-form-alert").innerHTML = "";
   parameter.innerHTML = data;
-}
+};
 
-export async function defDialogPanel(dialogID) {
-  return new bootstrap.Modal(document.getElementById(`${dialogID}`), {
-    keyboard: false,
-  });
-}
+// export const defDialogPanel = async (dialogID) => {
+//   return new bootstrap.Modal(document.getElementById(`${dialogID}`), {
+//     keyboard: false,
+//   });
+// };
 
-export async function clearDialogPanels() {
+export const clearDialogPanels = async () => {
   const dialogArea = document.getElementById("dialog-area");
   dialogArea.innerHTML = "";
-}
+};
 
-export function renderDictionaryListInput(container) {
+export const renderDictionaryListInput = (container) => {
   container.innerHTML += inputComboField(
     "dictionary-name-select",
     "Válassz egy szótárt"
   );
   renderDictionaryListOptions();
-}
+};
 
-export function renderDictionaryListOptions() {
+export const renderDictionaryListOptions = () => {
   state.dictionaries.sort(compareValues("dictionaryName", "asc"));
   const content = document.querySelector("#dictionary-name-select");
   content.innerHTML = "";
   Object.values(state.dictionaries).map((item, i) => {
     content.innerHTML += `<option value = "${i}" data-dictid="${item.autoID}" data-dbid="${item.id}" data-count="${item.lexicon.length}" data-dictid="${item.id}" data-lang1="${item.lang_prim}" data-lang2="${item.lang_sec}">${item.dictionary_name}</option>`;
   });
-}
+};
 
 export const hideAlertPanel = (selector) => {
   try {
@@ -473,19 +443,19 @@ export const showAlertPanel = (
   }
 };
 
-export function randomIntGenerator(min, max) {
+export const randomIntGenerator = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
-}
+};
 
-export function getLanguageId(languageCode) {
+export const getLanguageId = (languageCode) => {
   if (typeof languageCode != "string") return;
 
   return state.languages.filter(
     (language) => language.lang_code === languageCode
   )[0].id;
-}
+};
 
-export function filterBy(arr, filterBy, input) {
+export const filterBy = (arr, filterBy, input) => {
   state.filterArray = arr.filter((element) => {
     return (state.filterArray = element[filterBy]
       .toLowerCase()
@@ -493,16 +463,16 @@ export function filterBy(arr, filterBy, input) {
   });
 
   if (state.filterArray.length > 0) state.filtered = true;
-}
+};
 
-export function resetFilteredState() {
+export const resetFilteredState = () => {
   state.filtered = false;
-}
+};
 
-export function sliceArray(array, itemsPerPage = 6) {
+export const sliceArray = (array, itemsPerPage = 6) => {
   state.pagination.itemsPerPage = itemsPerPage;
   state.pagination.slicedArray = array.slice(0, state.pagination.itemsPerPage);
-}
+};
 
 export const renderLanguageCombobox = (selectInputId, selectedId = 1) => {
   const langContent = document.getElementById(selectInputId);
@@ -515,7 +485,7 @@ export const renderLanguageCombobox = (selectInputId, selectedId = 1) => {
   langContent.value = selectedId;
 };
 
-export function renderSearchBar() {
+export const renderSearchBar = () => {
   return `
             <div class="search-bar d-block mb-2">
                 <form id="search-form">
@@ -535,10 +505,10 @@ export function renderSearchBar() {
                     </div>
             </div>
     `;
-}
+};
 
-export function compareValues(key, order = "asc") {
-  return function innerSort(a, b) {
+export const compareValues = (key, order = "asc") => {
+  return (a, b) => {
     if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
       return 0;
     }
@@ -553,14 +523,14 @@ export function compareValues(key, order = "asc") {
     }
     return order === "desc" ? comparison * -1 : comparison;
   };
-}
+};
 
-export function startSpeech(
+export const startSpeech = (
   language,
   text,
   { volume = 1, rate = 1, pitch = 1 } = {},
   { cancel = false, pause = false, resume = false } = {}
-) {
+) => {
   let speech = new SpeechSynthesisUtterance();
   speech.lang = language;
   speech.text = text;
@@ -583,7 +553,7 @@ export function startSpeech(
   }).then((a) => {
     return a.type;
   });
-}
+};
 
 export const getVoices = () => {
   return new Promise((resolve) => {
@@ -601,40 +571,8 @@ export const getVoices = () => {
   });
 };
 
-export const Speech = (language, text) => {
-  let speechRecognition = new webkitSpeechRecognition();
-  speechRecognition.continuous = true;
-  speechRecognition.interimResults = true;
-  speechRecognition.lang = language;
-  //https://www.section.io/engineering-education/speech-recognition-in-javascript/
-};
-
-export async function startSpeechAsync(
-  language,
-  text,
-  { cancel = false, pause = false, resume = false } = {}
-) {
-  let speech = new SpeechSynthesisUtterance();
-  speech.lang = language;
-  speech.text = text;
-  speech.volume = 1;
-  speech.rate = 1;
-  speech.pitch = 1;
-
-  if (cancel) {
-    window.speechSynthesis.cancel();
-  } else if (pause) {
-    window.speechSynthesis.pause();
-  } else if (resume) {
-    window.speechSynthesis.resume();
-  } else {
-    window.speechSynthesis.speak(speech);
-  }
-}
-
 export const copyToClipboard = async (text) => {
   let ret;
-
   navigator.clipboard.writeText(text).then(
     function () {
       ret = {
@@ -677,7 +615,6 @@ export const showPassword = (button, label, input) => {
   }
 };
 
-
 export const showHidePasswords = async (nodeList) => {
   nodeList.forEach(
     (btn) =>
@@ -691,8 +628,7 @@ export const showHidePasswords = async (nodeList) => {
         showPassword(btn, label, input);
       })
   );
-}
-
+};
 
 export const inputEqualityControll = (input_1, input_2) => {
   if (input_1.value != input_2.value) {
@@ -736,9 +672,5 @@ export const validateInputs = (nodeList) => {
   });
   return valid;
 };
-
-export const clearInputs = (nodeList) => {
-  nodeList.forEach(input => input.value = "")
-}
 
 

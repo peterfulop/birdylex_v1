@@ -2,19 +2,18 @@ import View from "./View.js";
 import { inputField, inputComboField } from "../components.js";
 import { renderSearchBar, showDialogPanel, renderNoDataHTML, clearDialogPanels } from "../helper.js";
 import { dialogObjects, noDataInputs } from "../config.js";
-import { state } from "../state.js";
 import { isAnyDictionary } from "../models/_controllModel.js";
 
 export default class extends View {
   constructor(params) {
     super(params);
     this.setPageParams(window.location.pathname);
-  }
+  };
 
   async loadPage() {
     this._clear();
     this.renderDictionariesPageHTML();
-  }
+  };
 
   async addHandlerDefDOMelements() {
     this.DOM = {
@@ -46,7 +45,7 @@ export default class extends View {
       clearfilterBtn: document.getElementById("clear-search-filter"),
       searchAlert: document.getElementById("search-alert"),
     };
-  }
+  };
 
   async defDialogPanelDOM() {
     return {
@@ -69,7 +68,7 @@ export default class extends View {
         .querySelector("#edit-dictionary-dialog")
         .querySelector("#modal-footer"),
     };
-  }
+  };
 
   async loadDialogAsStandard() {
     const obj = await this.defDialogPanelDOM();
@@ -77,7 +76,7 @@ export default class extends View {
     obj.acceptBtn.classList.remove("d-none");
     obj.closeBtn.classList.remove("d-none");
     obj.genBtn.classList.add("d-none");
-  }
+  };
 
   async loadDialogAsModified() {
     const obj = await this.defDialogPanelDOM();
@@ -91,7 +90,7 @@ export default class extends View {
     obj.genBtn.style.width = "100%";
 
     obj.closeBtn.classList.add("d-none");
-  }
+  };
 
   async handlerShowNewDictionaryPanel(handler) {
     this.DOM.createNewDictionaryBtn.addEventListener("click", () => {
@@ -102,48 +101,46 @@ export default class extends View {
       this.DOM.createNewBlock.classList.remove("display-none");
       handler();
     });
-  }
-
+  };
 
   async handlerCerateNewDictionary(handler) {
     this.DOM.createNewForm.onsubmit = function (event) {
       event.preventDefault();
       handler();
     };
-  }
+  };
 
   async handlerHideAddNewDictionaryBlock() {
     this.DOM.createNewCloseBtn.addEventListener("click", () => {
-      //this.hideAddNewBlock();
       document.querySelector("[data-href='/dictionaries']").click();
     });
-  }
+  };
 
   async handlerSortDictionaries(handler) {
     this.DOM.sortAplhaBtn.addEventListener("click", () => {
       handler();
     });
-  }
+  };
 
   async handlerSearchDictionaryByName(handler) {
     this.DOM.searchFormSubmit.addEventListener("submit", (event) => {
       event.preventDefault();
       handler();
     });
-  }
+  };
 
   async handlerClearFiltration(handler) {
     this.DOM.clearfilterBtn.addEventListener("click", () => {
       handler();
     });
-  }
+  };
 
   async handlerCloseSearchAlert() {
     this.DOM.searchAlert.addEventListener("click", () => {
       this.DOM.searchAlert.classList.add("d-none");
       this.DOM.searchDictionaryInput.value = "";
     });
-  }
+  };
 
   async handlerLoadDeleteDictionary(handler) {
     await showDialogPanel("deleteDictionary");
@@ -154,18 +151,17 @@ export default class extends View {
         handler(button);
       });
     }
-  }
+  };
 
   async handlerLoadEditDictionary(handler) {
     await showDialogPanel("editDictionary");
-
     const editButtons = await this.getButtonsArray(".edit-content");
     for (const button of editButtons) {
       button.addEventListener("click", () => {
         handler(button);
       });
     }
-  }
+  };
 
   async handlerOpenDictionary(handler) {
     const openButtons = await this.getButtonsArray(".open-content");
@@ -174,7 +170,7 @@ export default class extends View {
         handler(button);
       });
     }
-  }
+  };
 
   async handlerAcceptDeleteDictionary(handler) {
     const acceptBtn = document
@@ -184,7 +180,7 @@ export default class extends View {
       handler();
       await clearDialogPanels();
     });
-  }
+  };
 
   async handlerAcceptEditDictionary(handler) {
     const acceptBtn = document
@@ -195,7 +191,7 @@ export default class extends View {
       const createCopy = document.querySelector("#create-copy-btn").checked;
       handler(createCopy);
     });
-  }
+  };
 
   async handlerExitEditDictionary(handler) {
     const exitButton = document
@@ -204,7 +200,7 @@ export default class extends View {
     exitButton.addEventListener("click", () => {
       handler();
     });
-  }
+  };
 
   hideAddNewBlock() {
     this.DOM.createNewDictionaryBtn.classList.remove("display-none");
@@ -214,23 +210,23 @@ export default class extends View {
     this.DOM.mainContentTitle.innerHTML = "Szótárak listája";
     this.DOM.alertPanel.innerHTML = "";
     this.DOM.dictionaryNameInput.value = "";
-  }
+  };
 
   async getButtonsArray(querySelector) {
     const buttons = document.querySelectorAll(`${querySelector}`);
     return Array.from(buttons);
-  }
+  };
 
   async getAcceptButton(querySelector) {
     const button = document
       .querySelector(querySelector)
       .querySelector("#dialogAcceptButton");
     return Array.from(button);
-  }
+  };
 
   renderDictionariesPageHTML() {
 
-    const isAny = isAnyDictionary();
+    let isAny = isAnyDictionary();
 
     document.querySelector(".main-content").innerHTML = `
 
@@ -270,55 +266,37 @@ export default class extends View {
                 <div id="pagination-block">
                 </div>
             </div>`;
-  }
+  };
 
   renderNewDictionaryMenu(isAny) {
     return `<div class="view-menu-bar-create">
-                <div class="d-flex flex-col justify-content-center" id="new-dictionary-alert">
-                </div>
-                <div class="create-new-dictionary display-none mb-3" id="create-new-dictionary-block">
-                <h5 class="${!isAny ? "d-block" : "d-none"}"> Szótár létrehozása</h5>
-      <div class="create-new-block-form w-100">
-        <form id="new-dictionary-form">
-
-          ${inputField(
-      "dictionary-name-input",
-      "Az új szótár neve:",
-      "dictionary-name",
-      true,
-      "szótár", "", "", "", "250"
-    )}
-
-          <div class="row">
-            ${inputComboField(
-      "dictionary-language-primary",
-      "Elsődleges nyelv:",
-      "col-sm-6"
-    )}
-            ${inputComboField(
-      "dictionary-language-secondary",
-      "Elsődleges nyelv:",
-      "col-sm-6"
-    )}
-          </div>
-          <div id="new-dictionary-form-alert"></div>
-
-          <div class="row create-new-block-buttons mt-3" id="create-dictionary-buttons">
-            <div class="col-sm-3">
-              <button type="button" class="btn btn-secondary w-100 mb-2" id="create-new-close">Vissza</button>
+                  <div class="d-flex flex-col justify-content-center" id="new-dictionary-alert">
+                  </div>
+                  <div class="create-new-dictionary display-none mb-3" id="create-new-dictionary-block">
+                  <h5 class="${!isAny ? "d-block" : "d-none"}"> Szótár létrehozása</h5>
+        <div class="create-new-block-form w-100">
+          <form id="new-dictionary-form">
+          ${inputField("dictionary-name-input", "Az új szótár neve:", "dictionary-name", true, "szótár", "", "", "", "250")}
+            <div class="row">
+              ${inputComboField("dictionary-language-primary", "Elsődleges nyelv:", "col-sm-6")}
+              ${inputComboField("dictionary-language-secondary", "Elsődleges nyelv:", "col-sm-6")}
             </div>
-            <div class="col-sm-9">
-              <button type="submit" class="btn btn-success w-100 mb-2" id="create-dictionary-button">Létrehozás</button>
+            <div id="new-dictionary-form-alert"></div>
+            <div class="row create-new-block-buttons mt-3" id="create-dictionary-buttons">
+              <div class="col-sm-3">
+                <button type="button" class="btn btn-secondary w-100 mb-2" id="create-new-close">Vissza</button>
+              </div>
+              <div class="col-sm-9">
+                <button type="submit" class="btn btn-success w-100 mb-2" id="create-dictionary-button">Létrehozás</button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
-    </div>`;
-  }
+        </form>
+      </div>
+      </div>`
+  };
 
   renderDictionaries(renderArray, index) {
-
     this.DOM.dictionaryList.innerHTML = "";
     let indexPuffer;
 
@@ -348,8 +326,7 @@ export default class extends View {
       `;
       indexPuffer = index + i;
     });
-
     return indexPuffer;
-  }
 
+  };
 }

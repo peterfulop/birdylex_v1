@@ -40,7 +40,7 @@ app.use("/api/notes", noteRoutes);
 
 app.use(main);
 
-// The 404 Route (ALWAYS Keep this as the last route)
+// //The 404 Route (ALWAYS Keep this as the last route)
 // app.get('*', function (req, res) {
 //     res.status(404).render('404');
 // });

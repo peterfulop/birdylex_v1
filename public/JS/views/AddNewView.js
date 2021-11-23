@@ -20,8 +20,6 @@ export default class extends View {
     this.renderAddWordsHTML();
   }
 
-  // HANDLERS
-
   addHandlerResetInputs() {
     const clearBtn = document.getElementById("reset-inputs-btn");
     clearBtn.addEventListener("click", () => {
@@ -79,7 +77,6 @@ export default class extends View {
 
   async renderAddWordsHTML() {
 
-
     this._mainContainer.innerHTML = renderNoDataHTML(noDataInputs.addnewView);
 
     const isAny = isAnyDictionary();
@@ -102,9 +99,7 @@ export default class extends View {
                     <label for="word_1_input" class="form-label"><span id="lang_1_span">${nyelv1}</span> kifejezés</label>
                     <div class="new-word-input-1">
                         <input type="text" class="form-control input-box" max-length="250" id="word_1_input" placeholder="${nyelv1}" required>
-                        <button class="btn btn-secondary listening-btn" id="listening-btn-primary" data-langcode="${this.getLanguageCode(
-        "lang1"
-      )}"><i class="fas fa-volume-up"></i></button>
+                        <button class="btn btn-secondary listening-btn" id="listening-btn-primary" data-langcode="${this.getLanguageCode("lang1")}"><i class="fas fa-volume-up"></i></button>
                     </div>
                 </div>
     
@@ -112,9 +107,7 @@ export default class extends View {
                     <label for="word_2_input" class="form-label"><span id="lang_2_span">${nyelv2}</span> kifejezés</label>
                         <div class="new-word-input-2">
                             <input type="text" class="form-control input-box" max-length="250" id="word_2_input" placeholder="${nyelv2}" required>
-                            <button class="btn btn-secondary listening-btn" id="listening-btn-secondary" data-langcode="${this.getLanguageCode(
-        "lang2"
-      )}"><i class="fas fa-volume-up"></i></button>
+                            <button class="btn btn-secondary listening-btn" id="listening-btn-secondary" data-langcode="${this.getLanguageCode("lang2")}"><i class="fas fa-volume-up"></i></button>
                         </div>
                     </div>
                  </div>
@@ -133,8 +126,6 @@ export default class extends View {
 
       this.selectedDictionaryChange();
       this.readSelectedWord();
-
-
     }
 
   }

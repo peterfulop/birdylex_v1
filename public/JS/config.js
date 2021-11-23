@@ -46,7 +46,7 @@ export const menuItems = Object.freeze({
     position: 7,
     view: "reader"
   }
-})
+});
 
 export const noDataInputs = Object.freeze({
   dictionaryView: {
@@ -74,7 +74,7 @@ export const noDataInputs = Object.freeze({
     buttonColor: "primary",
     click: true
   }
-})
+});
 
 export const dialogObjects = Object.freeze({
   deleteRow: {

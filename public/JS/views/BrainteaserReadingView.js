@@ -8,16 +8,14 @@ export default class extends View {
   constructor(params) {
     super(params);
     this.setPageParams(window.location.pathname);
-  }
+  };
 
   async loadPage() {
     this._mainContainer = document.getElementById("main-content-box");
     this._clear();
     clearDialogPanels();
     this.renderBrainteaserReadingHTML();
-  }
-
-  // HANDLERS
+  };
 
   async addHandlerDefDOMelements() {
     this.DOM = {
@@ -32,13 +30,13 @@ export default class extends View {
       stopSpeechBtn: document.getElementById("stop-speech-btn"),
     };
 
-  }
+  };
 
   async addHandlerBackToBrainteaser(handler) {
     this.DOM.backToBtn.addEventListener("click", async () => {
       handler();
     });
-  }
+  };
 
   async grabSpeechData(eventButton) {
     return {
@@ -48,7 +46,7 @@ export default class extends View {
         resume: eventButton.dataset.method == "resume",
       },
     };
-  }
+  };
 
   async addHandlerStartToSpeech(handler) {
     this.DOM.startSpeechBtn.addEventListener("click", async () => {
@@ -59,7 +57,7 @@ export default class extends View {
       const data = await this.grabSpeechData(this.DOM.startSpeechBtn);
       handler(data);
     });
-  }
+  };
 
   async addHandlerPauseToSpeech(handler) {
     this.DOM.pauseSpeechBtn.addEventListener("click", async () => {
@@ -68,7 +66,7 @@ export default class extends View {
       const data = await this.grabSpeechData(this.DOM.pauseSpeechBtn);
       handler(data);
     });
-  }
+  };
 
   async addHandlerResumeToSpeech(handler) {
     this.DOM.resumeSpeechBtn.addEventListener("click", async () => {
@@ -77,7 +75,7 @@ export default class extends View {
       const data = await this.grabSpeechData(this.DOM.resumeSpeechBtn);
       handler(data);
     });
-  }
+  };
 
   async addHandlerStopToSpeech(handler) {
     this.DOM.stopSpeechBtn.addEventListener("click", async () => {
@@ -88,8 +86,7 @@ export default class extends View {
       const data = await this.grabSpeechData(this.DOM.stopSpeechBtn);
       handler(data);
     });
-  }
-
+  };
 
   renderBrainteaserReadingHTML() {
     this._mainContainer.innerHTML = `
@@ -111,13 +108,12 @@ export default class extends View {
             <div class="question-answer-boxes words-list" id="reading-words-list">
             </div>
         </div>`;
-  }
+  };
 
   setActiveDictionaryName(info) {
     this.DOM.dictionaryName.innerHTML = info.dictionaryName;
     this.DOM.countOfWords.innerHTML = info.count;
     this.DOM.indexOfWord.innerHTML = 0;
     this.DOM.readingWordsList.innerHTML = "";
-  }
-
+  };
 }

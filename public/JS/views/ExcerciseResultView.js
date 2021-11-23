@@ -11,7 +11,6 @@ export default class extends View {
         this.setPageParams(window.location.pathname);
     };
 
-    // HANDLERS
     async addHandlerDefDOMelements() {
         this.DOM = {
             exportExcerciseBtn: document.getElementById('export-excercise-btn'),
@@ -97,7 +96,6 @@ export default class extends View {
                 </div>
             </div>
 
-
             <div class="d-block" id="outcome-issue-block">
                 ${this.renderIssueBlockHTML(data.yourAnswers)}
             </div>
@@ -105,7 +103,6 @@ export default class extends View {
             <div class="d-block" id="alert-block"></div>
 
             <div class="d-flex button-box m-2 justify-content-between">
-
                 <div class="d-flex me-2 col-3">
                     <button class="btn btn-secondary w-100" id="back-button" title="Vissza" type="button">Vissza</button>
                 </div>

@@ -12,11 +12,8 @@ export default class extends View {
 
     async loadPage() {
         this._clear();
-        //await this.RenderBrainteasetPageHTML();
     };
 
-
-    // HANDLERS
     async addHandlerDefDOMelements() {
         this.DOM = {
             cardMenu: document.querySelector(".card-menu"),
@@ -40,19 +37,19 @@ export default class extends View {
         this.DOM.setBrainteaserTestBtn.addEventListener("click", async () => {
             this.showHideBrainteaserInputs(true, brainteaserTypes.test);
         });
-    }
+    };
 
     async addHandlerRenderReading() {
         this.DOM.setBrainteaserReadingBtn.addEventListener("click", async () => {
             this.showHideBrainteaserInputs(true, brainteaserTypes.reading);
         });
-    }
+    };
 
     async addHandlerBackToBrainteasers() {
         this.DOM.brainteaserBackBtn.addEventListener("click", () => {
             this.showHideBrainteaserInputs(false);
         });
-    }
+    };
 
     async getDictionaryId() {
         return document.getElementById("dictionary-name-select").value;
@@ -121,7 +118,6 @@ export default class extends View {
 
     };
 
-
     loadInputs() {
         const brainteaserInputs = document.getElementById("brainteaser-inputs")
         renderDictionaryListInput(brainteaserInputs);
@@ -129,15 +125,14 @@ export default class extends View {
         this.renderExcerciseRuntimeInput(brainteaserInputs);
         this.renderBrainTeaserStartButton(brainteaserInputs);
         this.disableEmptyDictionaries();
-    }
-
+    };
 
     disableEmptyDictionaries() {
         let options = Array.from(document.querySelectorAll("#dictionary-name-select")[0].options);
         options.forEach(o => {
             if (o.dataset.count == 0) o.disabled = "disabled";
         });
-    }
+    };
 
     showHideBrainteaserInputs(show, type) {
         if (show) {
@@ -154,8 +149,7 @@ export default class extends View {
             this.DOM.brainteaserInputs.classList.remove("d-block");
             this.DOM.cardMenu.classList.remove("d-none");
         }
-    }
-
+    };
 
     renderExcerciseTypeInput(container) {
         container.innerHTML += inputComboField("excercise-name-select", "Gyakorlási forma:", "select-dictionary");

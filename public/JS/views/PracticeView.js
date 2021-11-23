@@ -2,7 +2,6 @@ import View from './View.js';
 
 export default class extends View {
 
-
     async addHandlerRender(handler) {
         handler();
     };

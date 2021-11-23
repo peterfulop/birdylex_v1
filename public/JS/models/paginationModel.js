@@ -72,7 +72,6 @@ async function setPaginationMethod() {
         pageIndex2,
         state.activeDictionary[0].lexicon
       );
-      //await reloadSingleModals();
       loadDictionaryContentHandlers();
 
       break;
@@ -90,15 +89,11 @@ function renderPaginationButtons(array) {
 
   for (let i = 0; i < state.pagination.pages; i++) {
     paginationPages.innerHTML += `
-        <li class="cursor-pointer page-item ${state.pagination.selectedPageIndex === i ? "active" : ""
-      }">
-        <span class="page-link button ${state.pagination.visisibledPages.includes(i) ? "" : "d-none"
-      }" data-btnID="${i}">${i + 1}</span></li>
-        `;
+        <li class="cursor-pointer page-item ${state.pagination.selectedPageIndex === i ? "active" : ""}">
+        <span class="page-link button ${state.pagination.visisibledPages.includes(i) ? "" : "d-none"}" data-btnID="${i}">${i + 1}</span></li>`;
   }
 
-  paginationPages.innerHTML += `<li id="page-item-next-arrow" class="cursor-pointer page-item ${state.pagination.pages <= 3 ? "disabled" : ""
-    }"><span class="page-link nav">&raquo;</span></li>`;
+  paginationPages.innerHTML += `<li id="page-item-next-arrow" class="cursor-pointer page-item ${state.pagination.pages <= 3 ? "disabled" : ""}"><span class="page-link nav">&raquo;</span></li>`;
 
   navButtonsEvent(array);
   navNextBtnEvent(array);

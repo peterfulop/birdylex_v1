@@ -29,7 +29,6 @@ export const controlEqualWord = async (data) => {
 
     const querystring = `${data.dictionaryId}/${data.word_1}/${data.word_2}`;
     const res = await multiFetch(`${API_URL}/words/equal/${querystring}`);
-    console.log("controlEqualWord", res);
     if (!res.ok) throw error;
     return res;
   } catch (err) {

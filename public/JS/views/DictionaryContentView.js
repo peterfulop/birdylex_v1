@@ -5,7 +5,6 @@ import {
   fillDialogPanel,
   renderLanguageCombobox,
   renderDictionaryListInput,
-  getLanguageId,
 } from "../helper.js";
 import { inputComboField, inputField } from "../components.js";
 import { dialogObjects } from "../config.js";

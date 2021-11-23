@@ -1,7 +1,6 @@
 import ReaderView from "../views/ReaderView.js";
 let rv = new ReaderView();
 import {
-  getLanguages,
   saveReadingHistory,
   isStorageEnabled,
   getHistoryStorageIndex,
@@ -15,9 +14,6 @@ const loadPageBasicMethods = async () => {
   const isStoreExists = await isStorageEnabled();
   if (!isStoreExists) await createHistoryStorage();
   const isEmpty = await getHistoryStorageIndex() == -1 ? true : false;
-
-  //rv.renderLanguageOptions(await getLanguages());
-  //renderLanguageCombobox(await getLanguages());
   rv.historyBtnDisabled(isEmpty);
 };
 

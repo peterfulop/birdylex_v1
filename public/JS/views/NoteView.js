@@ -8,7 +8,6 @@ export default class extends View {
     _selectedId;
     _acceptBtn;
 
-
     getNewNote() {
         const noteTetxt = document.getElementById('new-pin-input').value;
         this._clearInput();
@@ -27,9 +26,6 @@ export default class extends View {
         this._acceptBtn = document.getElementById('dialogAcceptButton');
     };
 
-
-
-    // HANDLERS
 
     async addHandlerRender(handler) {
         handler();

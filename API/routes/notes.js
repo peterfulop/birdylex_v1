@@ -25,7 +25,6 @@ router.get(
   "/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -42,7 +41,6 @@ router.post(
   "/post",
   isLoggedIn,
   (req, res, next) => {
-    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -59,7 +57,6 @@ router.patch(
   "/patch/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -76,7 +73,6 @@ router.delete(
   "/delete/:noteId",
   isLoggedIn,
   (req, res, next) => {
-    //console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");

@@ -38,8 +38,6 @@ export default class extends View {
     };
   }
 
-  // Handlers
-
   async addHandlerPasteToTextareaButton() {
     this.DOM.pasteTextAreaBtn.addEventListener("click", async () => {
       this.DOM.textToSpeech.value = await pasteClipboardValue();
@@ -114,7 +112,6 @@ export default class extends View {
     this.DOM.resumeSpeechBtn.addEventListener("click", async () => {
       this.DOM.pauseSpeechBtn.disabled = false;
       this.DOM.resumeSpeechBtn.disabled = true;
-
       const data = await this.grabSpeechData(this.DOM.resumeSpeechBtn);
       handler(data);
     });
@@ -122,7 +119,6 @@ export default class extends View {
 
   async addHandlerStopToSpeech(handler) {
     this.DOM.stopSpeechBtn.addEventListener("click", async () => {
-
       this.DOM.startSpeechBtn.classList.remove("d-none");
       this.DOM.resumeSpeechBtn.classList.add("d-none");
       this.DOM.stopSpeechBtn.disabled = true;
@@ -148,7 +144,6 @@ export default class extends View {
   async addHandlerSetPitch() {
     this.DOM.speechPitchBtn.addEventListener("input", async () => {
       this.DOM.speechPitchLabel.innerHTML = this.DOM.speechPitchBtn.value;
-
     })
   }
 
@@ -192,7 +187,6 @@ export default class extends View {
     };
   }
 
-  // PAGE ENTRY POINT
   async loadPage() {
     this._clear();
     await this.renderReaderPageHTML();
@@ -282,8 +276,6 @@ export default class extends View {
     renderLanguageCombobox("listening-select-language");
 
   }
-
-
 
   historyBtnDisabled(isDisabled) {
     if (isDisabled) {

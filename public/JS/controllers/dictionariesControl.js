@@ -22,7 +22,6 @@ import {
 
 import * as pagination from "../models/paginationModel.js";
 import dictionaryContentControl from "../controllers/dictionaryContentControl.js";
-import { isAnyDictionary } from "../models/_controllModel.js";
 
 const dv = new dictionaryView();
 
@@ -36,9 +35,7 @@ const renderDictionaryProcess = async (
     const pageIndex = dv.renderDictionaries(data.array, data.index);
     await setPaginationRendering(pageIndex, dictionaries);
   } else {
-    //dv.renderDictionariesPageHTML()
     dv.DOM.dictionaryList.innerHTML = "Nincsenek még szótáraid!";
-    //document.querySelector("[data-href='/dictionaries']").click();
   }
 };
 
@@ -52,7 +49,6 @@ const controlNewDictionaryPanel = async () => {
   // 1. Load languages
   renderLanguageCombobox("dictionary-language-primary");
   renderLanguageCombobox("dictionary-language-secondary");
-  // setFlagIcons(dv.DOM);
 };
 
 const controlAddDictionary = async () => {
@@ -66,8 +62,6 @@ const controlAddDictionary = async () => {
 
   // 3. Reload page
   showSuccessMessage(dv.DOM, process.data.dictionaryName);
-
-  //dv.hideAddNewBlock();
   await controlLoad();
 
 };

@@ -113,7 +113,6 @@ export const addDictionary = async (data) => {
       lang_2: data.langSeondary,
     });
 
-    console.log("postmetod", res);
     if (!res.ok) throw error;
     return res;
   } catch (err) {
@@ -124,7 +123,6 @@ export const addDictionary = async (data) => {
 async function isDictionaryNameExists(newName) {
   let searchFor = newName.toLowerCase();
   const result = await multiFetch(`${API_URL}/dictionaries/bydictionary/${searchFor}`);
-  console.log("Vizsgál:", result.data.data.length);
   if (result.data.data.length > 0) return true;
   else return false;
 }
@@ -138,16 +136,6 @@ export const showSuccessMessage = (objectDOM, dictionaryName) => {
     0
   );
   objectDOM.dictionaryNameInput.value = "";
-};
-
-export const setFlagIcons = (objectDOM) => {
-  objectDOM.languagePrimary.addEventListener("change", (event) => {
-    let searchIcon = state.languages.filter((e) => e.id == event.target.value);
-  });
-
-  objectDOM.languageSecondary.addEventListener("change", (event) => {
-    let searchIcon = state.languages.filter((e) => e.id == event.target.value);
-  });
 };
 
 export const sortDictionaryList = (objectDOM) => {
@@ -229,7 +217,6 @@ export const deleteDictionary = async () => {
   const exists = await multiFetch(`${API_URL}/words/bydictionaryid/${dictionaryId}`);
 
   if (exists.data.count > 0) {
-    console.log("Vannak szavak is a szótárban!");
     const response = await multiFetch(`${API_URL}/words/delete/${dictionaryId}`, "DELETE");
     if (!response.ok) throw error;
   }
@@ -239,35 +226,20 @@ export const deleteDictionary = async () => {
 };
 
 export const LoadEditDictionary = async (button) => {
+
   await defDictionary(button);
   let dictionary = state.activeDictionary;
-  const ModalHTML = `
-            ${inputField(
-    "edit-dictionary-name",
-    "Szótár neve",
-    "dictionary-name",
-    true,
-    dictionary[0].dictionary_name,
-    dictionary[0].dictionary_name
-  )}
-            <div class="dictionary-language row">
-                ${inputComboField(
-    "edit-dictionary-language-primary",
-    "Elsődleges nyelv:",
-    "col-sm-6"
-  )}
-                ${inputComboField(
-    "edit-dictionary-language-secondary",
-    "Másodlagos nyelv:",
-    "col-sm-6"
-  )}
-            </div>
 
-            <div class="form-check form-switch mt-3 w-100">
-                <input class="form-check-input" type="checkbox" id="create-copy-btn">
-                <label class="form-check-label" for="create-copy-btn">Másolat készítése a szótár elemeivel!</label>
-            </div>
-            `;
+  const ModalHTML = `
+    ${inputField("edit-dictionary-name", "Szótár neve", "dictionary-name", true, dictionary[0].dictionary_name, dictionary[0].dictionary_name)}
+    <div class="dictionary-language row">
+    ${inputComboField("edit-dictionary-language-primary", "Elsődleges nyelv:", "col-sm-6")}
+    ${inputComboField("edit-dictionary-language-secondary", "Másodlagos nyelv:", "col-sm-6")}
+    </div>
+    <div class="form-check form-switch mt-3 w-100">
+        <input class="form-check-input" type="checkbox" id="create-copy-btn">
+        <label class="form-check-label" for="create-copy-btn">Másolat készítése a szótár elemeivel!</label>
+    </div>`;
 
   fillDialogPanel(dialogObjects["editDictionary"].id, ModalHTML);
 
@@ -377,7 +349,6 @@ export const createDictionaryCopy = async (data) => {
     };
     await addWord(obj);
   }
-
   showAlertPanel(
     "#edit-dictionary-dialog #dialog-form-alert",
     "success",

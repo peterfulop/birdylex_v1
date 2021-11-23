@@ -25,7 +25,6 @@ router.get(
   "/bydictionaryid/:dictionaryId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -42,7 +41,6 @@ router.get(
   "/bydictionary/:dictionaryName",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -59,7 +57,6 @@ router.post(
   "/post",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -75,7 +72,6 @@ router.patch(
   "/patch/:dictionaryId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");
@@ -91,7 +87,6 @@ router.delete(
   "/delete/:dictionaryId",
   isLoggedIn,
   (req, res, next) => {
-    console.log(req.user);
     if (!req.user) {
       console.log("response message:", res.message);
       res.redirect("/");

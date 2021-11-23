@@ -17,7 +17,6 @@ router.get(
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
-      console.log(req.body);
       req.body.user = req.user;
       next();
     }
@@ -48,7 +47,6 @@ router.patch(
       console.log("response message:", res.message);
       res.redirect("/");
     } else {
-      console.log(req.user);
       req.body.userId = req.user.unique_id;
       req.body.oldpassword = req.user.password;
       next();
