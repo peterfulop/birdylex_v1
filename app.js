@@ -8,16 +8,16 @@ const fileUpload = require("express-fileupload");
 
 dotenv.config();
 
-const auth = require("./API/routes/auth");
-const pages = require("./API/routes/pages");
-const globalRoutes = require("./API/routes/global");
+const auth = require("./server/routes/auth");
+const pages = require("./server/routes/pages");
+const globalRoutes = require("./server/routes/global");
 
-const main = require("./API/routes/birdy");
-const user = require("./API/routes/user");
-const noteRoutes = require("./API/routes/notes");
-const practiceRoutes = require("./API/routes/practice");
-const dictionaryRoutes = require("./API/routes/dictionaries");
-const wordRoutes = require("./API/routes/words");
+const main = require("./server/routes/birdy");
+const user = require("./server/routes/user");
+const noteRoutes = require("./server/routes/notes");
+const practiceRoutes = require("./server/routes/practice");
+const dictionaryRoutes = require("./server/routes/dictionaries");
+const wordRoutes = require("./server/routes/words");
 
 app.use(cors());
 app.use(express.json());
