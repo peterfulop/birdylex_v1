@@ -137,23 +137,28 @@ export default class extends View {
 
     events.forEach((event) =>
       selectedDictionary.addEventListener(event, () => {
-        let lang_1_span = document.getElementById("lang_1_span");
-        let lang_2_span = document.getElementById("lang_2_span");
-        let word_1_input = document.getElementById("word_1_input");
-        let word_2_input = document.getElementById("word_2_input");
-        let listeningBtn1 = document.getElementById("listening-btn-primary");
-        let listeningBtn2 = document.getElementById("listening-btn-secondary");
 
-        lang_1_span.innerHTML = this.setLanguageName("lang1");
-        lang_2_span.innerHTML = this.setLanguageName("lang2");
-
-        word_1_input.placeholder = this.setLanguageName("lang1");
-        word_2_input.placeholder = this.setLanguageName("lang2");
-
-        listeningBtn1.dataset.langcode = this.getLanguageCode("lang1");
-        listeningBtn2.dataset.langcode = this.getLanguageCode("lang2");
+        this.setDictionarylanguages();
       })
     );
+  }
+
+  setDictionarylanguages() {
+    let lang_1_span = document.getElementById("lang_1_span");
+    let lang_2_span = document.getElementById("lang_2_span");
+    let word_1_input = document.getElementById("word_1_input");
+    let word_2_input = document.getElementById("word_2_input");
+    let listeningBtn1 = document.getElementById("listening-btn-primary");
+    let listeningBtn2 = document.getElementById("listening-btn-secondary");
+
+    lang_1_span.innerHTML = this.setLanguageName("lang1");
+    lang_2_span.innerHTML = this.setLanguageName("lang2");
+
+    word_1_input.placeholder = this.setLanguageName("lang1");
+    word_2_input.placeholder = this.setLanguageName("lang2");
+
+    listeningBtn1.dataset.langcode = this.getLanguageCode("lang1");
+    listeningBtn2.dataset.langcode = this.getLanguageCode("lang2");
   }
 
   setLanguageName(datasetLanguageCode) {

@@ -6,8 +6,10 @@ import {
   renderLanguageCombobox,
   renderDictionaryListInput,
 } from "../helper.js";
+import addNewView from "../views/AddNewView.js";
 import { inputComboField, inputField } from "../components.js";
 import { dialogObjects } from "../config.js";
+
 
 export default class extends View {
   constructor(params) {
@@ -522,6 +524,11 @@ export default class extends View {
       var options = document.getElementById("dictionary-name-select");
       const index = Array.from(options).filter((b) => b.dataset.dbid == dbid)[0].value;
       options.value = index;
+
+      const anw = new addNewView();
+      anw.setDictionarylanguages();
+
+
     });
   }
 
