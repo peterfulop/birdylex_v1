@@ -80,6 +80,7 @@ router.post(
       if (req.files && validImage) {
         const unique_id = req.user.unique_id;
         const pufferPath = `./public/images/users/${unique_id}/puffer/`;
+        const prevPath = `./public/images/users/${unique_id}/prev/`;
         const avatarPath = `./public/images/users/${unique_id}/avatar/`;
 
         const file = req.files.image;
@@ -92,6 +93,9 @@ router.post(
           await removeFolderContent(pufferPath),
           await removeFolderContent(avatarPath),
           await setPufferImage(file, pufferPath, pufferName, avatarPath),
+          await removeFolderContent(pufferPath),
+          await removeFolderContent(prevPath),
+
         ]).then(async () => {
           let count = await getFolderFiles(avatarPath);
           if (count.length > 0) {
@@ -124,11 +128,16 @@ router.delete(
 
       const avatarPath = `./public/images/users/${unique_id}/avatar/`;
       const originalAvatar = `./public/images/${process.env.DEFAULT_AVATAR}`;
+      const prevPath = `./public/images/users/${unique_id}/prev/`;
+      const pufferPath = `./public/images/users/${unique_id}/puffer/`;
+
 
       Promise.allSettled([
         await setUserFolders(unique_id),
         await removeFolderContent(avatarPath),
-        await copyFileTo(originalAvatar, avatarPath + process.env.DEFAULT_AVATAR)
+        await copyFileTo(originalAvatar, avatarPath + process.env.DEFAULT_AVATAR),
+        await removeFolderContent(pufferPath),
+        await removeFolderContent(prevPath),
       ])
         .then(() => {
           req.body.avatarId = process.env.DEFAULT_AVATAR;
