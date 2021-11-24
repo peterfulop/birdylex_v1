@@ -17,15 +17,14 @@
   --color-sec: #00bed7;
 }
 
-.a{
+.a {
   text-decoration: none !important;
-  }
+}
 
-  .helper-icon{
-    font-size: 2rem;
-    color: var(--default-icon-color);
-  }
-
+.helper-icon {
+  font-size: 2rem;
+  color: var(--default-icon-color);
+}
 
 .text-sort {
   overflow: hidden;
@@ -226,9 +225,8 @@ main {
   transition: 0.5s;
   background-color: white;
   border-radius: 50%;
-  padding: .5rem;
-  margin-bottom: .8rem;
-
+  padding: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .social-icon-box {
@@ -267,19 +265,17 @@ main {
   object-fit: cover;
 }
 
-#profile-avatar{
+#profile-avatar {
   min-width: 150px;
   min-height: 150px;
   width: 180px;
   height: 180px;
-    margin: 5px;
+  margin: 5px;
   padding: 5px;
-    border-radius: 50%;
+  border-radius: 50%;
   box-shadow: 1px 1px 10px rgba(122, 122, 122, 0.1);
   object-fit: cover;
 }
-
-
 
 #avatar.tight {
   width: 60px;
@@ -353,9 +349,8 @@ main {
   text-align: center;
   height: auto;
   margin: 0 1rem;
-} */
-
- #user-avatar a {
+}
+*/ #user-avatar a {
   text-decoration: none;
 }
 
@@ -365,7 +360,7 @@ main {
 }
 
 .links {
-  margin: 2rem 0;
+  margin: 1rem 0;
   display: flex;
   flex-direction: column;
 }
@@ -420,8 +415,7 @@ main {
   padding: 0.25rem;
   transition: 0.25s;
   justify-content: center;
-    text-decoration: none;
-
+  text-decoration: none;
 }
 
 .link.tight:hover {
@@ -1295,8 +1289,8 @@ main {
   }
 
   .mobile-menu-item:last-child:hover {
-    border-bottom-left-radius: .5rem;
-    border-bottom-right-radius: .5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
   }
 }
 
@@ -1347,18 +1341,14 @@ main {
   #history-excercises,
   #note-list-block,
   #history-words {
-        max-height: 30vh;
-
+    max-height: 30vh;
   }
-
-
 
   .mobile-menu-item:last-child:hover {
     border-radius: 0;
   }
 
-
-  #dictionary-list-items{
+  #dictionary-list-items {
     max-height: 55vh;
   }
 

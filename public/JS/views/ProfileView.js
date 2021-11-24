@@ -206,17 +206,13 @@ export default class extends View {
     document.querySelector("#profile-avatar").src = data.avatar;
   }
 
-
   async setUploadedImage(userId, img) {
     this.DOM.profileImageName.innerHTML =
       this.DOM.userProfileImage.files[0].name;
     this.DOM.removeSelectedImage.classList.remove("d-none");
     this.DOM.uploadImageBlock.classList.add("d-none");
     this.DOM.deleteAvatarBtn.classList.add("d-none");
-    this.DOM.fileNameBlock.classList.add(
-      "bg-corn",
-      "justify-content-between"
-    );
+    this.DOM.fileNameBlock.classList.add("bg-corn", "justify-content-between");
     this.loadAvatarPreview(userId, img);
   }
 
@@ -321,8 +317,8 @@ export default class extends View {
 
             <div class="d-block block-2">
 
-                <div class="d-block w-100" id="edit-profil-form-alert"></div>
-                <div class="accordion accordion-flush mt-3" id="accordionFlushExample">
+                <div class="d-block w-100 mb-3" id="edit-profil-form-alert"></div>
+                <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="flush-headingOne">
                                     <button class="btn btn-listen w-100 card-header justify-content-between collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">Mentés</button>

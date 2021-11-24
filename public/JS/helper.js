@@ -3,7 +3,6 @@ import { dialogObjects } from "./config.js";
 import { inputComboField } from "./components.js";
 import { state } from "./state.js";
 
-
 export const loadVisualisation = async () => {
   console.log("state", state);
   await renderMainMenu();
@@ -22,8 +21,12 @@ const timeout = function (s) {
   });
 };
 
-export const multiFetch = async function (url, method = "GET", body = "", file = false) {
-
+export const multiFetch = async function (
+  url,
+  method = "GET",
+  body = "",
+  file = false
+) {
   let object = {};
   object = {
     headers: {
@@ -31,7 +34,7 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
     },
     method: method,
     body: body === "" ? null : JSON.stringify(body),
-  }
+  };
 
   if (file) {
     object.headers = {};
@@ -48,7 +51,7 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
     const data = await res.json();
     return {
       ok: res.ok,
-      data
+      data,
     };
   } catch (error) {
     throw error;
@@ -56,9 +59,13 @@ export const multiFetch = async function (url, method = "GET", body = "", file =
 };
 
 export const mediaQuery = () => {
-  const mediaQuery = window.matchMedia("(max-width: 960px)");
-  autoFullScreen(mediaQuery);
-  mediaQuery.addListener(autoFullScreen);
+  const mediaQueryWidth = window.matchMedia("(max-width: 960px)");
+  autoFullScreen(mediaQueryWidth);
+  mediaQueryWidth.addListener(autoFullScreen);
+
+  const mediaQueryHeight = window.matchMedia("(max-height: 768px)");
+  autoFullScreen(mediaQueryHeight);
+  mediaQueryHeight.addListener(autoFullScreen);
 };
 
 export const fullScreenMode = () => {
@@ -101,8 +108,14 @@ const autoFullScreen = (mediaQuery) => {
   }
 };
 
-export const renderNoDataHTML = (objectData, uniqueId = "helper-btn", click = true) => {
-  let event = click ? `document.querySelector("[data-href='/${objectData.buttonHref}']").click()` : "";
+export const renderNoDataHTML = (
+  objectData,
+  uniqueId = "helper-btn",
+  click = true
+) => {
+  let event = click
+    ? `document.querySelector("[data-href='/${objectData.buttonHref}']").click()`
+    : "";
   return `<div class="m-1">
             <div class="row align-items-center mb-2">
                     <i class="fas fa-info-circle helper-icon"></i>
@@ -114,7 +127,7 @@ export const renderNoDataHTML = (objectData, uniqueId = "helper-btn", click = tr
                     onClick=${event}>${objectData.buttonText}</button>
                 </div>
             </div>
-        </div>`
+        </div>`;
 };
 
 export const renderMainMenu = async () => {
@@ -129,15 +142,14 @@ export const renderMainMenu = async () => {
                     <h3 class="hideable">${item.text}</h3>
                 </div>
             `;
-
     });
 
-  // add last menuitem 
+  // add last menuitem
   dashboardLinkContainer.innerHTML += `
   <a href="api/auth/logout" class="link wide nav" title="Kijelentkezés">
     <i class="link-icon-box fas fa-sign-out-alt"></i>
     <h3 class="hideable">Kijelentkezés</h3>
-  </a>`
+  </a>`;
 
   document.getElementById("app-spinner").classList.add("d-none");
   document.getElementById("app-box").classList.remove("d-none");
@@ -159,12 +171,12 @@ export const renderMobileMenu = () => {
         `;
     });
 
-  // add last menuitem 
+  // add last menuitem
   mobileMenuContainer.innerHTML += `
   <a href="/login" class="mobile-menu-item py-2 nav" title="Kijelentkezés">
     <i class="link-icon-box fas fa-sign-out-alt"></i>
     <h3 class="hideable">Kijelentkezés</h3>
-  </a>`
+  </a>`;
 };
 
 export const displayMobileMenu = () => {
@@ -312,8 +324,6 @@ export const renderAppHTML = async () => {
             </div>
         </section>     
     `;
-
-
 };
 
 export const showDialogPanel = async (dialogIndex) => {
@@ -616,17 +626,16 @@ export const showPassword = (button, label, input) => {
 };
 
 export const showHidePasswords = async (nodeList) => {
-  nodeList.forEach(
-    (btn) =>
-      btn.addEventListener("change", async () => {
-        let label = [...document.querySelectorAll(".password-label")].find(
-          (a) => a.dataset.inputId === btn.dataset.inputId
-        );
-        let input = [...document.querySelectorAll(".password-input")].find(
-          (a) => a.dataset.inputId === btn.dataset.inputId
-        );
-        showPassword(btn, label, input);
-      })
+  nodeList.forEach((btn) =>
+    btn.addEventListener("change", async () => {
+      let label = [...document.querySelectorAll(".password-label")].find(
+        (a) => a.dataset.inputId === btn.dataset.inputId
+      );
+      let input = [...document.querySelectorAll(".password-input")].find(
+        (a) => a.dataset.inputId === btn.dataset.inputId
+      );
+      showPassword(btn, label, input);
+    })
   );
 };
 
@@ -672,5 +681,6 @@ export const validateInputs = (nodeList) => {
   });
   return valid;
 };
-
-
+export const clearInputs = (nodeList) => {
+  nodeList.forEach((input) => (input.value = ""));
+};
