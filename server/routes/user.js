@@ -3,11 +3,11 @@ const { isLoggedIn } = require("../controllers/auth.js");
 const router = express.Router();
 const path = require("path");
 const uuid = require("uuid");
-const fs = require("fs");
-const sharp = require("sharp");
 const UserController = require("../controllers/user.js");
 const dotenv = require("dotenv");
+const FileService = require("../services/fileService");
 dotenv.config();
+const fService = new FileService();
 
 router.get(
   "/active",
@@ -67,7 +67,7 @@ router.post(
 
       const mime = req.files.image.mimetype;
       const extension = mime.split('/').pop();
-      const validImage = await validateImageExtension(extension.toLowerCase());
+      const validImage = await fService.validateImageExtension(extension.toLowerCase());
 
       if (!validImage) {
         return res.status(200).json({
@@ -89,15 +89,15 @@ router.post(
         const pufferName = uuid.v4() + fileExt;
 
         await Promise.allSettled([
-          await setUserFolders(unique_id),
-          await removeFolderContent(pufferPath),
-          await removeFolderContent(avatarPath),
-          await setPufferImage(file, pufferPath, pufferName, avatarPath),
-          await removeFolderContent(pufferPath),
-          await removeFolderContent(prevPath),
+          await fService.setUserFolders(unique_id),
+          await fService.removeFolderContent(pufferPath),
+          await fService.removeFolderContent(avatarPath),
+          await fService.setPufferImage(file, pufferPath, pufferName, avatarPath),
+          await fService.removeFolderContent(pufferPath),
+          await fService.removeFolderContent(prevPath),
 
         ]).then(async () => {
-          let count = await getFolderFiles(avatarPath);
+          let count = await fService.getFolderFiles(avatarPath);
           if (count.length > 0) {
             req.body.avatarId = pufferName;
             next();
@@ -133,11 +133,11 @@ router.delete(
 
 
       Promise.allSettled([
-        await setUserFolders(unique_id),
-        await removeFolderContent(avatarPath),
-        await copyFileTo(originalAvatar, avatarPath + process.env.DEFAULT_AVATAR),
-        await removeFolderContent(pufferPath),
-        await removeFolderContent(prevPath),
+        await fService.setUserFolders(unique_id),
+        await fService.removeFolderContent(avatarPath),
+        await fService.copyFileTo(originalAvatar, avatarPath + process.env.DEFAULT_AVATAR),
+        await fService.removeFolderContent(pufferPath),
+        await fService.removeFolderContent(prevPath),
       ])
         .then(() => {
           req.body.avatarId = process.env.DEFAULT_AVATAR;
@@ -154,7 +154,7 @@ router.post("/avatar/prev", isLoggedIn, async (req, res) => {
   } else {
     const mime = req.files.image.mimetype;
     const extension = mime.split('/').pop();
-    const validImage = await validateImageExtension(extension.toLowerCase());
+    const validImage = await fService.validateImageExtension(extension.toLowerCase());
 
     if (!validImage) {
       return res.status(200).json({
@@ -175,12 +175,12 @@ router.post("/avatar/prev", isLoggedIn, async (req, res) => {
       const pufferName = uuid.v4() + fileExt;
 
       await Promise.allSettled([
-        await setUserFolders(unique_id),
-        await removeFolderContent(pufferPath),
-        await removeFolderContent(prevPath),
-        await setPufferImage(file, pufferPath, pufferName, prevPath),
+        await fService.setUserFolders(unique_id),
+        await fService.removeFolderContent(pufferPath),
+        await fService.removeFolderContent(prevPath),
+        await fService.setPufferImage(file, pufferPath, pufferName, prevPath),
       ]).then(async () => {
-        let count = await getFolderFiles(prevPath);
+        let count = await fService.getFolderFiles(prevPath);
         if (count.length > 0) {
           res.json({
             ok: true,
@@ -209,127 +209,12 @@ router.delete("/avatar/prev", isLoggedIn, async (req, res) => {
     const prevPath = `./public/images/users/${unique_id}/prev/`;
 
     Promise.allSettled([
-      await setUserFolders(unique_id),
-      await removeFolderContent(pufferPath),
-      await removeFolderContent(prevPath),
+      await fService.setUserFolders(unique_id),
+      await fService.removeFolderContent(pufferPath),
+      await fService.removeFolderContent(prevPath),
     ]).then(res.json({ ok: true, message: "Mappák törölve" }));
   }
 });
-
-
-/// ROUT METHODS
-const setUserFolders = async (userId) => {
-  const basePath = `./public/images/users/${userId}/`;
-  const avatarPath = `./public/images/users/${userId}/avatar/`;
-  const prevPath = `./public/images/users/${userId}/prev/`;
-  const pufferPath = `./public/images/users/${userId}/puffer/`;
-
-  fs.access(basePath, (err) => {
-    if (err) {
-      fs.mkdirSync(basePath);
-    }
-  });
-
-  fs.access(avatarPath, (err) => {
-    if (err) {
-      fs.mkdirSync(avatarPath);
-    }
-  });
-
-  fs.access(prevPath, (err) => {
-    if (err) {
-      fs.mkdirSync(prevPath);
-    }
-  });
-
-  fs.access(pufferPath, (err) => {
-    if (err) {
-      fs.mkdirSync(pufferPath);
-    }
-  });
-
-  return {
-    basePath,
-    prevPath,
-    avatarPath,
-    pufferPath,
-  };
-};
-
-const getFolderFiles = async (folderPath) => {
-  return await new Promise((resolve, reject) => {
-    return fs.readdir(folderPath, (err, filenames) =>
-      err != null ? reject(err) : resolve(filenames)
-    );
-  });
-};
-
-const removeFolderContent = async (folderPath) => {
-  let files = await getFolderFiles(folderPath);
-  let i = files.length;
-  await new Promise(async (resolve, reject) => {
-    if (i > 0) {
-      for (const file of files) {
-        let curPath = path.join(folderPath, file);
-        i--;
-        fs.unlink(curPath, (err) => {
-          if (err) reject(err);
-        });
-      }
-      if (i === 0) {
-        resolve();
-      }
-    } else {
-      resolve();
-    }
-  });
-};
-
-const setPufferImage = async (file, pufferPath, pufferedName, prevPath) => {
-  await new Promise(async (resolve, reject) => {
-    await file.mv(pufferPath + pufferedName, async (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(
-          await setResizedImage(pufferPath, pufferedName, prevPath)
-        );
-      }
-    });
-  });
-};
-
-const copyFileTo = async (copyFrom, pasteTo) => {
-  await new Promise(async (resolve, reject) => {
-    fs.copyFile(copyFrom, pasteTo, (err) => {
-      if (err) reject(err);
-      else resolve();
-    })
-  })
-}
-
-const setResizedImage = async (pufferPath, imageName, prevPath) => {
-  await new Promise(async (resolve, reject) => {
-    const pufferedImage = pufferPath + imageName;
-    await sharp(pufferedImage)
-      .resize({ width: 300 })
-      .rotate()
-      .toFile(prevPath + imageName)
-      .finally(() => {
-        resolve(sharp.cache({ files: 0 })); /// VERY IMPORTANT TO CLEAR THE CACHE!!!!
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
-
-const validateImageExtension = (fileExt) => {
-
-  const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg', 'tiff', 'avif'];
-  return validExtensions.includes(fileExt.toLowerCase());
-
-}
 
 
 module.exports = router;

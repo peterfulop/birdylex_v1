@@ -72,6 +72,7 @@ export default class extends View {
   }
 
   removeUploadedFile(img) {
+    console.log("removeUploadedFile", img);
     if (this.DOM.userProfileImage.files[0]) {
       this.DOM.profileImageName.innerHTML = "Nincs kép kiválasztva!";
       this.DOM.removeSelectedImage.classList.add("d-none");
@@ -164,8 +165,8 @@ export default class extends View {
           status: false,
         };
       }
-      const img = await handler();
-      this.removeUploadedFile(img);
+      handler();
+      //this.removeUploadedFile(img);
     });
   }
 

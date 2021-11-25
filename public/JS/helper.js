@@ -173,7 +173,7 @@ export const renderMobileMenu = () => {
 
   // add last menuitem
   mobileMenuContainer.innerHTML += `
-  <a href="/login" class="mobile-menu-item py-2 nav" title="Kijelentkezés">
+  <a href="/api/auth/logout" class="mobile-menu-item py-2 nav" title="Kijelentkezés">
     <i class="link-icon-box fas fa-sign-out-alt"></i>
     <h3 class="hideable">Kijelentkezés</h3>
   </a>`;
@@ -501,11 +501,12 @@ export const renderSearchBar = () => {
                 <form id="search-form">
                     <div class="line-1 d-flex">
                         <div class="search-input w-100">
-                            <input type="search" class="form-control" id="search-element-input" max-length="250" placeholder="Keresés...">
+                            <input type="search" class="form-control" id="search-element-input" max-length="250" 
+                            placeholder=""Keresés..."}">
                         </div>
                         <div class="search-buttons d-flex">
                             <button type="submit" class="btn btn-secondary ms-1" id="search-element-button"><i class="fas fa-search"></i></button>
-                            <button type="button" class="btn btn-danger ms-1 d-none align-items-center mw-50" id="clear-search-filter"><i class="fas fa-filter"></i></button>
+                            <button type="button"  class="btn btn-danger ms-1 d-none align-items-center mw-50" id="clear-search-filter"><i class="fas fa-filter"></i></button>
                         </div>
                 </form>
                 </div>

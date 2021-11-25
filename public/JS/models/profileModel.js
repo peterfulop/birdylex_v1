@@ -9,6 +9,7 @@ export const getUserData = () => {
 export const editProfile = async (data) => {
   hideAlertPanel("#edit-profil-form-alert");
 
+
   const isValid = await multiFetch(`${API_URL}/users/control`, "POST", {
     password: data.currPassword,
     email: state.user.email,

@@ -1,11 +1,6 @@
 const DbServiceUsers = require("../services/DbServiceUsers");
 const db = new DbServiceUsers();
 
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const uploads = multer({ storage });
-const sharp = require("sharp");
-
 exports.users_get_userById = (req, res) => {
   res.status(200).json({
     user: req.body.user,

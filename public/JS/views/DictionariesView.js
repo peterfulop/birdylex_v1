@@ -279,7 +279,7 @@ export default class extends View {
           ${inputField("dictionary-name-input", "Az új szótár neve:", "dictionary-name", true, "szótár", "", "", "", "250")}
             <div class="row">
               ${inputComboField("dictionary-language-primary", "Elsődleges nyelv:", "col-sm-6")}
-              ${inputComboField("dictionary-language-secondary", "Elsődleges nyelv:", "col-sm-6")}
+              ${inputComboField("dictionary-language-secondary", "Másodlagos nyelv:", "col-sm-6")}
             </div>
             <div id="new-dictionary-form-alert"></div>
             <div class="row create-new-block-buttons mt-3" id="create-dictionary-buttons">

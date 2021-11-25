@@ -1,6 +1,7 @@
 import * as searchModel from "../models/searchModel.js";
 import SearchView from "../views/SearchView.js";
 import * as pagination from "../models/paginationModel.js";
+import { isAnyWord } from "../models/_controllModel.js";
 
 let sv = new SearchView();
 
@@ -20,7 +21,7 @@ const controlSearchResult = async () => {
     let data = await searchModel.loadSearchResults(query);
 
     // 5. Render result
-    if (data.count != 0) await sv.renderResult(data.data);
+    if (data.data.count != 0) await sv.renderResult(data.data);
     else {
       await sv.renderError();
     }
@@ -34,7 +35,12 @@ const controlClearResult = async () => {
 };
 
 export default async function init() {
-  await sv.addHandlerDefDOMelements();
-  sv.addHandlerSearch(controlSearchResult);
-  sv.addHandlerClearSearch(controlClearResult);
+
+  const isAny = isAnyWord();
+  if (isAny) {
+    await sv.addHandlerDefDOMelements();
+    sv.addHandlerSearch(controlSearchResult);
+    sv.addHandlerClearSearch(controlClearResult);
+  }
+
 }

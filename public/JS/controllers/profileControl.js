@@ -7,6 +7,7 @@ import {
 } from "../models/profileModel.js";
 import ProfileView from "../views/ProfileView.js";
 import { User } from "../datamodels/User.js";
+import { state } from "../state.js";
 
 let pf = new ProfileView();
 let user = new User();
@@ -18,6 +19,7 @@ const submitForm = async () => {
     await user.setUser();
     const userData = getUserData();
     pf.loadUserData(userData);
+    pf.removeUploadedFile(state.user.img);
   }
 };
 

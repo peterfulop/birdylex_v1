@@ -1,3 +1,4 @@
+
 import { multiFetch } from "../helper.js";
 import { API_URL } from "../config.js";
 import DataModel from "./DataModel.js";
@@ -32,3 +33,4 @@ export class MenuItem extends DataModel {
     }
   }
 }
+

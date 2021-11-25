@@ -41,15 +41,10 @@ export const router = async () => {
         { path: "/", view: HomeView, init: homeControl },
         { path: "/profile", view: ProfileView, init: profileControl },
         { path: "/search", view: SearchView, init: searchControl },
-        {
-            path: "/dictionaries",
-            view: DictionariesView,
-            init: dictionariesControl,
-        },
+        { path: "/dictionaries", view: DictionariesView, init: dictionariesControl },
         { path: "/addnew", view: AddNewView, init: addNewControl },
         { path: "/brainteaser", view: BrainteaserView, init: brainteaserControl },
         { path: "/reader", view: ReaderView, init: readerControl },
-
     ];
 
     // Test each route for potential match

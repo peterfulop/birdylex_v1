@@ -1,5 +1,6 @@
 export const state = {
   user: [],
+  file: [],
   screenMode: 0,
   activeMenu: "",
   selectedDictionary: "",
@@ -66,6 +67,7 @@ export const state = {
 };
 
 export const resetState = () => {
+  state.file = [];
   state.selectedDictionary = "";
   state.dictionaryID = "";
   state.dictionaryName = "";

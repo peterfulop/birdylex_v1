@@ -73,6 +73,15 @@ export const noDataInputs = Object.freeze({
     buttonText: "Kifejezés rögzítése",
     buttonColor: "primary",
     click: true
+  },
+
+  searchView: {
+    headerText: "Úgy tűnik, nincsenek még mentett kifejezéseid!",
+    smallText: "Ahhoz, hogy keresni tudj, legalább 1 kifejezést rögzítened kell.",
+    buttonHref: "addnew",
+    buttonText: "Kifejezés rögzítése",
+    buttonColor: "primary",
+    click: true
   }
 });
 

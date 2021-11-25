@@ -1,5 +1,5 @@
 const DbService = require("./dbService.js");
-const crypto = require("crypto");
+const FileService = require("./fileService");
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -7,6 +7,7 @@ const connection = require("../database/db");
 const dotenv = require("dotenv");
 const fs = require("fs");
 dotenv.config();
+const fService = new FileService()
 
 class DbServiceUsers extends DbService {
 
@@ -166,7 +167,7 @@ class DbServiceUsers extends DbService {
 
             if (response > 0) {
 
-              this.setUserFolders(newUser.unique_id);
+              fService.setUserFolders(newUser.unique_id);
               const basePath = `./public/images/users/${newUser.unique_id}/avatar/`;
               fs.copyFile('./public/images/avatar.png', `${basePath}/avatar.png`, (err) => {
                 if (err) throw error;

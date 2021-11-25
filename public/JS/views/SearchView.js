@@ -5,8 +5,11 @@ import {
   compareValues,
   sliceArray,
   renderSearchBar,
+  renderNoDataHTML,
 } from "../helper.js";
 import { state } from "../state.js";
+import { isAnyWord } from "../models/_controllModel.js";
+import { noDataInputs } from "../config.js";
 
 export default class extends View {
   constructor(params) {
@@ -49,7 +52,7 @@ export default class extends View {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       this.renderError();
     } else {
-      await this.renderSearchResult(data);
+      await this.renderSearchResult(data.data);
       this.displaySearchClearBtn();
     }
   }
@@ -77,19 +80,20 @@ export default class extends View {
   }
 
   async renderSearchPageHTML() {
-    this._mainContainer.innerHTML = `
-        <div class="d-flexd-flex mb-3" id=""><strong class="text-secondary">Globális keresés</strong></div>
 
-        <div class="d-none search-block search-by-date">
-                <input type="date" name="" id="">
-                <input type="date" name="" id="">
-        </div>
-        <div class="d-none search-block search-by-text">
-                <input type="text" name="" id="">
-        </div>
+    this._mainContainer.innerHTML = renderNoDataHTML(noDataInputs.searchView);
+
+    const isAny = isAnyWord();
+
+    if (isAny) {
+      this._mainContainer.innerHTML = `
+        <div class="d-flexd-flex mb-3" id=""><strong class="text-secondary">Globális szókeresés</strong></div>
         ${renderSearchBar()}
-        <div class= "d-block" id = "search-container">
+        <div class= "d-block" id="search-container">
         </div>`;
+
+    }
+
   }
 
   renderResultHeader(query) {
@@ -109,11 +113,13 @@ export default class extends View {
   }
 
   async renderSearchResult(renderArray) {
+
+
     this.clearResultContainer();
 
     state.pagination.location = 2;
 
-    state.pagination.arrayLength = state.search.searchResult.length;
+    state.pagination.arrayLength = state.search.searchResult.count;
 
     renderArray.sort(compareValues("relase_date", "desc"));
 
@@ -161,7 +167,7 @@ export default class extends View {
     );
 
     this.readSelectedWord();
-    await pagination.renderPaginationFooter(state.search.searchResult);
+    await pagination.renderPaginationFooter(state.search.searchResult.data);
   }
 
   displaySearchClearBtn(show = true) {
