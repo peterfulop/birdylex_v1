@@ -178,11 +178,11 @@ export const dialogObjects = Object.freeze({
 
 export const excerciseTypes = Object.freeze([
   {
-    name: "Idegenről magyar nyelvre",
+    name: "Első alakról jelentésre",
     value: 0,
   },
   {
-    name: "Magyar nyelvről idegenre",
+    name: "Jelentésről első alakra",
     value: 1,
   },
   {

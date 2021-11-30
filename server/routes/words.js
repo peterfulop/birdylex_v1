@@ -5,6 +5,8 @@ const router = express.Router();
 const WordsController = require("../controllers/words");
 
 // OK!! + AUTH
+
+
 router.get(
   "/",
   isLoggedIn,

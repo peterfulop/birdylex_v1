@@ -145,7 +145,6 @@ const controlExitEditDictionary = async () => {
 
 export default async function init() {
 
-
   await dv.addHandlerDefDOMelements();
   await controlLoad();
   await dv.handlerShowNewDictionaryPanel(controlNewDictionaryPanel);
@@ -156,6 +155,7 @@ export default async function init() {
   await dv.handlerClearFiltration(controlClearFilter);
   await dv.handlerSortDictionaries(controlSortDictionaries);
   await loadDictionariesHandlers();
+
 }
 
 export const loadDictionariesHandlers = async () => {

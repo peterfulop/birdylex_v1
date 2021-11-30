@@ -1,6 +1,5 @@
 const DbServiceUsers = require("../services/DbServiceUsers");
 const db = new DbServiceUsers();
-const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 

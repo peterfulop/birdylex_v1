@@ -5,28 +5,18 @@ import { Word } from "./datamodels/Word.js";
 import { User } from "./datamodels/User.js";
 import { Note } from "./datamodels/Note.js";
 import { router, pageNavigation } from "./router.js";
-import {
-  loadVisualisation
-} from "./helper.js";
-
-const user = new User();
-const menu = new MenuItem();
-const lang = new Language();
-const words = new Word();
-const dict = new Dictionary();
-const note = new Note();
+import { loadVisualisation } from "./helper.js";
 
 (async function run() {
 
-  await user.setUser();
-  await menu.loadMainMenu();
-  await lang.loadLanguages();
+  await new User().setUser();
+  await new MenuItem().loadMainMenu();
+  await new Language().loadLanguages();
 
-  // Load words, Dictionaries
-  await words.loadWords();
-  await dict.loadDictionaries();
-  await dict.fillLexiconArrays();
-  await note.loadNotes();
+  await new Word().loadWords();
+  await new Dictionary().loadDictionaries();
+  await new Dictionary().fillLexiconArrays();
+  await new Note().loadNotes();
 
   await loadVisualisation();
   await pageNavigation();
