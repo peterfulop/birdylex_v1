@@ -19,7 +19,7 @@ export default class extends View {
                 <div class="d-block w-100 flex-wrap" id="homepage-note-block">
                     <div class="d-flex input w-100">
                         <div class="form-group w-100">
-                            <input type="email" class="form-control" id="new-pin-input" placeholder="új jegyzet" maxlength="250">
+                            <input type="text" class="form-control" id="new-pin-input" placeholder="új jegyzet" maxlength="250">
                         </div>
                         <button type="button" class="btn btn-secondary ms-2" id="fix-pin-button">
                             <i class="fas fa-thumbtack"></i>

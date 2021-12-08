@@ -13,9 +13,11 @@
     "hbs": "^4.1.2",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
+    "mysql-import": "^5.0.21",
     "nodemon": "^2.0.9",
     "sanitize-html": "^2.3.3",
     "sharp": "^0.29.3",
+    "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {},

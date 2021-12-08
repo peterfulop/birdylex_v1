@@ -71,6 +71,7 @@ const controlResumeToSpeech = async (data) => {
 };
 
 const controlPauseToSpeech = async (data) => {
+
   const speech = await startSpeech("", "", "", data.method);
 };
 const controlStopToSpeech = async (data) => {
