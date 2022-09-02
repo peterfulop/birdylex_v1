@@ -81,7 +81,7 @@ export const askSomething = async (objectDOM) => {
   }
 
   if (state.excercise.data.indexPuffer.length == maxNumber) {
-    state.excercise.data.endTermin = new Date().toLocaleString();
+    state.excercise.data.endTermin = new Date();
     state.excercise.data.dictionary = state.excercise.settings.dictionaryName;
     state.excercise.data.dictionaryId = state.excercise.settings.dictionaryId;
     return {

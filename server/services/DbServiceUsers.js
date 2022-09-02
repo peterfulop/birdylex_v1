@@ -40,10 +40,8 @@ class DbServiceUsers extends DbService {
           expiresIn: process.env.EXPIRES_IN,
         });
 
-        console.log("The token is:", token);
-
         const response = await new Promise((resolve, reject) => {
-          const query = `UPDATE users SET last_login = '${new Date().toLocaleString()}' WHERE email ='${email}';`;
+          const query = `UPDATE users SET last_login = '2021-11-18 17:06:11.000' WHERE email ='${email}';`;
           connection.query(query, (err, result) => {
             if (err) reject(new Error(err.message));
             if (result) resolve(result);
@@ -145,7 +143,7 @@ class DbServiceUsers extends DbService {
         } else {
           try {
             let hashedPassword = await bcrypt.hash(password, 8);
-            let datetime = new Date().toLocaleString();
+            let datetime = new Date();
             let newUser = {
               unique_id: uuid.v4(),
               name: this.sanitizeHtml(name),

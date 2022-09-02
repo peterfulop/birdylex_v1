@@ -29,7 +29,7 @@ const resetExcerciseData = async () => {
     question: "",
     answer: "",
     yourAnswers: [],
-    startTermin: new Date().toLocaleString(),
+    startTermin: new Date(),
     endTermin: "",
     language: "",
     randomText: "",

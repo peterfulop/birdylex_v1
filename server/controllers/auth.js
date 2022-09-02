@@ -40,8 +40,8 @@ exports.isLoggedIn = async (req, res, next) => {
                     unique_id: data.user.unique_id,
                     name: data.user.name,
                     email: data.user.email,
-                    registered: new Date(data.user.registered).toLocaleString(),
-                    last_login: new Date(data.user.last_login).toLocaleString(),
+                    registered: new Date(data.user.registered),
+                    last_login: new Date(data.user.last_login),
                     avatar: data.user.avatar,
                     password: data.user.password
                 };

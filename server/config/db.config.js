@@ -2,6 +2,6 @@ module.exports = {
   HOST: "localhost",
   DATABASE: "birdylex",
   USER: "root",
-  PASSWORD: "",
+  PASSWORD: "password",
   PORT: 3306,
 };
